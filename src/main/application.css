@@ -1,0 +1,21 @@
+
+#playButton{
+	-fx-background-color: "#05a95c";
+	-fx-font-family: "Helvetica";
+    -fx-font-size: 25px;
+    -fx-text-fill: white;
+    -fx-font-scale: 40;
+}
+
+
+#playButton:hover{
+	-fx-background-color: "#05a95c"; /* Green */
+	-fx-background-color: white;
+    -fx-text-fill: green;
+    -fx-border-color: green;
+}
+
+#contentBox{
+	-fx-background-color: white;
+	-fx-border-color: gray;
+}
