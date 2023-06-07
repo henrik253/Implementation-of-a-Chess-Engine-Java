@@ -20,8 +20,12 @@ public class GameView extends Pane implements Component {
 
 	}
 	
+	public boolean moveRequest(int oldX,int oldY,int newX,int newY) {
+		return gamePresenter.moveRequest(oldX,oldY,newX,newY);
+	}
+	
 	public void initSimplePieceBoard(SimplePiece[][] simplePieceBoard) {
-		this.board.initSimplePieceBoard(simplePieceBoard);
+		this.board.drawPiecesOnBoard(simplePieceBoard);
 	}
 
 	public void setBoard(Board board) {

@@ -26,6 +26,8 @@ public class MainView extends AnchorPane {
 		
 		this.gameOverView.setVisible(false);
 		
+		
+		
 	}
 
 	public void drawGameStart() {

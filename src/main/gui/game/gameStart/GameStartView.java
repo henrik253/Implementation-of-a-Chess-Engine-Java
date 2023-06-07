@@ -2,6 +2,7 @@ package main.gui.game.gameStart;
 
 
 import javafx.scene.control.Button;
+import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Background;
 import javafx.scene.layout.Border;
@@ -20,6 +21,9 @@ public class GameStartView extends Pane {
 	
 	private Pane contentBox;
 	private Button play;
+	
+	private ImageView playerImage; 
+	private ImageView cpuImage; 
 	
 	public void init() {
 		
@@ -50,13 +54,14 @@ public class GameStartView extends Pane {
 		play.setOnMousePressed(this::handle);
 	}
 	
+	private void initImages() {
+		
+	}
+	
 	private void handle(MouseEvent event) {
 		gameStartPresenter.playButtonPressed();
 	}
 	
-	private void initPlayerInfo() {
-		
-	}
 	
 	private void initIDs() {
 		play.setId("playButton");

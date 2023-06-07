@@ -1,21 +1,57 @@
 
-#playButton{
+#playButton1{
 	-fx-background-color: "#05a95c";
 	-fx-font-family: "Helvetica";
-    -fx-font-size: 25px;
+    -fx-font-size: 25.0px;
     -fx-text-fill: white;
-    -fx-font-scale: 40;
+    -fx-font-scale: 40.0;
+    -fx-effect: dropshadow( three-pass-box , rgba(0.0,0.0,0.0,0.5) , 10.0, 0.0 , 0.0 , 3.0 );
 }
 
 
-#playButton:hover{
-	-fx-background-color: "#05a95c"; /* Green */
-	-fx-background-color: white;
-    -fx-text-fill: green;
-    -fx-border-color: green;
+#playButton1:hover{
+	 -fx-background-color:
+          -fx-shadow-highlight-color,
+          linear-gradient(to bottom, derive(-fx-text-box-border, -10.0%), -fx-text-box-border),
+          linear-gradient(to bottom,
+            derive(-fx-control-inner-background, -7.0%),
+            derive(-fx-control-inner-background, 0.0%),
+            derive(-fx-control-inner-background, -3.0%),
+            derive(-fx-control-inner-background, -9.0%)
+          );
+    -fx-background-insets: 0.0, 0.0 0.0 1.0 0.0, 1.0 1.0 2.0 1.0;
+    -fx-background-radius: 4.0, 3.0, 2.0; /* 10, 9, 8 */
+     -fx-text-fill: "#05a95c";
+   
 }
 
 #contentBox{
 	-fx-background-color: white;
-	-fx-border-color: gray;
+	-fx-border-color: rgba(255.0,255.0,240.0);
+	 -fx-effect: dropshadow( three-pass-box , rgba(240.0,255.0,240.0) , 10.0, 0.0 , 0.0 , 3.0 );
 }
+
+
+#playButton {
+    -fx-background-color: #55a630;
+    -fx-background-radius: 12.0;
+    -fx-border-width: 2.0;
+    -fx-font-family: "Helvetica";
+    -fx-font-size: 25.0px;
+    -fx-text-fill: white;
+    -fx-effect: dropshadow( gaussian , rgba(0.0,0.0,0.0,0.5) , 2.0,0.0,0.0,1.0 );
+}
+
+#playButton Text{
+	  
+}
+
+#playButton:hover {
+    -fx-background-color: #63b037;
+}
+
+#playButton:pressed {
+    -fx-background-color: #438329;
+    -fx-border-color: #32611d;
+}
+

@@ -14,25 +14,26 @@ public class FENConverter {
 		SimplePiece[][] board = new SimplePiece[ROWS][COLUMNS];
 
 		int row = 0;
-		int column = 0;
-		String[] splitFen = fen.split(" ");
-		String firstPart = splitFen[0];
-
+		int column = -1;
+		String[] parts = fen.split(" ");
+		String firstPart = parts[0];
+		
 		try {
 			for (int i = 0; i < firstPart.length(); i++) {
 				char c = firstPart.charAt(i);
-
-				if (Character.isLetter(c))
-					board[row][column] = buildSimplePiece(c);
-				else {
-					column += Character.getNumericValue(c);
+				
+				if(c == '/') {
+					column = -1; 
+					row++; 
+					continue; 
 				}
-
-				column++;
-
-				if (column >= COLUMNS) {
-					column = 0;
-					row++;
+				if(Character.isLetter(c)) {
+					++column; 
+					board[row][column] = buildSimplePiece(c); 
+					continue; 
+				}
+				if(Character.getNumericValue(c) != -1) {
+					column += Character.getNumericValue(c);
 				}
 
 			}
@@ -42,8 +43,6 @@ public class FENConverter {
 
 		return board;
 	}
-	
-	
 
 	public static SimplePiece buildSimplePiece(char c) {
 		ChessPieceColor color = Character.isUpperCase(c) ? ChessPieceColor.WHITE : ChessPieceColor.BLACK;

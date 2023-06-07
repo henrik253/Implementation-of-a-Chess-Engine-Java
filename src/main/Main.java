@@ -18,12 +18,11 @@ import main.gui.game.settings.SettingsPresenter;
 import main.gui.game.settings.SettingsView;
 
 public class Main extends Application {
-	private static final int WINDOW_WIDTH = 1200;
-	private static final int WINDOW_HEIGHT = 800;
-	
+
 	private Scene scene;
-	
+
 	private MainPresenter mainPresenter;
+	private SettingsPresenter settingsPresenter;
 	private GamePresenter gamePresenter;
 	private GameOverPresenter gameOverPresenter;
 	private GameStartPresenter gameStartPresenter;
@@ -34,44 +33,47 @@ public class Main extends Application {
 	private GameOverView gameOverView;
 	private GameStartView gameStartView;
 
+	private Settings settings;
+	private Board board;
+	private Overlay overlay;
+
 	@Override
 	public void start(Stage primaryStage) throws Exception {
 		initGUIComponents();
-		
+
 		primaryStage.setScene(scene);
 		primaryStage.show();
 	}
 
 	public void initGUIComponents() {
 
-		
-		
 		// All Presenters
-		MainPresenter mainPresenter = new MainPresenter();
+		mainPresenter = new MainPresenter();
 
-		GamePresenter gamePresenter = new GamePresenter();
-		SettingsPresenter settingsPresenter = new SettingsPresenter();
-		GameOverPresenter gameOverPresenter = new GameOverPresenter();
-		GameStartPresenter gameStartPresenter = new GameStartPresenter();
+		gamePresenter = new GamePresenter();
+		settingsPresenter = new SettingsPresenter();
+		gameOverPresenter = new GameOverPresenter();
+		gameStartPresenter = new GameStartPresenter();
 
 		// All Views
-		MainView mainView = new MainView();
-		GameView gameView = new GameView();
-		SettingsView settingsView = new SettingsView();
-		GameOverView gameOverView = new GameOverView();
-		GameStartView gameStartView = new GameStartView();
+		mainView = new MainView();
+		gameView = new GameView();
+		settingsView = new SettingsView();
+		gameOverView = new GameOverView();
+		gameStartView = new GameStartView();
 
 		// All other Class
-		Settings settings = new Settings();
-		Board board = new Board(); 
-		Overlay overlay = new Overlay();
-		
+		settings = new Settings();
+		board = new Board();
+		overlay = new Overlay();
+
 		// Setting all Classes
 
 		mainPresenter.setGamePresenter(gamePresenter);
 		mainPresenter.setGameStartPresenter(gameStartPresenter);
 		mainPresenter.setSettingsPresenter(settingsPresenter);
 		mainPresenter.setMainView(mainView);
+		mainPresenter.setSettings(settings);
 
 		gamePresenter.setGameView(gameView);
 		gamePresenter.setMainPresenter(mainPresenter);
@@ -91,49 +93,52 @@ public class Main extends Application {
 		mainView.setMainPresenter(mainPresenter);
 		mainView.setSettingsView(settingsView);
 		mainView.setSettings(settings);
-		
-		
+
 		gameView.setGamePresenter(gamePresenter);
 		gameView.setBoard(board);
-		
+
 		gameStartView.setGameStartPresenter(gameStartPresenter);
+		gameStartView.setSettings(settings);
+		gameStartView.setOverlay(overlay);
 
 		gameOverView.setGameOverPresenter(gameOverPresenter);
+		gameOverView.setSettings(settings);
+		gameOverView.setOverlay(overlay);
+		
+		settingsView.setSettings(settings);
+		settingsView.setSettingsPresenter(settingsPresenter);
 		
 		board.setSettings(settings);
 		board.setGameView(gameView);
-		
-		gameStartView.setSettings(settings);
-		
-		gameOverView.setSettings(settings);
-		
-		gameStartView.setOverlay(overlay);
-		
-		gameOverView.setOverlay(overlay);
-		
+
 		overlay.setSettings(settings);
-		
-		//Init other classes 
+
+		// Init other classes
 		overlay.init();
-		//Init all Views
+		
+		// Init all Views
 		mainView.init();
 		gameStartView.init();
 		gameOverView.init();
 		settingsView.init();
-		
-		// Execute 
-		board.draw(); 
-		mainPresenter.loadBoard(settings.defaultFENString);
-		
-		scene = new Scene(mainView,WINDOW_WIDTH,WINDOW_HEIGHT);
-		scene.getStylesheets().add(getClass().getResource("application.css").toExternalForm());
-		
-	}
-	
 
+		// Execute
+		// Board
+		board.drawBoard();
+		mainPresenter.loadBoard(settings.defaultFENString);
+		mainPresenter.loadBoard(getRandomFEN());
+
+		// Scene
+		scene = new Scene(mainView, settings.WINDOW_WIDTH, settings.WINDOW_HEIGHT);
+		scene.getStylesheets().add(getClass().getResource("application.css").toExternalForm());
+	}
 
 	public static void main(String[] args) {
 		launch(args);
+	}
+
+	public String getRandomFEN() {
+		return settings.randomFENStrings[(int) (Math.random() * settings.randomFENStrings.length)];
 	}
 
 }

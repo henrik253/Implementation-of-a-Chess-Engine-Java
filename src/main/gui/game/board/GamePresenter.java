@@ -12,6 +12,11 @@ public class GamePresenter extends Presenter {
 	public void setBoard(SimplePiece[][] simplePieceBoard) {
 		gameView.initSimplePieceBoard(simplePieceBoard);
 	}
+	
+	public boolean moveRequest(int oldX,int oldY,int newX,int newY) {
+		return mainPresenter.moveRequest(oldX,oldY,newX,newY);
+	}
+	
 	public GameView getGameView() {
 		return gameView;
 	}
