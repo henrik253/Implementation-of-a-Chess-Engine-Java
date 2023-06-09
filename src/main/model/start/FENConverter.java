@@ -8,7 +8,6 @@ public class FENConverter {
 
 	private static final int ROWS = 8;
 	private static final int COLUMNS = 8;
-	// small letters represent black figures
 
 	public static SimplePiece[][] convert(String fen) {
 		SimplePiece[][] board = new SimplePiece[ROWS][COLUMNS];
@@ -17,22 +16,21 @@ public class FENConverter {
 		int column = -1;
 		String[] parts = fen.split(" ");
 		String firstPart = parts[0];
-		
+
 		try {
 			for (int i = 0; i < firstPart.length(); i++) {
 				char c = firstPart.charAt(i);
-				
-				if(c == '/') {
-					column = -1; 
-					row++; 
-					continue; 
+
+				if (c == '/') {
+					column = -1;
+					row++;
+					continue;
 				}
-				if(Character.isLetter(c)) {
-					++column; 
-					board[row][column] = buildSimplePiece(c); 
-					continue; 
+				if (Character.isLetter(c)) {
+					board[row][++column] = buildSimplePiece(c);
+					continue;
 				}
-				if(Character.getNumericValue(c) != -1) {
+				if (Character.getNumericValue(c) != -1) {
 					column += Character.getNumericValue(c);
 				}
 

@@ -42,9 +42,7 @@
     -fx-effect: dropshadow( gaussian , rgba(0.0,0.0,0.0,0.5) , 2.0,0.0,0.0,1.0 );
 }
 
-#playButton Text{
-	  
-}
+
 
 #playButton:hover {
     -fx-background-color: #63b037;
@@ -53,5 +51,58 @@
 #playButton:pressed {
     -fx-background-color: #438329;
     -fx-border-color: #32611d;
+}
+
+#remiButton{
+	 -fx-background-color: white;
+    -fx-border-color: black;
+    -fx-border-width: 2.0;
+    -fx-font-family: "Helvetica";
+    -fx-font-size: 20.0px;
+    -fx-text-fill: black;
+
+}
+
+#remiButton:hover{
+	 -fx-background-color: #e8e8e8;
+}
+
+#surrenderButton{
+	 -fx-background-color: white;
+    -fx-border-color: black;
+    -fx-border-width: 2.0;
+    -fx-font-family: "Helvetica";
+    -fx-font-size: 20.0px;
+    -fx-text-fill: black;
+
+}
+
+#surrenderButton:hover{
+	-fx-background-color: #e8e8e8;
+}
+
+#pauseGameButton{
+	 -fx-background-color: white;
+    -fx-border-width: 2.0;
+    -fx-border-color: black;
+    -fx-font-family: "Helvetica";
+    -fx-font-size: 25.0px;
+    -fx-text-fill: black;
+   
+}
+
+#pauseGameButton:hover{
+	-fx-background-color: #e8e8e8;
+}
+
+
+#SettingsView{
+	-fx-background-color: #FFFFFF;
+}
+
+#InGamePane{
+
+	-fx-border-radius: 20.0;
+	-fx-background-color: white; 
 }
 

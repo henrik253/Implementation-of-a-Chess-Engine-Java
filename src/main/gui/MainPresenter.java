@@ -29,6 +29,7 @@ public class MainPresenter extends Presenter {
 	public void startGame() {
 		gameStartPresenter.setDisableView(false);
 		loadBoard(settings.selectedFEN.get());
+		settingsPresenter.setInGameContent();
 	}
 
 	public void surrenderGame() {

@@ -4,6 +4,14 @@ public class SettingsPresenter {
 	private Settings settings;
 	private SettingsView settingsView;
 
+	public void setInGameContent() {
+		settingsView.inGame();
+	}
+	
+	public void setNoGameContent() {
+		settingsView.noGame();
+	}
+	
 	public Settings getSettings() {
 		return settings;
 	}

@@ -17,15 +17,19 @@ public class Settings {
 	public final int WINDOW_HEIGHT = 800;
 	public DoubleProperty boardHeight = new SimpleDoubleProperty(800);
 	public DoubleProperty boardWidth = new SimpleDoubleProperty(800);
-	public ObjectProperty<Color> brightColor = new SimpleObjectProperty<>(Color.web("#f2d4a2"));
-	public ObjectProperty<Color> darkColor = new SimpleObjectProperty<>(Color.web("#4a2f01"));
+	public ObjectProperty<Color> brightColor = new SimpleObjectProperty<>(Color.web("#FFFFFF"));
+	public ObjectProperty<Color> darkColor = new SimpleObjectProperty<>(Color.web("#4f4f4f"));
 	public StringProperty playButtonText = new SimpleStringProperty("Start Game");
 
 	public DoubleProperty settingsViewTranslateX = new SimpleDoubleProperty();
 	public DoubleProperty settingsViewTranslateY = new SimpleDoubleProperty(0);
 	public DoubleProperty settingsViewPrefWidth = new SimpleDoubleProperty();
 	public DoubleProperty settingsViewPrefHeight = new SimpleDoubleProperty(WINDOW_HEIGHT);
-
+	public DoubleProperty settingsViewInGamePrefWidth = new SimpleDoubleProperty();
+	public DoubleProperty settingsViewInGamePrefHeight = new SimpleDoubleProperty();
+	public DoubleProperty settingsViewInGameWidthOffset = new SimpleDoubleProperty(50);
+	public DoubleProperty settingsViewInGameButtosOffset = new SimpleDoubleProperty(10);
+	
 	public int rows = 8;
 	public int columns = 8;
 	public DoubleProperty squareHeight = new SimpleDoubleProperty();
@@ -34,6 +38,11 @@ public class Settings {
 	public DoubleProperty contentBoxWidthLayoutOffset = new SimpleDoubleProperty();
 	public DoubleProperty contentBoxHeightLayoutOffset = new SimpleDoubleProperty();
 
+	
+	
+	
+	
+	
 	// FENS
 	public String defaultFENString = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1";
 	public StringProperty selectedFEN = new SimpleStringProperty(defaultFENString);
@@ -54,6 +63,7 @@ public class Settings {
 		contentBoxHeightLayoutOffset.bind(Bindings.divide(boardHeight, 16));
 		settingsViewTranslateX.bind(boardWidth);
 		settingsViewPrefWidth.bind(Bindings.subtract(WINDOW_WIDTH, boardWidth));
+		settingsViewInGamePrefWidth.bind(settingsViewPrefWidth.subtract(settingsViewInGameWidthOffset));
 //		settingsViewPrefHeight.bind(WINDOW_Height);
 
 	}

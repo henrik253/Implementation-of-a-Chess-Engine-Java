@@ -12,6 +12,7 @@ import javafx.scene.input.DragEvent;
 import javafx.scene.input.Dragboard;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.input.TransferMode;
+import javafx.scene.layout.Border;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
@@ -55,7 +56,7 @@ public class Board extends GridPane {
 		int newX = (int) (event.getSceneX() / settings.squareWidth.get());
 		int newY = (int) (event.getSceneY() / settings.squareHeight.get());
 
-		boolean validMove = gameView.moveRequest(oldX, oldY, newX, newY);
+		boolean validMove = true;//gameView.moveRequest(oldX, oldY, newX, newY);
 		
 		if(validMove) {
 			movePiece(draggedPiece,newX,newY);
