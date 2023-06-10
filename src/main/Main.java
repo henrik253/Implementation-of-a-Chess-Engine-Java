@@ -138,7 +138,7 @@ public class Main extends Application {
 	}
 
 	public String getRandomFEN() {
-		return settings.randomFENStrings[(int) (Math.random() * settings.randomFENStrings.length)];
+		return settings.fenExamples[(int) (Math.random() * settings.fenExamples.length)];
 	}
 
 }

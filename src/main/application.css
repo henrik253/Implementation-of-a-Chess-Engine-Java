@@ -54,12 +54,14 @@
 }
 
 #remiButton{
-	 -fx-background-color: white;
+	 -fx-background-color: White;
+	 
     -fx-border-color: black;
     -fx-border-width: 2.0;
     -fx-font-family: "Helvetica";
     -fx-font-size: 20.0px;
     -fx-text-fill: black;
+     -fx-effect: dropshadow( gaussian , rgba(0.0,0.0,0.0,250.0) , 10.0,0.0,0.0,1.0 );
 
 }
 
@@ -74,12 +76,27 @@
     -fx-font-family: "Helvetica";
     -fx-font-size: 20.0px;
     -fx-text-fill: black;
+      -fx-effect: dropshadow( gaussian , rgba(0.0,0.0,0.0,250.0) , 10.0,0.0,0.0,1.0 );
 
 }
 
 #surrenderButton:hover{
 	-fx-background-color: #e8e8e8;
 }
+
+
+
+
+#SettingsView{
+	-fx-background-color: #FFFFFF;
+}
+
+#InGamePane{
+	-fx-background-color: Transparent;
+	
+}
+
+
 
 #pauseGameButton{
 	 -fx-background-color: white;
@@ -88,6 +105,7 @@
     -fx-font-family: "Helvetica";
     -fx-font-size: 25.0px;
     -fx-text-fill: black;
+     -fx-effect: dropshadow( gaussian , rgba(0.0,0.0,0.0,250.0) , 10.0,0.0,0.0,1.0 );
    
 }
 
@@ -96,13 +114,4 @@
 }
 
 
-#SettingsView{
-	-fx-background-color: #FFFFFF;
-}
-
-#InGamePane{
-
-	-fx-border-radius: 20.0;
-	-fx-background-color: white; 
-}
 

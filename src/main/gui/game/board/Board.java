@@ -10,6 +10,7 @@ import javafx.scene.image.ImageView;
 import javafx.scene.input.ClipboardContent;
 import javafx.scene.input.DragEvent;
 import javafx.scene.input.Dragboard;
+import javafx.scene.input.MouseDragEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.input.TransferMode;
 import javafx.scene.layout.Border;
@@ -42,8 +43,6 @@ public class Board extends GridPane {
 
 	}
 
-	// "file:resources/BishopBlack.png"
-
 	private void onDragOver(DragEvent event) {
 		event.acceptTransferModes(TransferMode.MOVE);
 	}
@@ -56,30 +55,52 @@ public class Board extends GridPane {
 		int newX = (int) (event.getSceneX() / settings.squareWidth.get());
 		int newY = (int) (event.getSceneY() / settings.squareHeight.get());
 
-		boolean validMove = true;//gameView.moveRequest(oldX, oldY, newX, newY);
-		
-		if(validMove) {
-			movePiece(draggedPiece,newX,newY);
+		boolean validMove = true;// gameView.moveRequest(oldX, oldY, newX, newY);
+
+		if (validMove) {
+			movePiece(draggedPiece, newX, newY);
 		}
-		
+
 	}
-	
-	private void movePiece(Piece piece,int x,int y) {
+
+	private void movePiece(Piece piece, int x, int y) {
 		this.getChildren().remove(piece);
 		this.add(piece, x, y);
 	}
 
 	public void drawBoard() {
+
+		drawBoard(true);
+	}
+
+	public void drawBoard(boolean inverted) {
+		this.getChildren().clear();
+		Color color1 = settings.brightColor.get();
+		Color color2 = settings.darkColor.get();
+		if (inverted) {
+			color1 = settings.darkColor.get();
+			color2 = settings.brightColor.get();
+		}
+
 		for (int row = 0; row < settings.rows; row++) {
 			for (int column = 0; column < settings.columns; column++) {
-				Color color = (row + column) % 2 == 0 ? settings.brightColor.get() : settings.darkColor.get();
+				Color color = (row + column) % 2 == 0 ? color1 : color2;
 				add(new Square(settings.squareWidth.get(), settings.squareHeight.get(), color), row, column);
 			}
+
 		}
 	}
 
 	public void drawPiecesOnBoard(SimplePiece[][] board) {
+		drawPiecesOnBoard(board, true);
+	}
+
+	public void drawPiecesOnBoard(SimplePiece[][] board, boolean inverted) {
 		clearPiecesOnBoard();
+		if (inverted) {
+			board = invertBoard(board);
+		}
+
 		for (int row = 0; row < settings.rows; row++) {
 			for (int column = 0; column < settings.columns; column++) {
 				SimplePiece simplePiece = board[row][column];
@@ -88,12 +109,24 @@ public class Board extends GridPane {
 
 				String imageName = simplePiece.toString();
 				Piece piece = new Piece(row, column);
-				piece.setImage(new Image(IMAGES_PATH + imageName + FILE_FORMAT));
+				piece.setImage(new Image(IMAGES_PATH + imageName + FILE_FORMAT, 150, 150, false, false));
 
 				piecesOnBoard.add(piece);
 				this.add(piece, column, row);
 			}
 		}
+	}
+
+	private SimplePiece[][] invertBoard(SimplePiece[][] board) {
+		SimplePiece[][] invertedBoard = new SimplePiece[board.length][board[0].length];
+		for (int i = 0; i < invertedBoard.length; i++) {
+			SimplePiece[] invertedRow = new SimplePiece[invertedBoard[i].length];
+			for (int j = 0; j < invertedRow.length; j++) {
+				invertedRow[j] = board[board.length - i - 1][board[i].length - j - 1];
+			}
+			invertedBoard[i] = invertedRow;
+		}
+		return invertedBoard;
 	}
 
 	public void clearPiecesOnBoard() {
@@ -132,19 +165,21 @@ public class Board extends GridPane {
 			this.column = new SimpleIntegerProperty(column);
 			this.row = new SimpleIntegerProperty(row);
 			this.setOnDragDetected(this::onDragDetected);
-
+			this.setOnDragDone(this::onDragDone);
 		}
 
 		private void onDragDetected(MouseEvent event) {
 			Dragboard dragboard = this.startDragAndDrop(TransferMode.ANY);
 			ClipboardContent content = new ClipboardContent();
-
 			Move.getMove(this);
 			Image image = imageView.getImage();
-
 			content.putImage(image);
-
 			dragboard.setContent(content);
+			this.setVisible(false);
+		}
+		
+		private void onDragDone(DragEvent event) {
+			this.setVisible(true);
 		}
 
 		public int getColumn() {

@@ -2,9 +2,11 @@ package main.gui.game.settings;
 
 import javafx.geometry.Insets;
 import javafx.scene.control.Button;
+import javafx.scene.layout.Background;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
+import javafx.scene.paint.Color;
 import main.gui.Component;
 
 public class SettingsView extends Pane implements Component {
@@ -37,7 +39,7 @@ public class SettingsView extends Pane implements Component {
 	}
 
 	public void inGame() {
-		//gameContent.getChildren().clear();
+		gameContent.getChildren().clear();
 		gameContent.getChildren().add(inGameContent);
 	}
 
