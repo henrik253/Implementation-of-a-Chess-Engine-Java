@@ -1,17 +1,20 @@
 package main.gui.game.settings;
 
+import main.gui.MainPresenter;
+
 public class SettingsPresenter {
 	private Settings settings;
 	private SettingsView settingsView;
+	private MainPresenter mainPresenter;
 
 	public void setInGameContent() {
 		settingsView.inGame();
 	}
-	
+
 	public void setNoGameContent() {
 		settingsView.noGame();
 	}
-	
+
 	public Settings getSettings() {
 		return settings;
 	}
@@ -26,6 +29,22 @@ public class SettingsPresenter {
 
 	public void setSettingsView(SettingsView settingsView) {
 		this.settingsView = settingsView;
+	}
+
+	public MainPresenter getMainPresenter() {
+		return mainPresenter;
+	}
+
+	public void setMainPresenter(MainPresenter mainPresenter) {
+		this.mainPresenter = mainPresenter;
+	}
+
+	public void pauseGameButtonClicked() {
+		mainPresenter.pauseGame();
+	}
+	
+	public void setDisableView(boolean disable) {
+		settingsView.setDisable(disable);
 	}
 
 }

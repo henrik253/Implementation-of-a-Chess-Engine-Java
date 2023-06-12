@@ -80,12 +80,14 @@ public class Main extends Application {
 
 		settingsPresenter.setSettings(settings);
 		settingsPresenter.setSettingsView(settingsView);
+		settingsPresenter.setMainPresenter(mainPresenter);
 
 		gameOverPresenter.setGameOverView(gameOverView);
 		gameOverPresenter.setGamePresenter(gamePresenter);
 
 		gameStartPresenter.setGameStartView(gameStartView);
 		gameStartPresenter.setMainPresenter(mainPresenter);
+		gameStartPresenter.setSettings(settings);
 
 		mainView.setGameOverView(gameOverView);
 		mainView.setGameStartView(gameStartView);

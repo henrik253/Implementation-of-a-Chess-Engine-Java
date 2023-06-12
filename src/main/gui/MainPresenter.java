@@ -90,4 +90,9 @@ public class MainPresenter extends Presenter {
 	public void setModel(Model model) {
 		this.model = model;
 	}
+
+	public void pauseGame() {
+		gameStartPresenter.setDisableView(true);
+		gameStartPresenter.pauseGame();
+	}
 }

@@ -56,12 +56,12 @@
 #remiButton{
 	 -fx-background-color: White;
 	 
-    -fx-border-color: black;
+    -fx-border-color: Black;
     -fx-border-width: 2.0;
     -fx-font-family: "Helvetica";
     -fx-font-size: 20.0px;
     -fx-text-fill: black;
-     -fx-effect: dropshadow( gaussian , rgba(0.0,0.0,0.0,250.0) , 10.0,0.0,0.0,1.0 );
+    -fx-effect: dropshadow( gaussian , rgba(0.0,0.0,0.0,250.0) , 10.0,0.0,0.0,1.0 );
 
 }
 
@@ -76,7 +76,7 @@
     -fx-font-family: "Helvetica";
     -fx-font-size: 20.0px;
     -fx-text-fill: black;
-      -fx-effect: dropshadow( gaussian , rgba(0.0,0.0,0.0,250.0) , 10.0,0.0,0.0,1.0 );
+    -fx-effect: dropshadow( gaussian , rgba(0.0,0.0,0.0,250.0) , 10.0,0.0,0.0,0.0 );
 
 }
 

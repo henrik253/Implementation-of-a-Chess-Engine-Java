@@ -26,7 +26,7 @@ public class Board extends GridPane {
 	private Settings settings;
 	private GameView gameView;
 
-	private static final String IMAGES_PATH = "file:resources/";
+	private static final String IMAGE_PATH = "file:resources/";
 	private static final String FILE_FORMAT = ".png";
 
 	private List<Piece> piecesOnBoard = new LinkedList<>();
@@ -109,7 +109,7 @@ public class Board extends GridPane {
 
 				String imageName = simplePiece.toString();
 				Piece piece = new Piece(row, column);
-				piece.setImage(new Image(IMAGES_PATH + imageName + FILE_FORMAT, 150, 150, false, false));
+				piece.setImage(new Image(IMAGE_PATH + imageName + FILE_FORMAT, 150, 150, false, false));
 
 				piecesOnBoard.add(piece);
 				this.add(piece, column, row);

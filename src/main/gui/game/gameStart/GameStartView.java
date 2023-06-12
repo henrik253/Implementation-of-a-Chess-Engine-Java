@@ -20,7 +20,7 @@ public class GameStartView extends Pane {
 	private Overlay overlay;
 	
 	private Pane contentBox;
-	private Button play;
+	private Button playButton;
 	
 	private ImageView playerImage; 
 	private ImageView cpuImage; 
@@ -46,12 +46,12 @@ public class GameStartView extends Pane {
 	}
 	
 	private void initPlayButton() {
-		play = new Button(settings.playButtonText.get());
-		play.setPrefHeight(contentBox.getPrefHeight() / 5);
-		play.setPrefWidth((contentBox.getPrefWidth()/5) * 4);
-		play.setTranslateX( (contentBox.getPrefWidth() - play.getPrefWidth())/2 );
-		play.setTranslateY((contentBox.getPrefHeight() / 4) * 3);
-		play.setOnMousePressed(this::handle);
+		playButton = new Button(settings.playButtonTextStart.get());
+		playButton.setPrefHeight(contentBox.getPrefHeight() / 5);
+		playButton.setPrefWidth((contentBox.getPrefWidth()/5) * 4);
+		playButton.setTranslateX( (contentBox.getPrefWidth() - playButton.getPrefWidth())/2 );
+		playButton.setTranslateY((contentBox.getPrefHeight() / 4) * 3);
+		playButton.setOnMousePressed(this::handle);
 	}
 	
 	private void initImages() {
@@ -64,13 +64,13 @@ public class GameStartView extends Pane {
 	
 	
 	private void initIDs() {
-		play.setId("playButton");
+		playButton.setId("playButton");
 	}
 	
 	private void style() {
 		this.getChildren().add(overlay);  // Adding the color fade in the background
 		this.getChildren().add(contentBox);
-		contentBox.getChildren().add(play);
+		contentBox.getChildren().add(playButton);
 	}
 	
 	public GameStartPresenter getGameStartPresenter() {
@@ -81,6 +81,9 @@ public class GameStartView extends Pane {
 		this.gameStartPresenter = gameStartPresenter;
 	}
 	
+	public void setPlayButtonText(String text) {
+		this.playButton.setText(text);
+	}
 
 	public Settings getSettings() {
 		return settings;
