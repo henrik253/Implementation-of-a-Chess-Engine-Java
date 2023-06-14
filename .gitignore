@@ -1,3 +1,6 @@
 *.class
 *
-!src/*
+!.gitignore
+!src/
+!src/**
+
