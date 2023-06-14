@@ -7,8 +7,8 @@ import javafx.scene.paint.Color;
 import javafx.scene.paint.CycleMethod;
 import javafx.scene.paint.LinearGradient;
 import javafx.scene.paint.Stop;
+import main.Settings;
 import main.gui.Component;
-import main.gui.game.settings.Settings;
 
 public class Overlay extends Pane implements Component {
 

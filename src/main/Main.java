@@ -13,9 +13,11 @@ import main.gui.game.gameOver.GameOverPresenter;
 import main.gui.game.gameOver.GameOverView;
 import main.gui.game.gameStart.GameStartPresenter;
 import main.gui.game.gameStart.GameStartView;
-import main.gui.game.settings.Settings;
 import main.gui.game.settings.SettingsPresenter;
 import main.gui.game.settings.SettingsView;
+import main.model.Model;
+import main.model.gameLogic.GameLogic;
+import main.model.gameLogic.MoveValidation;
 
 public class Main extends Application {
 
@@ -37,9 +39,15 @@ public class Main extends Application {
 	private Board board;
 	private Overlay overlay;
 
+	private Model model; 
+	private MoveValidation moveValidation;
+	private GameLogic gameLogic; 
+	
 	@Override
 	public void start(Stage primaryStage) throws Exception {
 		initGUIComponents();
+		initModelComponents();
+		combineGUItoModel();
 
 		primaryStage.setScene(scene);
 		primaryStage.show();
@@ -106,10 +114,10 @@ public class Main extends Application {
 		gameOverView.setGameOverPresenter(gameOverPresenter);
 		gameOverView.setSettings(settings);
 		gameOverView.setOverlay(overlay);
-		
+
 		settingsView.setSettings(settings);
 		settingsView.setSettingsPresenter(settingsPresenter);
-		
+
 		board.setSettings(settings);
 		board.setGameView(gameView);
 
@@ -117,7 +125,7 @@ public class Main extends Application {
 
 		// Init other classes
 		overlay.init();
-		
+
 		// Init all Views
 		mainView.init();
 		gameStartView.init();
@@ -128,19 +136,35 @@ public class Main extends Application {
 		// Board
 		board.drawBoard();
 		mainPresenter.loadBoard(settings.defaultFENString);
-		mainPresenter.loadBoard(getRandomFEN());
+		String fen = getRandomFEN();
+		settings.selectedFEN.set(settings.defaultFENString);
+		mainPresenter.loadBoard(settings.selectedFEN.get());
+		
 
 		// Scene
 		scene = new Scene(mainView, settings.WINDOW_WIDTH, settings.WINDOW_HEIGHT);
 		scene.getStylesheets().add(getClass().getResource("application.css").toExternalForm());
 	}
 
-	public static void main(String[] args) {
-		launch(args);
+	public void initModelComponents() {
+		model = new Model();
+		moveValidation = new MoveValidation(); 
+		model.setSettings(settings);
+		model.setMoveValidation(moveValidation);
+		
+	
+	}
+
+	public void combineGUItoModel() {
+		mainPresenter.setModel(model);
 	}
 
 	public String getRandomFEN() {
 		return settings.fenExamples[(int) (Math.random() * settings.fenExamples.length)];
+	}
+	
+	public static void main(String[] args) {
+		launch(args);
 	}
 
 }

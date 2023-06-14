@@ -1,8 +1,8 @@
 package main.gui;
 
+import main.Settings;
 import main.gui.game.board.GamePresenter;
 import main.gui.game.gameStart.GameStartPresenter;
-import main.gui.game.settings.Settings;
 import main.gui.game.settings.SettingsPresenter;
 import main.model.Model;
 import main.model.gameStates.State;
@@ -19,18 +19,18 @@ public class MainPresenter extends Presenter {
 	private Model model;
 
 	public boolean moveRequest(int oldX, int oldY, int newX, int newY) {
-
-	
-		boolean validMove = State.chessMove.isValid(); // after model.moveRequest
-
+		
+		boolean validMove = model.move(oldX, oldY, newX, newY); // after model.moveRequest
 		return validMove;
 	}
 
 	public void startGame() {
 		gameStartPresenter.setDisableView(false);
 		loadBoard(settings.selectedFEN.get());
-		settingsPresenter.setInGameContent();
+		settingsPresenter.setInGameContent(); // PauseGame Button etc... 
+		model.startGame(); 
 	}
+	
 
 	public void surrenderGame() {
 	}
@@ -40,7 +40,7 @@ public class MainPresenter extends Presenter {
 	}
 
 	public void loadBoard(String fen) {
-		gamePresenter.setBoard(FENConverter.convert(fen));
+		gamePresenter.setBoard(FENConverter.convertSimplePieceBoard(fen));
 	}
 
 	public MainView getMainView() {

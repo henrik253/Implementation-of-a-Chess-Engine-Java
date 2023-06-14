@@ -12,30 +12,32 @@ public class Bishop extends Piece {
 	private Vector2D[] directions = { new Vector2D(1, 1), new Vector2D(-1, -1), new Vector2D(-1, 1),
 			new Vector2D(1, -1) };
 
-	public Bishop(ChessPieceColor color, int column, int row) {
-		super(ChessPieceName.BISHOP, color, column, row);
+	public Bishop(ChessPieceColor color, int row, int column) {
+		super(ChessPieceName.BISHOP, color, row, column);
 		// TODO Auto-generated constructor stub
 	}
 
 	@Override
-	protected List<Vector2D> calculatePossiblePositions(Vector2D position) {
-		List<Vector2D> moves = new LinkedList<>();
+	public List<List<Vector2D>> calculateAttackablePositions(Vector2D position) {
+		List<List<Vector2D>> moves = new LinkedList<>();
 
 		if (outOfBounds(position))
 			return moves;
 
 		for (Vector2D direction : directions) {
-
+			List<Vector2D> movesInDirection = new LinkedList<>();
 			Vector2D possiblePosition = position.clone();
 
 			possiblePosition.add(direction); // currentPosition should not be included
 
 			while (!outOfBounds(possiblePosition)) {
-				moves.add(possiblePosition.clone());
+				movesInDirection.add(possiblePosition.clone());
 				possiblePosition.add(direction);
 			}
-		}
 
+			moves.add(movesInDirection);
+		}
+		this.possiblePositions = moves;
 		return moves;
 	}
 

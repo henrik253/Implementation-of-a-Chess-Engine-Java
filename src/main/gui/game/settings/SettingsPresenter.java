@@ -1,5 +1,6 @@
 package main.gui.game.settings;
 
+import main.Settings;
 import main.gui.MainPresenter;
 
 public class SettingsPresenter {

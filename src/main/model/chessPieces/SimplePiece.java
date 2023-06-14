@@ -17,9 +17,9 @@ public class SimplePiece {
 	public ChessPieceColor getColor() {
 		return color;
 	}
-	
+
 	public String toString() {
-		return name+"_"+color;
+		return name + "_" + color;
 	}
 
 }

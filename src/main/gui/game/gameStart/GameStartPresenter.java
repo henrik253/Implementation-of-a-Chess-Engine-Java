@@ -1,8 +1,8 @@
 package main.gui.game.gameStart;
 
+import main.Settings;
 import main.gui.MainPresenter;
 import main.gui.Presenter;
-import main.gui.game.settings.Settings;
 
 public class GameStartPresenter extends Presenter {
 

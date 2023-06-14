@@ -9,33 +9,34 @@ import main.model.chessPieces.ChessPieceName;
 
 public class Rook extends Piece {
 
-	private Vector2D[] directions = { new Vector2D(1, 0), new Vector2D(-1, 0), new Vector2D(0, 1), new Vector2D(0, -1) };
+	private Vector2D[] directions = { new Vector2D(1, 0), new Vector2D(-1, 0), new Vector2D(0, 1),
+			new Vector2D(0, -1) };
 
-	public Rook(ChessPieceColor color, int column, int row) {
-		super(ChessPieceName.ROOK, color, column, row);
+	public Rook(ChessPieceColor color, int row, int column) {
+		super(ChessPieceName.ROOK, color, row, column);
 		// TODO Auto-generated constructor stub
 	}
 
 	@Override
-	protected List<Vector2D> calculatePossiblePositions(Vector2D position) {
-		List<Vector2D> moves = new LinkedList<>();
+	public List<List<Vector2D>> calculateAttackablePositions(Vector2D position) {
+		List<List<Vector2D>> moves = new LinkedList<>();
 
 		if (outOfBounds(position))
 			return moves;
-		
-		for (Vector2D direction : directions) {
 
+		for (Vector2D direction : directions) {
+			List<Vector2D> movesInDirection = new LinkedList<>();
 			Vector2D possiblePosition = position.clone();
 
 			possiblePosition.add(direction); // currentPosition should not be included
 
 			while (!outOfBounds(possiblePosition)) {
-				moves.add(possiblePosition.clone());
+				movesInDirection.add(possiblePosition.clone());
 				possiblePosition.add(direction);
 			}
+			moves.add(movesInDirection);
 		}
-
+		this.possiblePositions = moves;
 		return moves;
 	}
-
 }

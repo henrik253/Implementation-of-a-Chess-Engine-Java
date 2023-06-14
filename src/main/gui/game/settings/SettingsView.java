@@ -7,6 +7,7 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
+import main.Settings;
 import main.gui.Component;
 
 public class SettingsView extends Pane implements Component {

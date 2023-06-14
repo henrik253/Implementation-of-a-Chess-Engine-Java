@@ -9,8 +9,8 @@ import javafx.scene.layout.Border;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
+import main.Settings;
 import main.gui.game.Overlay;
-import main.gui.game.settings.Settings;
 
 
 public class GameStartView extends Pane {

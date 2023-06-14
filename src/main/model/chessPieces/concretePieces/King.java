@@ -12,29 +12,37 @@ public class King extends Piece {
 	private Vector2D[] directions = { new Vector2D(1, 0), new Vector2D(-1, 0), new Vector2D(0, 1), new Vector2D(0, -1),
 			new Vector2D(1, 1), new Vector2D(-1, -1), new Vector2D(-1, 1), new Vector2D(1, -1) };
 
-	public King(ChessPieceColor color, int column, int row) {
-		super(ChessPieceName.KING, color, column, row);
+	public King(ChessPieceColor color, int row, int column) {
+		super(ChessPieceName.KING, color, row, column);
 		// TODO Auto-generated constructor stub
 	}
 
+	@Override 
+	public boolean isValidMove(Vector2D position) {
+		boolean validMovement = super.isValidMove(position);
+		boolean castling = false;  // castling 
+		return validMovement || castling; 
+	}
+	
 	@Override
-	protected List<Vector2D> calculatePossiblePositions(Vector2D position) {
-		List<Vector2D> moves = new LinkedList<>();
+	public List<List<Vector2D>> calculateAttackablePositions(Vector2D position) {
+		List<List<Vector2D>> moves = new LinkedList<>();
 
 		if (outOfBounds(position))
 			return moves;
 
 		for (Vector2D direction : directions) {
-
+			List<Vector2D> movesInDirection = new LinkedList<>();
 			Vector2D possiblePosition = position.clone();
 
 			possiblePosition.add(direction); // currentPosition should not be included
 
 			if (!outOfBounds(possiblePosition)) {
-				moves.add(possiblePosition.clone());
+				movesInDirection.add(possiblePosition.clone());
 			}
+			moves.add(movesInDirection);
 		}
-
+		this.possiblePositions = moves;
 		return moves;
 	}
 

@@ -17,8 +17,7 @@ import javafx.scene.layout.Border;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
-
-import main.gui.game.settings.Settings;
+import main.Settings;
 import main.model.chessPieces.SimplePiece;
 
 public class Board extends GridPane {
@@ -55,22 +54,28 @@ public class Board extends GridPane {
 		int newX = (int) (event.getSceneX() / settings.squareWidth.get());
 		int newY = (int) (event.getSceneY() / settings.squareHeight.get());
 
-		boolean validMove = true;// gameView.moveRequest(oldX, oldY, newX, newY);
+		boolean validMove = false;
+
+		if (oldX != newX || oldY != newY)
+			validMove = gameView.moveRequest(oldX, oldY, newX, newY);
 
 		if (validMove) {
 			movePiece(draggedPiece, newX, newY);
+
 		}
 
 	}
 
 	private void movePiece(Piece piece, int x, int y) {
+		piece.setRow(x);
+		piece.setColumn(y);
 		this.getChildren().remove(piece);
 		this.add(piece, x, y);
 	}
 
 	public void drawBoard() {
 
-		drawBoard(true);
+		drawBoard(false);
 	}
 
 	public void drawBoard(boolean inverted) {
@@ -92,7 +97,7 @@ public class Board extends GridPane {
 	}
 
 	public void drawPiecesOnBoard(SimplePiece[][] board) {
-		drawPiecesOnBoard(board, true);
+		drawPiecesOnBoard(board, false);
 	}
 
 	public void drawPiecesOnBoard(SimplePiece[][] board, boolean inverted) {
@@ -177,7 +182,15 @@ public class Board extends GridPane {
 			dragboard.setContent(content);
 			this.setVisible(false);
 		}
-		
+
+		public void setColumn(int column) {
+			this.column.set(column);
+		}
+
+		public void setRow(int row) {
+			this.row.set(row);
+		}
+
 		private void onDragDone(DragEvent event) {
 			this.setVisible(true);
 		}

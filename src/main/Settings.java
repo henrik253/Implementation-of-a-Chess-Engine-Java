@@ -1,4 +1,4 @@
-package main.gui.game.settings;
+package main;
 
 import javafx.beans.binding.Bindings;
 import javafx.beans.property.DoubleProperty;
