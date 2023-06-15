@@ -9,7 +9,7 @@ import main.model.chessPieces.ChessPieceName;
 
 public class Knight extends Piece {
 
-	Vector2D[] directions = { new Vector2D(2, 1), new Vector2D(1, 2), new Vector2D(-2, 1), new Vector2D(-1, 2),
+	protected Vector2D[] attackDirections = { new Vector2D(2, 1), new Vector2D(1, 2), new Vector2D(-2, 1), new Vector2D(-1, 2),
 			new Vector2D(-2, -1), new Vector2D(-1, -2), new Vector2D(1, -2), new Vector2D(2, -1) };
 
 	public Knight(ChessPieceColor color, int row, int column) {
@@ -25,7 +25,7 @@ public class Knight extends Piece {
 		if (outOfBounds(position))
 			return moves;
 
-		for (Vector2D direction : directions) {
+		for (Vector2D direction : attackDirections) {
 			List<Vector2D> movesInDirection = new LinkedList<>(); 
 			Vector2D possiblePosition = position.clone();
 
@@ -36,7 +36,7 @@ public class Knight extends Piece {
 			}
 			moves.add(movesInDirection);
 		}
-		this.possiblePositions = moves;
+		this.attackableSquares = moves;
 		return moves;
 	}
 

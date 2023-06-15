@@ -2,6 +2,7 @@ package main.gui.game.board;
 
 import javafx.scene.layout.Pane;
 import main.gui.Component;
+import main.model.Vector2D;
 import main.model.chessPieces.SimplePiece;
 
 public class GameView extends Pane implements Component {
@@ -39,6 +40,11 @@ public class GameView extends Pane implements Component {
 
 	public void setGamePresenter(GamePresenter gamePresenter) {
 		this.gamePresenter = gamePresenter;
+	}
+
+	public void removePieceFromBoard(Vector2D pos) {
+		board.removePiece(pos);
+		
 	}
 
 }

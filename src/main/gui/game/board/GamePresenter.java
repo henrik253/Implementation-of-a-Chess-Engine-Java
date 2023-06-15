@@ -2,6 +2,7 @@ package main.gui.game.board;
 
 import main.gui.MainPresenter;
 import main.gui.Presenter;
+import main.model.Vector2D;
 import main.model.chessPieces.SimplePiece;
 
 public class GamePresenter extends Presenter {
@@ -31,6 +32,11 @@ public class GamePresenter extends Presenter {
 
 	public void setMainPresenter(MainPresenter mainPresenter) {
 		this.mainPresenter = mainPresenter;
+	}
+
+	public void removePieceFromBoard(Vector2D pos) {
+		gameView.removePieceFromBoard(pos);
+		
 	}
 
 }

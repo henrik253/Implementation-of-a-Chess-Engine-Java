@@ -88,7 +88,6 @@ public class BoardRepresentation {
 	}
 
 	public Piece getPiece(Vector2D position) {
-		System.out.println(Arrays.toString(board[position.getY()]));
 		return board[position.getY()][position.getX()];
 	}
 
@@ -140,9 +139,9 @@ public class BoardRepresentation {
 			for (int j = 0; j < board[i].length; j++) {
 
 				if (board[i][j] instanceof Piece) {
-					result += i + " " + j;
+					result += board[i][j].toString().charAt(0);
 				} else
-					result += " O ";
+					result += " ";
 
 				result += " | ";
 			}

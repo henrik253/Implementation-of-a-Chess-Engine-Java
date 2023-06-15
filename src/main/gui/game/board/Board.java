@@ -18,6 +18,7 @@ import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import main.Settings;
+import main.model.Vector2D;
 import main.model.chessPieces.SimplePiece;
 
 public class Board extends GridPane {
@@ -73,6 +74,18 @@ public class Board extends GridPane {
 		this.add(piece, x, y);
 	}
 
+	public void removePiece(Vector2D pos) {
+		
+		for(Piece piece : piecesOnBoard) {
+			System.out.println(piece); // ROWS AND COLUMNS ARE SWITCHED ??? NEED TO BE FIXED IT!!!!
+			if(piece.getRow() == pos.getX() && piece.getColumn() == pos.getY()) {
+				System.out.println("FOUND IT");
+				this.getChildren().remove(piece); 
+				
+			}
+		}
+	}
+	
 	public void drawBoard() {
 
 		drawBoard(false);
@@ -213,7 +226,10 @@ public class Board extends GridPane {
 			imageView.setFitHeight(settings.squareHeight.get());
 			imageView.setFitWidth(settings.squareWidth.get());
 		}
-
+		
+		public String toString() {
+			return "( " + column.get() + " | " + row.get() + " )";
+		}
 	}
 
 	private static class Move {
@@ -242,5 +258,6 @@ public class Board extends GridPane {
 			return move.figure;
 		}
 	}
+
 
 }

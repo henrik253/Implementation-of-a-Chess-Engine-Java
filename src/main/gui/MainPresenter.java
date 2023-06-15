@@ -5,6 +5,7 @@ import main.gui.game.board.GamePresenter;
 import main.gui.game.gameStart.GameStartPresenter;
 import main.gui.game.settings.SettingsPresenter;
 import main.model.Model;
+import main.model.Vector2D;
 import main.model.gameStates.State;
 import main.model.start.FENConverter;
 
@@ -94,5 +95,10 @@ public class MainPresenter extends Presenter {
 	public void pauseGame() {
 		gameStartPresenter.setDisableView(true);
 		gameStartPresenter.pauseGame();
+	}
+
+	public void removePieceFromBoard(Vector2D pos ) {
+		gamePresenter.removePieceFromBoard(pos);
+		
 	}
 }

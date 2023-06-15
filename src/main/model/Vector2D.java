@@ -26,6 +26,7 @@ public class Vector2D {
 		this.y = y;
 	}
 	
+
 	public boolean equals(Vector2D vec) {
 		return vec.getX() == this.x && vec.getY() == this.y; 
 	}
@@ -39,8 +40,14 @@ public class Vector2D {
 		this.y += vec.y;
 	}
 	
+	public static Vector2D add(Vector2D v1,Vector2D v2) {
+		return new Vector2D(v1.x + v2.x , v1.y + v2.y);
+	}
+	
 	@Override 
 	public String toString() {
 		return "( "+ x + " | " + y + " )";
 	}
+	
+	
 }

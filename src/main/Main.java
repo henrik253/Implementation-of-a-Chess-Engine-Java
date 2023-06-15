@@ -151,12 +151,13 @@ public class Main extends Application {
 		moveValidation = new MoveValidation(); 
 		model.setSettings(settings);
 		model.setMoveValidation(moveValidation);
-		
+		moveValidation.setModel(model);
 	
 	}
 
 	public void combineGUItoModel() {
 		mainPresenter.setModel(model);
+		model.setMainPresenter(mainPresenter);
 	}
 
 	public String getRandomFEN() {

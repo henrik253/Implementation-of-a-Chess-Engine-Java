@@ -9,7 +9,7 @@ import main.model.chessPieces.ChessPieceName;
 
 public class Bishop extends Piece {
 
-	private Vector2D[] directions = { new Vector2D(1, 1), new Vector2D(-1, -1), new Vector2D(-1, 1),
+	protected Vector2D[] attackDirections = { new Vector2D(1, 1), new Vector2D(-1, -1), new Vector2D(-1, 1),
 			new Vector2D(1, -1) };
 
 	public Bishop(ChessPieceColor color, int row, int column) {
@@ -24,7 +24,7 @@ public class Bishop extends Piece {
 		if (outOfBounds(position))
 			return moves;
 
-		for (Vector2D direction : directions) {
+		for (Vector2D direction : attackDirections) {
 			List<Vector2D> movesInDirection = new LinkedList<>();
 			Vector2D possiblePosition = position.clone();
 
@@ -37,7 +37,7 @@ public class Bishop extends Piece {
 
 			moves.add(movesInDirection);
 		}
-		this.possiblePositions = moves;
+		this.attackableSquares = moves;
 		return moves;
 	}
 

@@ -13,18 +13,21 @@ public abstract class Piece {
 	protected ChessPieceColor color;
 
 	protected Vector2D position;
-	protected List<List<Vector2D>> possiblePositions;
+	protected List<List<Vector2D>> attackableSquares;
 	protected final int length = 8;
+
+	protected Vector2D[] attackDirections;
 
 	public Piece(ChessPieceName name, ChessPieceColor color, int row, int column) {
 		this.name = name;
 		this.color = color;
 		this.position = new Vector2D(column, row);
-		this.possiblePositions = new LinkedList<>();
+		this.attackableSquares = new LinkedList<>();
 	}
 
-	public boolean isValidMove(Vector2D newPosition) {
-		for (List<Vector2D> positionsInDirection : possiblePositions) {
+	// Not the best approach, but the easiest to implement
+	public boolean isValidMove(Vector2D newPosition) { // Attack and move are same for all Pieces except Pawn
+		for (List<Vector2D> positionsInDirection : attackableSquares) {
 			for (Vector2D position : positionsInDirection) {
 				if (newPosition.equals(position))
 					return true;
@@ -46,7 +49,7 @@ public abstract class Piece {
 	public void setPosition(Vector2D position) {
 		this.position = position;
 	}
-	
+
 	public String toString() {
 		return this.name + " " + this.color;
 	}
