@@ -157,7 +157,6 @@ public class Main extends Application {
 
 	public void combineGUItoModel() {
 		mainPresenter.setModel(model);
-		model.setMainPresenter(mainPresenter);
 	}
 
 	public String getRandomFEN() {

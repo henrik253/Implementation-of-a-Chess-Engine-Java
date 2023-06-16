@@ -49,19 +49,20 @@ public class Board extends GridPane {
 
 	private void onDragDropped(DragEvent event) {
 		Piece draggedPiece = Move.getPiece();
-
-		int oldX = draggedPiece.getColumn();
-		int oldY = draggedPiece.getRow();
+		
+		int oldX = draggedPiece.getRow();
+		int oldY = draggedPiece.getColumn();
+		
 		int newX = (int) (event.getSceneX() / settings.squareWidth.get());
 		int newY = (int) (event.getSceneY() / settings.squareHeight.get());
 
 		boolean validMove = false;
-
+		
 		if (oldX != newX || oldY != newY)
 			validMove = gameView.moveRequest(oldX, oldY, newX, newY);
 
 		if (validMove) {
-			movePiece(draggedPiece, newX, newY);
+			// movePiece(draggedPiece, newX, newY);
 
 		}
 
@@ -74,18 +75,17 @@ public class Board extends GridPane {
 		this.add(piece, x, y);
 	}
 
-	public void removePiece(Vector2D pos) {
-		
-		for(Piece piece : piecesOnBoard) {
-			System.out.println(piece); // ROWS AND COLUMNS ARE SWITCHED ??? NEED TO BE FIXED IT!!!!
-			if(piece.getRow() == pos.getX() && piece.getColumn() == pos.getY()) {
-				System.out.println("FOUND IT");
-				this.getChildren().remove(piece); 
-				
-			}
-		}
-	}
-	
+//	public void removePiece(Vector2D pos) {
+//
+//		for (Piece piece : piecesOnBoard) {
+//			// ROWS AND COLUMNS ARE SWITCHED ??? NEED TO BE FIXED !!!!
+//			if (piece.getRow() == pos.getX() && piece.getColumn() == pos.getY()) {
+//				this.getChildren().remove(piece);
+//
+//			}
+//		}
+//	}
+
 	public void drawBoard() {
 
 		drawBoard(false);
@@ -226,7 +226,7 @@ public class Board extends GridPane {
 			imageView.setFitHeight(settings.squareHeight.get());
 			imageView.setFitWidth(settings.squareWidth.get());
 		}
-		
+
 		public String toString() {
 			return "( " + column.get() + " | " + row.get() + " )";
 		}
@@ -258,6 +258,5 @@ public class Board extends GridPane {
 			return move.figure;
 		}
 	}
-
 
 }

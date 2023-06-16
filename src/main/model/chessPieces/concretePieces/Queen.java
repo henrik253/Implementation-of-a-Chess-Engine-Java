@@ -40,5 +40,10 @@ public class Queen extends Piece {
 		this.attackableSquares = moves;
 		return moves;
 	}
+	
+	@Override
+	public Piece clone() {
+		return new Queen(color,position.getY(),position.getX());
+	}
 
 }

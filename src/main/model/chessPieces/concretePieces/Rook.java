@@ -9,6 +9,8 @@ import main.model.chessPieces.ChessPieceName;
 
 public class Rook extends Piece {
 
+	private boolean firstMove = true;
+
 	private Vector2D[] attackDirections = { new Vector2D(1, 0), new Vector2D(-1, 0), new Vector2D(0, 1),
 			new Vector2D(0, -1) };
 
@@ -38,5 +40,31 @@ public class Rook extends Piece {
 		}
 		this.attackableSquares = moves;
 		return moves;
+	}
+
+	@Override
+	public void setPosition(Vector2D position) {
+		if (this.position == null) {
+			this.position = position;
+			return;
+		}
+		this.position = position;
+		firstMove = false;
+	}
+
+	@Override
+	public Piece clone() {
+		Rook rook = new Rook(color, position.getY(), position.getX());
+		rook.setFirstMove(firstMove);
+
+		return rook;
+	}
+
+	public boolean isFirstMove() {
+		return firstMove;
+	}
+
+	public void setFirstMove(boolean firstMove) {
+		this.firstMove = firstMove;
 	}
 }

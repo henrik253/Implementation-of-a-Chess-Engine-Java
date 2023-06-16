@@ -29,6 +29,10 @@ public class GameView extends Pane implements Component {
 		this.board.drawPiecesOnBoard(simplePieceBoard);
 	}
 
+	public void loadSimpleBoard(SimplePiece[][] board) {
+		this.board.drawPiecesOnBoard(board);
+	}
+	
 	public void setBoard(Board board) {
 		this.board = board;
 		this.getChildren().add(board);
@@ -41,10 +45,10 @@ public class GameView extends Pane implements Component {
 	public void setGamePresenter(GamePresenter gamePresenter) {
 		this.gamePresenter = gamePresenter;
 	}
-
-	public void removePieceFromBoard(Vector2D pos) {
-		board.removePiece(pos);
-		
-	}
+//
+//	public void removePieceFromBoard(Vector2D pos) {
+//		board.removePiece(pos);
+//		
+//	}
 
 }

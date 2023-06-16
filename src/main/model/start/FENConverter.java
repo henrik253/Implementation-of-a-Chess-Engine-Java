@@ -16,6 +16,8 @@ public class FENConverter {
 	private static final int ROWS = 8;
 	private static final int COLUMNS = 8;
 
+	
+	
 	public static SimplePiece[][] convertSimplePieceBoard(String fen) {
 		SimplePiece[][] board = new SimplePiece[ROWS][COLUMNS];
 

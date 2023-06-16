@@ -2,6 +2,8 @@ package main.model;
 
 import main.Settings;
 import main.gui.MainPresenter;
+import main.model.chessPieces.SimplePiece;
+import main.model.chessPieces.concretePieces.Piece;
 import main.model.gameLogic.BoardRepresentation;
 import main.model.gameLogic.MoveValidation;
 import main.model.start.FENConverter;
@@ -11,7 +13,6 @@ public class Model {
 	private Settings settings;
 	private BoardRepresentation board;
 	private MoveValidation moveValidation;
-	private MainPresenter mainPresenter; 
 
 	public void startGame() {
 		startGame(settings.selectedFEN.get());
@@ -22,13 +23,12 @@ public class Model {
 		this.board = new BoardRepresentation(FENConverter.convertPieceBoard(fen));
 	}
 
-	public boolean move(int oldColumn, int oldRow, int newColumn, int newRow) {
-		// FIX THIS !!!!!!!!!! new Vector2D(oldRow,oldColumn),new Vector2D(newColumn,newRow)
-		return moveValidation.makeMove(new Vector2D(oldRow,oldColumn),new Vector2D(newColumn,newRow));
+	public boolean movePiece(int oldColumn, int oldRow, int newColumn, int newRow) {
+		return moveValidation.makeMove(new Vector2D(oldColumn, oldRow), new Vector2D(newColumn, newRow));
 	}
-	
-	public void removePieceFromBoard(Vector2D pos) {
-		mainPresenter.removePieceFromBoard(pos); 
+
+	public Piece[][] getBoard() {
+		return board.getBoard();
 	}
 
 	public MoveValidation getMoveValidation() {
@@ -47,20 +47,14 @@ public class Model {
 		this.settings = settings;
 	}
 
-	public BoardRepresentation getBoard() {
+	public BoardRepresentation getBoardRepresentatio() {
 		return board;
 	}
 
-	public void setBoard(BoardRepresentation board) {
+	public void setBoardRepresentatio(BoardRepresentation board) {
 		this.board = board;
 	}
-	
-	public MainPresenter getMainPresenter() {
-		return mainPresenter;
-	}
 
-	public void setMainPresenter(MainPresenter mainPresenter) {
-		this.mainPresenter = mainPresenter;
-	}
+
 
 }

@@ -39,5 +39,10 @@ public class Knight extends Piece {
 		this.attackableSquares = moves;
 		return moves;
 	}
+	
+	@Override
+	public Piece clone() {
+		return new Knight(color,position.getY(),position.getX());
+	}
 
 }

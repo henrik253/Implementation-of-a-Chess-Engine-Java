@@ -61,4 +61,6 @@ public abstract class Piece {
 	public void setColor(ChessPieceColor color) {
 		this.color = color;
 	}
+	
+	public abstract Piece clone();
 }

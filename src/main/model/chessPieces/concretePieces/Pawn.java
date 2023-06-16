@@ -79,5 +79,21 @@ public class Pawn extends Piece {
 	public void setFirstMove(boolean firstMove) {
 		this.firstMove = firstMove;
 	}
+	
+	@Override
+	public void setPosition(Vector2D position) {
+		if (this.position == null) {
+			this.position = position;
+			return;
+		}
+		this.position = position; 
+		firstMove = false; 
+	}
 
+	@Override
+	public Piece clone() {
+		Pawn pawn =  new Pawn(color, position.getY(), position.getX());
+		pawn.setFirstMove(firstMove);
+		return pawn; 
+	}
 }

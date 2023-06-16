@@ -15,7 +15,13 @@ public class GamePresenter extends Presenter {
 	}
 	
 	public boolean moveRequest(int oldX,int oldY,int newX,int newY) {
-		return mainPresenter.moveRequest(oldX,oldY,newX,newY);
+		boolean succeedMove = mainPresenter.moveRequest(oldX,oldY,newX,newY);
+		
+		if(succeedMove)
+		{
+			gameView.loadSimpleBoard(mainPresenter.getGameBoard());
+		}
+		return succeedMove;
 	}
 	
 	public GameView getGameView() {
@@ -34,9 +40,9 @@ public class GamePresenter extends Presenter {
 		this.mainPresenter = mainPresenter;
 	}
 
-	public void removePieceFromBoard(Vector2D pos) {
-		gameView.removePieceFromBoard(pos);
-		
-	}
+//	public void removePieceFromBoard(Vector2D pos) {
+//		gameView.removePieceFromBoard(pos);
+//		
+//	}
 
 }

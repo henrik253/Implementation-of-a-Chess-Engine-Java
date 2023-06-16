@@ -6,7 +6,9 @@ import main.gui.game.gameStart.GameStartPresenter;
 import main.gui.game.settings.SettingsPresenter;
 import main.model.Model;
 import main.model.Vector2D;
+import main.model.chessPieces.SimplePiece;
 import main.model.gameStates.State;
+import main.model.start.BoardConverter;
 import main.model.start.FENConverter;
 
 public class MainPresenter extends Presenter {
@@ -21,7 +23,7 @@ public class MainPresenter extends Presenter {
 
 	public boolean moveRequest(int oldX, int oldY, int newX, int newY) {
 		
-		boolean validMove = model.move(oldX, oldY, newX, newY); // after model.moveRequest
+		boolean validMove = model.movePiece(oldX, oldY, newX, newY); // after model.moveRequest
 		return validMove;
 	}
 
@@ -97,8 +99,13 @@ public class MainPresenter extends Presenter {
 		gameStartPresenter.pauseGame();
 	}
 
-	public void removePieceFromBoard(Vector2D pos ) {
-		gamePresenter.removePieceFromBoard(pos);
+	public SimplePiece[][] getGameBoard() {
+		return BoardConverter.convertToSimple(model.getBoard());
 		
 	}
+
+//	public void removePieceFromBoard(Vector2D pos ) {
+//		gamePresenter.removePieceFromBoard(pos);
+//		
+//	}
 }

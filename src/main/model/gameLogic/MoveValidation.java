@@ -1,19 +1,22 @@
 package main.model.gameLogic;
 
+import java.util.List;
+
 import main.model.Model;
 import main.model.Vector2D;
 import main.model.chessPieces.ChessPieceColor;
+import main.model.chessPieces.concretePieces.King;
 import main.model.chessPieces.concretePieces.Knight;
 import main.model.chessPieces.concretePieces.Piece;
 
 public class MoveValidation {
-	private Model model; 
+	private Model model;
 
 	private ChessPieceColor onMove;
 	private BoardRepresentation board;
-	
-	private Piece whiteKing;
-	private Piece blackKing;
+
+	private King whiteKing;
+	private King blackKing;
 
 	public MoveValidation(ChessPieceColor startingColor) {
 		this.onMove = startingColor;
@@ -24,109 +27,92 @@ public class MoveValidation {
 	}
 
 	public void initKingReferences() {
-		whiteKing = board.getKing(ChessPieceColor.WHITE);
-		blackKing = board.getKing(ChessPieceColor.BLACK);
+		whiteKing = (King) board.getKing(ChessPieceColor.WHITE);
+		blackKing = (King) board.getKing(ChessPieceColor.BLACK);
 	}
 
 	public boolean makeMove(Vector2D oldPos, Vector2D newPos) {
 		Piece currentPiece = board.getPiece(oldPos);
-		boolean movesSucces = false;
+		boolean moveSucceed = false;
 
 		if (!isOnMove(currentPiece))
 			return false;
 
-		if (currentPiece.isValidMove(newPos) && noPiecesBetween(currentPiece, newPos)) {
-			if (noPiece(newPos)) {
-				movesSucces = tryMove(oldPos, newPos);
-			} else if (isEnemyPiece(currentPiece, newPos)) {
-				if(tryMove(oldPos, newPos)) {
-					movesSucces = true; 
-					pieceGotTaken(newPos);
-				}
-				
-			} else if (isAllyPiece(currentPiece, newPos)) {
-				movesSucces = false;
+		if (!currentPiece.isValidMove(newPos) || !noPiecesBetween(currentPiece, newPos))
+			return false;
+
+		if (noPiece(newPos)) {
+			moveSucceed = tryMove(oldPos, newPos);
+		} else if (isEnemyPiece(currentPiece, newPos)) {
+			if (tryMove(oldPos, newPos)) {
+				moveSucceed = true;
+				//pieceGotTaken(newPos);
 			}
+
+		} else if (isAllyPiece(currentPiece, newPos)) {
+			moveSucceed = false;
 		}
 
-		if (movesSucces == true)
-			toggleOnMove();
+		if (moveSucceed) {
+			if (enemyInCheck()) {
 
-		return movesSucces;
+			}
+			setNextPlayerOnMove();
+		}
+		return moveSucceed;
 	}
 
-	private void pieceGotTaken(Vector2D newPos) {
-		model.removePieceFromBoard(newPos);
+	private boolean isCheckMate() {
+		King k = onMove.isWhite() ? blackKing : whiteKing;
+		int[][] attackableSqaures = onMove.isWhite() ? this.board.getAttackedSquaresByWhite()
+				: this.board.getAttackedSquaresByBlack();
+		List<Vector2D> moveablePositions = k.calculateMoveablePositions();
+
+		for (Vector2D pos : moveablePositions) {
+
+		}
+		return false;
 	}
+
+//	private void pieceGotTaken(Vector2D newPos) {
+//		model.removePieceFromBoard(newPos);
+//	}
 
 	private boolean tryMove(Vector2D oldPos, Vector2D newPos) {
 		BoardRepresentation boardClone = this.board.clone();
 		boardClone.makeMove(oldPos, newPos);
+		this.board.checkSpecialMoves(oldPos, newPos);
 		boardClone.calcAttackedSquares();
-		int[][] attackedSqaures;
-		boolean moveSucces = true;
 
-		if (onMove.isWhite()) {
-			attackedSqaures = boardClone.getAttackedSquaresByBlack();
-			if (attackedSqaures[whiteKing.getPosition().getY()][whiteKing.getPosition().getX()] > 0) {
-				System.out.println("WHITE IN CHECK");
-				moveSucces = false;
-			}
-		} else {
-			attackedSqaures = boardClone.getAttackedSquaresByWhite();
-			if (attackedSqaures[blackKing.getPosition().getY()][blackKing.getPosition().getX()] > 0) {
-				System.out.println("BLACK IN CHECK!");
-				moveSucces = false;
-			}
+		int[][] attackedSqaures = onMove.isWhite() ? boardClone.getAttackedSquaresByBlack()
+				: boardClone.getAttackedSquaresByWhite();
+		King king = onMove.isWhite() ? this.whiteKing : this.blackKing;
+
+		
+		
+		if (inCheck(attackedSqaures, king)) {
+			return false;
 		}
+		System.out.println(this.board.toBoardString());
+		this.board.setBoard(boardClone.getBoard());
+		this.board.calcAttackedSquares(); // inefficient solution!
+		
+		return true;
+	}
 
-		if (moveSucces) {
-			this.board.setBoard(boardClone.getBoard());
-			this.board.calcAttackedSquares(); // inefficient solution!
-			System.out.println(this.board.toBoardString());
-		}
-
-		return moveSucces;
+	private boolean inCheck(int[][] attackedSqaures, King king) {
+		return attackedSqaures[king.getPosition().getY()][king.getPosition().getX()] > 0;
 	}
 
 	private boolean noPiecesBetween(Piece piece, Vector2D newPos) {
-		if (piece instanceof Knight) // Knight jumps over pieces
-			return true;
-
-		return countFiguresBetween(piece.getPosition(), newPos) == 0;
-
-	}
-
-	private int countFiguresBetween(Vector2D pos1, Vector2D pos2) {
-		int x = pos1.getX() - pos2.getX();
-		int y = pos1.getY() - pos2.getY();
-		int length = Math.max(Math.abs(x), Math.abs(y));
-
-		int countX = pos1.getX();
-		int countY = pos1.getY();
-
-		int incX = (x > 0 ? 1 : -1);
-		int incY = (y > 0 ? 1 : -1);
-		incX = x != 0 ? incX : 0;
-		incY = y != 0 ? incY : 0;
-
-		int count = 0;
-
-		for (int step = 0; step < length - 1; step++) {
-			countX -= incX;
-			countY -= incY;
-			if (this.board.getBoard()[countY][countX] != null) {
-				count++;
-			}
-		}
-		return count;
+		return this.board.countFiguresBetween(piece.getPosition(), newPos) == 0 || piece instanceof Knight;
 	}
 
 	private boolean isOnMove(Piece piece) {
 		return onMove == piece.getColor();
 	}
 
-	private void toggleOnMove() {
+	private void setNextPlayerOnMove() {
 		onMove = onMove.isWhite() ? ChessPieceColor.BLACK : ChessPieceColor.WHITE;
 	}
 
@@ -169,7 +155,7 @@ public class MoveValidation {
 		this.board = board;
 		initKingReferences();
 	}
-	
+
 	public Model getModel() {
 		return model;
 	}

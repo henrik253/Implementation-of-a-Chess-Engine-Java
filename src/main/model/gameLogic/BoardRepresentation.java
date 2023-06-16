@@ -7,6 +7,7 @@ import main.model.Vector2D;
 import main.model.chessPieces.ChessPieceColor;
 import main.model.chessPieces.concretePieces.King;
 import main.model.chessPieces.concretePieces.Piece;
+import main.model.chessPieces.concretePieces.Rook;
 
 public class BoardRepresentation {
 
@@ -25,7 +26,7 @@ public class BoardRepresentation {
 		calcAttackedSquares();
 	}
 
-	public void calcAttackedSquares() {
+	public void calcAttackedSquares() { // inefficient solution
 		int[][] attackedSquaresByWhite = new int[board.length][board.length];
 		int[][] attackedSquaresByBlack = new int[board.length][board.length];
 
@@ -53,10 +54,10 @@ public class BoardRepresentation {
 				// Vector2D is alway (x,y) tuple. x in this case are the columns and y the rows
 				int y = move.getY(), x = move.getX();
 				if (board[y][x] instanceof Piece) {
-					attackedSquares[y][x] += 1;
+					attackedSquares[y][x]++;
 					break;
-				} else if (attackedSquares[y][x] == 0) { // no attack on this square
-					attackedSquares[y][x] += 1;
+				} else if (attackedSquares[y][x] >= 0) { // no attack on this square
+					attackedSquares[y][x]++;
 				}
 			}
 
@@ -81,10 +82,113 @@ public class BoardRepresentation {
 	public void makeMove(Vector2D oldPos, Vector2D newPos) {
 		Piece piece = board[oldPos.getY()][oldPos.getX()];
 
+		checkSpecialMoves(oldPos, newPos);
+
 		board[newPos.getY()][newPos.getX()] = piece;
 		board[oldPos.getY()][oldPos.getX()] = null;
 
 		piece.setPosition(newPos);
+	}
+
+	public boolean checkSpecialMoves(Vector2D oldPos, Vector2D newPos) {
+		boolean castling = tryCastling(oldPos, newPos);
+
+		if (castling) {
+			return true;
+		}
+
+		return false;
+	}
+
+	public boolean tryCastling(Vector2D oldPos, Vector2D newPos) {
+		Piece piece = getPiece(oldPos);
+		if (!(piece instanceof King))
+			return false;
+
+		King king = (King) piece;
+
+		if (!king.isFirstMove())
+			return false;
+
+		if (!king.isValidCastle(newPos))
+			return false;
+
+		// left or right side castle
+		boolean isRightSideCastle = newPos.getX() - king.getPosition().getX() > 0;
+
+		int xPos = isRightSideCastle ? board.length - 1 : 0;
+		Vector2D rookPos = new Vector2D(xPos, king.getPosition().getY());
+
+		if (countFiguresBetween(king.getPosition(), rookPos) > 0) {
+			return false;
+		}
+
+		if (checkInCastlingMove(king.getPosition(), rookPos)) {
+			return false;
+		}
+
+		Piece rook = getPiece(rookPos);
+
+		if (rook instanceof Rook && ((Rook) rook).isFirstMove()) {
+			Vector2D direction = new Vector2D(isRightSideCastle ? -2 : 3, 0);
+			makeMove(rookPos, Vector2D.add(rookPos, direction));
+			return true;
+		}
+
+		return false;
+	}
+
+	public boolean checkInCastlingMove(Vector2D kingPos, Vector2D rookPos) {
+		int x = kingPos.getX() - rookPos.getX();
+		int y = kingPos.getY() - rookPos.getY();
+		int length = Math.max(Math.abs(x), Math.abs(y));
+
+		int countX = kingPos.getX();
+		int countY = kingPos.getY();
+
+		int incX = (x > 0 ? 1 : -1);
+		int incY = (y > 0 ? 1 : -1);
+
+		incX = x != 0 ? incX : 0;
+		incY = y != 0 ? incY : 0;
+
+		int[][] attackedSquares = getPiece(kingPos).getColor().isWhite() ? attackedSquaresByBlack
+				: attackedSquaresByWhite;
+
+		for (int step = 0; step < length - 1; step++) {
+			countX -= incX;
+			countY -= incY;
+			if (attackedSquares[countY][countX] > 0) {
+				return true;
+			}
+		}
+		return false;
+
+	}
+
+	public int countFiguresBetween(Vector2D pos1, Vector2D pos2) {
+		int x = pos1.getX() - pos2.getX();
+		int y = pos1.getY() - pos2.getY();
+		int length = Math.max(Math.abs(x), Math.abs(y));
+
+		int countX = pos1.getX();
+		int countY = pos1.getY();
+
+		int incX = (x > 0 ? 1 : -1);
+		int incY = (y > 0 ? 1 : -1);
+		incX = x != 0 ? incX : 0;
+		incY = y != 0 ? incY : 0;
+
+		int count = 0;
+
+		for (int step = 0; step < length - 1; step++) {
+			countX -= incX;
+			countY -= incY;
+			if (this.board[countY][countX] != null) {
+				count++;
+			}
+		}
+		return count;
 	}
 
 	public Piece getPiece(Vector2D position) {
@@ -105,9 +209,12 @@ public class BoardRepresentation {
 
 	public Piece[][] getBoardClone() {
 		Piece[][] result = new Piece[board.length][board.length];
-		int pos = 0;
-		for (Piece[] p : board) {
-			result[pos++] = p.clone();
+		for (int row = 0; row < board.length; row++) {
+			for (int column = 0; column < board[row].length; column++) {
+				Piece p = this.board[row][column];
+				if (p != null)
+					result[row][column] = p.clone();
+			}
 		}
 
 		return result;

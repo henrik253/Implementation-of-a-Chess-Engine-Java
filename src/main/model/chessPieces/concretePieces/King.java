@@ -9,21 +9,30 @@ import main.model.chessPieces.ChessPieceName;
 
 public class King extends Piece {
 
-	private Vector2D[] attackDirections = { new Vector2D(1, 0), new Vector2D(-1, 0), new Vector2D(0, 1), new Vector2D(0, -1),
-			new Vector2D(1, 1), new Vector2D(-1, -1), new Vector2D(-1, 1), new Vector2D(1, -1) };
+	private boolean firstMove = true;
+
+	private Vector2D[] attackDirections = { new Vector2D(1, 0), new Vector2D(-1, 0), new Vector2D(0, 1),
+			new Vector2D(0, -1), new Vector2D(1, 1), new Vector2D(-1, -1), new Vector2D(-1, 1), new Vector2D(1, -1) };
 
 	public King(ChessPieceColor color, int row, int column) {
 		super(ChessPieceName.KING, color, row, column);
 		// TODO Auto-generated constructor stub
 	}
 
-	@Override 
+	@Override
 	public boolean isValidMove(Vector2D position) {
 		boolean validMovement = super.isValidMove(position);
-		boolean castling = false;  // castling 
-		return validMovement || castling; 
+		boolean castling = isValidCastle(position); // castling
+		return validMovement || castling;
 	}
-	
+
+	public boolean isValidCastle(Vector2D position) {
+		if (!firstMove)
+			return false;
+
+		return (int) Math.abs((((double) (position.getX() - this.position.getX())))) == 2;
+	}
+
 	@Override
 	public List<List<Vector2D>> calculateAttackablePositions(Vector2D position) {
 		List<List<Vector2D>> moves = new LinkedList<>();
@@ -44,6 +53,47 @@ public class King extends Piece {
 		}
 		this.attackableSquares = moves;
 		return moves;
+	}
+
+	public List<Vector2D> calculateMoveablePositions() {
+		List<Vector2D> moves = new LinkedList<>();
+
+		if (outOfBounds(position))
+			return moves;
+
+		for (Vector2D direction : attackDirections) {
+			Vector2D possiblePosition = position.clone();
+			possiblePosition.add(direction);
+			if (!outOfBounds(possiblePosition)) {
+				moves.add(possiblePosition.clone());
+			}
+		}
+		return moves;
+	}
+	
+	@Override
+	public void setPosition(Vector2D position) {
+		if (this.position == null) {
+			this.position = position;
+			return;
+		}
+		this.position = position; 
+		firstMove = false; 
+	}
+
+	@Override
+	public Piece clone() {
+		King king =  new King(color, position.getY(), position.getX());
+		king.setFirstMove(firstMove);
+		return king;
+	}
+
+	public boolean isFirstMove() {
+		return firstMove;
+	}
+
+	public void setFirstMove(boolean firstMove) {
+		this.firstMove = firstMove;
 	}
 
 }
