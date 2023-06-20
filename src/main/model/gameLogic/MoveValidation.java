@@ -7,7 +7,9 @@ import main.model.Vector2D;
 import main.model.chessPieces.ChessPieceColor;
 import main.model.chessPieces.concretePieces.King;
 import main.model.chessPieces.concretePieces.Knight;
+import main.model.chessPieces.concretePieces.Pawn;
 import main.model.chessPieces.concretePieces.Piece;
+import main.model.chessPieces.concretePieces.Rook;
 
 public class MoveValidation {
 	private Model model;
@@ -17,6 +19,8 @@ public class MoveValidation {
 
 	private King whiteKing;
 	private King blackKing;
+	
+	private int moveCounter = 0; 
 
 	public MoveValidation(ChessPieceColor startingColor) {
 		this.onMove = startingColor;
@@ -29,37 +33,171 @@ public class MoveValidation {
 	public void initKingReferences() {
 		whiteKing = (King) board.getKing(ChessPieceColor.WHITE);
 		blackKing = (King) board.getKing(ChessPieceColor.BLACK);
+
 	}
 
 	public boolean makeMove(Vector2D oldPos, Vector2D newPos) {
-		Piece currentPiece = board.getPiece(oldPos);
+		Piece piece = board.getPiece(oldPos);
 		boolean moveSucceed = false;
 
-		if (!isOnMove(currentPiece))
+		if (!isOnMove(piece))
 			return false;
 
-		if (!currentPiece.isValidMove(newPos) || !noPiecesBetween(currentPiece, newPos))
+		if (!piece.isValidMove(newPos) && !isSpecialMove(piece, newPos))
+			return false;
+
+		if (!noPiecesBetween(piece, newPos))
 			return false;
 
 		if (noPiece(newPos)) {
 			moveSucceed = tryMove(oldPos, newPos);
-		} else if (isEnemyPiece(currentPiece, newPos)) {
+		} else if (isEnemyPiece(piece, newPos)) {
 			if (tryMove(oldPos, newPos)) {
 				moveSucceed = true;
-				//pieceGotTaken(newPos);
 			}
 
-		} else if (isAllyPiece(currentPiece, newPos)) {
+		} else if (isAllyPiece(piece, newPos)) {
 			moveSucceed = false;
 		}
 
 		if (moveSucceed) {
 			if (enemyInCheck()) {
-
+				System.out.println("IN CHECK!!!!");
 			}
 			setNextPlayerOnMove();
+			moveCounter++; 
 		}
 		return moveSucceed;
+	}
+
+	private boolean tryMove(Vector2D oldPos, Vector2D newPos) {
+		BoardRepresentation boardClone = this.board.clone();
+
+		if (isSpecialMove(boardClone.getPiece(oldPos), newPos)) {
+			boardClone.makeSpecialMove(oldPos, newPos);
+		} else
+			boardClone.makeMove(oldPos, newPos);
+
+		boardClone.calcAttackedSquaresBy(onMove.getOpponentColor());
+
+		int[][] attackedSquares = onMove.isWhite() ? boardClone.getAttackedSquaresByBlack()
+				: boardClone.getAttackedSquaresByWhite();
+
+		
+		King king = onMove.isWhite() ? (King) boardClone.getKing(ChessPieceColor.WHITE) : 
+			(King) boardClone.getKing(ChessPieceColor.BLACK);
+
+		if (inCheck(attackedSquares, king)) {
+			return false;
+		}
+
+		this.board.setBoard(boardClone.getBoard());
+		this.board.calcAttackedSquaresBy(onMove);
+
+		return true;
+	}
+
+	public boolean isSpecialMove(Piece piece, Vector2D newPos) {
+
+		if (piece instanceof Pawn) {
+			Pawn pawn = (Pawn) piece;
+
+			if (isPawnAttack(pawn, newPos))
+				return true;
+		}
+
+		if (piece instanceof King) {
+			King king = (King) piece;
+			if (isCastleMove(king, newPos)) {
+				return true;
+			}
+		}
+
+		return false;
+	}
+
+	public boolean isPawnAttack(Pawn pawn, Vector2D newPos) {
+		for (List<Vector2D> movesInDirection : pawn.getAttackableSquares()) {
+			for (Vector2D move : movesInDirection) {
+				Piece p = this.board.getPiece(newPos);
+				if (move.equals(newPos) && p != null && p.getColor() != onMove) {
+					return true;
+				}
+			}
+		}
+		return false;
+	}
+
+	public boolean isCastleMove(King king, Vector2D newPos) {
+		if (!king.isFirstMove())
+			return false;
+
+		if (!king.isValidCastle(newPos))
+			return false;
+
+		// left or right side castle
+		boolean isRightSideCastle = newPos.getX() - king.getPosition().getX() > 0;
+
+		int xPosRook = isRightSideCastle ? this.board.getBoard().length - 1 : 0;
+		Vector2D rookPos = new Vector2D(xPosRook, king.getPosition().getY());
+
+		if (board.countFiguresBetween(king.getPosition(), rookPos) > 0) {
+			return false;
+		}
+
+		if (board.isCheckBetween(king.getPosition(), rookPos)) {
+			return false;
+		}
+
+		Piece rook = board.getPiece(rookPos);
+
+		if (!(rook instanceof Rook && ((Rook) rook).isFirstMove())) {
+			return false;
+		}
+
+		return true;
+	}
+
+	public boolean tryCastling(Vector2D oldPos, Vector2D newPos) {
+		Piece piece = board.getPiece(oldPos);
+		if (!(piece instanceof King))
+			return false;
+
+		King king = (King) piece;
+
+		if (!king.isFirstMove())
+			return false;
+
+		if (!king.isValidCastle(newPos))
+			return false;
+
+		// left or right side castle
+		boolean isRightSideCastle = newPos.getX() - king.getPosition().getX() > 0;
+
+		int xPos = isRightSideCastle ? this.board.getBoard().length - 1 : 0;
+		Vector2D rookPos = new Vector2D(xPos, king.getPosition().getY());
+
+		if (board.countFiguresBetween(king.getPosition(), rookPos) > 0) {
+			return false;
+		}
+
+		if (board.isCheckBetween(king.getPosition(), rookPos)) {
+			return false;
+		}
+
+		Piece rook = board.getPiece(rookPos);
+
+		if (rook instanceof Rook && ((Rook) rook).isFirstMove()) {
+			Vector2D direction = new Vector2D(isRightSideCastle ? -2 : 3, 0);
+			makeMove(rookPos, Vector2D.add(rookPos, direction));
+			return true;
+		}
+
+		return false;
+	}
+
+	private boolean inCheck(int[][] attackedSquares, King king) {
+		return attackedSquares[king.getPosition().getY()][king.getPosition().getX()] > 0;
 	}
 
 	private boolean isCheckMate() {
@@ -72,36 +210,6 @@ public class MoveValidation {
 
 		}
 		return false;
-	}
-
-//	private void pieceGotTaken(Vector2D newPos) {
-//		model.removePieceFromBoard(newPos);
-//	}
-
-	private boolean tryMove(Vector2D oldPos, Vector2D newPos) {
-		BoardRepresentation boardClone = this.board.clone();
-		boardClone.makeMove(oldPos, newPos);
-		this.board.checkSpecialMoves(oldPos, newPos);
-		boardClone.calcAttackedSquares();
-
-		int[][] attackedSqaures = onMove.isWhite() ? boardClone.getAttackedSquaresByBlack()
-				: boardClone.getAttackedSquaresByWhite();
-		King king = onMove.isWhite() ? this.whiteKing : this.blackKing;
-
-		
-		
-		if (inCheck(attackedSqaures, king)) {
-			return false;
-		}
-		System.out.println(this.board.toBoardString());
-		this.board.setBoard(boardClone.getBoard());
-		this.board.calcAttackedSquares(); // inefficient solution!
-		
-		return true;
-	}
-
-	private boolean inCheck(int[][] attackedSqaures, King king) {
-		return attackedSqaures[king.getPosition().getY()][king.getPosition().getX()] > 0;
 	}
 
 	private boolean noPiecesBetween(Piece piece, Vector2D newPos) {
