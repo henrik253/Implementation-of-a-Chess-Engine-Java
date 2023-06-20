@@ -6,6 +6,7 @@ import java.util.List;
 import main.model.Vector2D;
 import main.model.chessPieces.ChessPieceColor;
 import main.model.chessPieces.concretePieces.King;
+import main.model.chessPieces.concretePieces.Pawn;
 import main.model.chessPieces.concretePieces.Piece;
 
 public class BoardRepresentation {
@@ -112,7 +113,9 @@ public class BoardRepresentation {
 
 		if (movedPiece instanceof King && ((King) movedPiece).isValidCastle(newPos)) {
 			executeCastling((King) movedPiece, oldPos, newPos);
-		} else {
+		} else if (movedPiece instanceof Pawn && getPiece(newPos) == null) {
+			executeEnPassant(oldPos, newPos); // == null to check if its really enPassant
+		} else { // in MoveValidation enPassant rules were checked so == null compare is enough
 			board[oldPos.getY()][oldPos.getX()] = null;
 			board[newPos.getY()][newPos.getX()] = movedPiece;
 		}
@@ -137,6 +140,21 @@ public class BoardRepresentation {
 		Vector2D kingDirection = new Vector2D(isRightSideCastle ? 2 : -2, 0);
 		makeMove(rookPos, Vector2D.add(rookPos, rookDirection));
 		makeMove(king.getPosition(), Vector2D.add(king.getPosition(), kingDirection));
+	}
+
+	public void executeEnPassant(Vector2D oldPos, Vector2D newPos) {
+		boolean whiteOnMove = getPiece(oldPos).getColor().isWhite();
+		Vector2D direction = new Vector2D(0, whiteOnMove ? 1 : -1);
+		Piece attackedPiece = getPiece(Vector2D.add(newPos, direction));
+
+		makeMove(oldPos, newPos);
+		if (whiteOnMove)
+			blackPieces.remove(attackedPiece);
+		else
+			whitePieces.remove(attackedPiece);
+
+		Vector2D attackedPiecePos = attackedPiece.getPosition(); 
+		board[attackedPiecePos.getY()][attackedPiecePos.getX()] = null;  // or NoPiece! 
 	}
 
 	public boolean isCheckBetween(Vector2D kingPos, Vector2D rookPos) {
@@ -282,7 +300,7 @@ public class BoardRepresentation {
 			resultBlack += "\n";
 		}
 
-		return "WHITE: \n" + resultWhite + " \n" + "#".repeat(50) + "\n \n" + "BLACK: \n" + resultBlack;
+		return "WHITE: \n" + resultWhite + " \n" + "#".repeat(50) + "\n \n" + "BLACK: \n" + resultBlack+ " \n" + toBoardString();
 	}
 
 }

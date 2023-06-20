@@ -3,6 +3,7 @@ package main.model.gameLogic;
 import java.util.List;
 
 import main.model.Model;
+import main.model.Move;
 import main.model.Vector2D;
 import main.model.chessPieces.ChessPieceColor;
 import main.model.chessPieces.concretePieces.King;
@@ -19,8 +20,10 @@ public class MoveValidation {
 
 	private King whiteKing;
 	private King blackKing;
-	
-	private int moveCounter = 0; 
+
+	private int moveCounter = 0;
+
+	private Move lastMove;
 
 	public MoveValidation(ChessPieceColor startingColor) {
 		this.onMove = startingColor;
@@ -65,7 +68,8 @@ public class MoveValidation {
 				System.out.println("IN CHECK!!!!");
 			}
 			setNextPlayerOnMove();
-			moveCounter++; 
+			moveCounter++;
+			lastMove = new Move(oldPos, newPos);
 		}
 		return moveSucceed;
 	}
@@ -83,9 +87,8 @@ public class MoveValidation {
 		int[][] attackedSquares = onMove.isWhite() ? boardClone.getAttackedSquaresByBlack()
 				: boardClone.getAttackedSquaresByWhite();
 
-		
-		King king = onMove.isWhite() ? (King) boardClone.getKing(ChessPieceColor.WHITE) : 
-			(King) boardClone.getKing(ChessPieceColor.BLACK);
+		King king = onMove.isWhite() ? (King) boardClone.getKing(ChessPieceColor.WHITE)
+				: (King) boardClone.getKing(ChessPieceColor.BLACK);
 
 		if (inCheck(attackedSquares, king)) {
 			return false;
@@ -104,6 +107,10 @@ public class MoveValidation {
 
 			if (isPawnAttack(pawn, newPos))
 				return true;
+			
+			if(isEnPassantMove(pawn,newPos))
+				return true;
+
 		}
 
 		if (piece instanceof King) {
@@ -117,15 +124,23 @@ public class MoveValidation {
 	}
 
 	public boolean isPawnAttack(Pawn pawn, Vector2D newPos) {
-		for (List<Vector2D> movesInDirection : pawn.getAttackableSquares()) {
-			for (Vector2D move : movesInDirection) {
-				Piece p = this.board.getPiece(newPos);
-				if (move.equals(newPos) && p != null && p.getColor() != onMove) {
-					return true;
-				}
-			}
-		}
-		return false;
+		Piece p = this.board.getPiece(newPos);
+		return pawn.isValidAttack(newPos) && p != null && p.getColor() != onMove;
+
+	}
+
+	public boolean isEnPassantMove(Pawn pawn, Vector2D newPos) {
+		Piece p = this.board.getPiece(newPos);
+		Vector2D direction = new Vector2D(0, onMove.isWhite() ? 1 : -1);
+		Piece attackedPiece = board.getPiece(Vector2D.add(newPos, direction));
+		return pawn.isValidAttack(newPos) && p == null && attackedPiece instanceof Pawn
+				&& ((Pawn) attackedPiece).getColor() != onMove && lastMoveIsDoublePawnMove();
+	}
+
+	private boolean lastMoveIsDoublePawnMove() {
+		Piece piece = board.getPiece(lastMove.getNewPos());
+		int yLength = (int) Math.abs(lastMove.getOldPos().getY() - lastMove.getNewPos().getY());
+		return piece instanceof Pawn && !(((Pawn) piece).isFirstMove()) && yLength == 2;
 	}
 
 	public boolean isCastleMove(King king, Vector2D newPos) {

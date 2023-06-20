@@ -71,6 +71,16 @@ public class Pawn extends Piece {
 		return moves;
 	}
 
+	public boolean isValidAttack(Vector2D position) {
+		for (List<Vector2D> movesInDirection : this.getAttackableSquares()) {
+			for (Vector2D move : movesInDirection) {
+				if(move.equals(position))
+					return true;
+			}
+		}
+		return false; 
+	}
+
 	public boolean isFirstMove() {
 		return firstMove;
 	}
@@ -86,7 +96,7 @@ public class Pawn extends Piece {
 			return;
 		}
 		this.position = position;
-		
+
 		if (firstMove)
 			firstMove = false;
 	}
