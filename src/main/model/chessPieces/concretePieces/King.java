@@ -22,8 +22,8 @@ public class King extends Piece {
 	@Override
 	public boolean isValidMove(Vector2D position) {
 		boolean validMovement = super.isValidMove(position);
-		boolean castling = isValidCastle(position); // castling
-		return validMovement || castling;
+
+		return validMovement;
 	}
 
 	public boolean isValidCastle(Vector2D position) {
@@ -70,20 +70,22 @@ public class King extends Piece {
 		}
 		return moves;
 	}
-	
+
 	@Override
 	public void setPosition(Vector2D position) {
 		if (this.position == null) {
 			this.position = position;
 			return;
 		}
-		this.position = position; 
-		firstMove = false; 
+		this.position = position;
+
+		if (firstMove)
+			firstMove = false;
 	}
 
 	@Override
 	public Piece clone() {
-		King king =  new King(color, position.getY(), position.getX());
+		King king = new King(color, position.getY(), position.getX());
 		king.setFirstMove(firstMove);
 		return king;
 	}

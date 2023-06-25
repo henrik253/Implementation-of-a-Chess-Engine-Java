@@ -1,13 +1,13 @@
 package main.model.gameLogic;
 
-import java.util.Arrays;
+import java.util.LinkedList;
 import java.util.List;
 
 import main.model.Vector2D;
 import main.model.chessPieces.ChessPieceColor;
 import main.model.chessPieces.concretePieces.King;
+import main.model.chessPieces.concretePieces.Pawn;
 import main.model.chessPieces.concretePieces.Piece;
-import main.model.chessPieces.concretePieces.Rook;
 
 public class BoardRepresentation {
 
@@ -15,36 +15,47 @@ public class BoardRepresentation {
 	private int[][] attackedSquaresByWhite;
 	private int[][] attackedSquaresByBlack;
 
+	private List<Piece> whitePieces;
+	private List<Piece> blackPieces;
+
 	public BoardRepresentation(Piece[][] board) {
 		this.board = board;
-		calcAttackedSquares();
+		whitePieces = new LinkedList<>();
+		blackPieces = new LinkedList<>();
+		initPieces();
+		calcAttackedSquaresBy(ChessPieceColor.WHITE);
+		calcAttackedSquaresBy(ChessPieceColor.BLACK);
+	}
 
+	public void initPieces() {
+		for (int row = 0; row < board.length; row++) {
+			for (int column = 0; column < board[row].length; column++) {
+				Piece piece = board[row][column];
+				if (piece != null) {
+					if (piece.getColor().isWhite())
+						whitePieces.add(piece);
+					else
+						blackPieces.add(piece);
+				}
+			}
+		}
 	}
 
 	public BoardRepresentation(int length) {
 		this.board = new Piece[length][length];
-		calcAttackedSquares();
+		calcAttackedSquaresBy(ChessPieceColor.WHITE);
+		calcAttackedSquaresBy(ChessPieceColor.BLACK);
 	}
 
-	public void calcAttackedSquares() { // inefficient solution
-		int[][] attackedSquaresByWhite = new int[board.length][board.length];
-		int[][] attackedSquaresByBlack = new int[board.length][board.length];
-
-		for (int row = 0; row < board.length; row++) {
-			for (int column = 0; column < board[row].length; column++) {
-				Piece piece = board[row][column];
-				if (piece == null)
-					continue;
-
-				if (piece.getColor().isWhite()) {
-					markAttackedSquares(piece, attackedSquaresByWhite);
-				} else if (piece.getColor().isBlack()) {
-					markAttackedSquares(piece, attackedSquaresByBlack);
-				}
-			}
+	public void calcAttackedSquaresBy(ChessPieceColor color) { // inefficient solution
+		int[][] attackedSquares = new int[board.length][board.length];
+		if (color.isWhite()) {
+			whitePieces.forEach(piece -> markAttackedSquares(piece, attackedSquares));
+			this.attackedSquaresByWhite = attackedSquares;
+		} else if (color.isBlack()) {
+			blackPieces.forEach(piece -> markAttackedSquares(piece, attackedSquares));
+			this.attackedSquaresByBlack = attackedSquares;
 		}
-		this.attackedSquaresByWhite = attackedSquaresByWhite;
-		this.attackedSquaresByBlack = attackedSquaresByBlack;
 	}
 
 	private void markAttackedSquares(Piece piece, int[][] attackedSquares) {
@@ -80,65 +91,73 @@ public class BoardRepresentation {
 	}
 
 	public void makeMove(Vector2D oldPos, Vector2D newPos) {
-		Piece piece = board[oldPos.getY()][oldPos.getX()];
+		Piece movedPiece = this.getPiece(oldPos);
+		Piece pieceOnNewPos = this.getPiece(newPos);
 
-		checkSpecialMoves(oldPos, newPos);
-
-		board[newPos.getY()][newPos.getX()] = piece;
 		board[oldPos.getY()][oldPos.getX()] = null;
+		board[newPos.getY()][newPos.getX()] = movedPiece;
 
-		piece.setPosition(newPos);
-	}
-
-	public boolean checkSpecialMoves(Vector2D oldPos, Vector2D newPos) {
-		boolean castling = tryCastling(oldPos, newPos);
-
-		if (castling) {
-			return true;
+		if (pieceOnNewPos != null) {
+			if (pieceOnNewPos.getColor().isWhite()) {
+				whitePieces.remove(pieceOnNewPos);
+			} else
+				blackPieces.remove(pieceOnNewPos);
 		}
 
-		return false;
+		movedPiece.setPosition(newPos);
 	}
 
-	public boolean tryCastling(Vector2D oldPos, Vector2D newPos) {
-		Piece piece = getPiece(oldPos);
-		if (!(piece instanceof King))
-			return false;
+	public void makeSpecialMove(Vector2D oldPos, Vector2D newPos) {
+		Piece movedPiece = this.getPiece(oldPos);
+		Piece pieceOnNewPos = this.getPiece(newPos);
 
-		King king = (King) piece;
+		if (movedPiece instanceof King && ((King) movedPiece).isValidCastle(newPos)) {
+			executeCastling((King) movedPiece, oldPos, newPos);
+		} else if (movedPiece instanceof Pawn && getPiece(newPos) == null) {
+			executeEnPassant(oldPos, newPos); // == null to check if its really enPassant
+		} else { // in MoveValidation enPassant rules were checked so == null compare is enough
+			board[oldPos.getY()][oldPos.getX()] = null;
+			board[newPos.getY()][newPos.getX()] = movedPiece;
+		}
 
-		if (!king.isFirstMove())
-			return false;
+		if (pieceOnNewPos != null) {
+			if (pieceOnNewPos.getColor().isWhite()) {
+				whitePieces.remove(pieceOnNewPos);
+			} else
+				blackPieces.remove(pieceOnNewPos);
+		}
 
-		if (!king.isValidCastle(newPos))
-			return false;
+		movedPiece.setPosition(newPos);
 
-		// left or right side castle
+	}
+
+	public void executeCastling(King king, Vector2D oldPos, Vector2D newPos) {
 		boolean isRightSideCastle = newPos.getX() - king.getPosition().getX() > 0;
+		int xPosRook = isRightSideCastle ? this.board.length - 1 : 0;
+		Vector2D rookPos = new Vector2D(xPosRook, king.getPosition().getY());
 
-		int xPos = isRightSideCastle ? board.length - 1 : 0;
-		Vector2D rookPos = new Vector2D(xPos, king.getPosition().getY());
-
-		if (countFiguresBetween(king.getPosition(), rookPos) > 0) {
-			return false;
-		}
-
-		if (checkInCastlingMove(king.getPosition(), rookPos)) {
-			return false;
-		}
-
-		Piece rook = getPiece(rookPos);
-
-		if (rook instanceof Rook && ((Rook) rook).isFirstMove()) {
-			Vector2D direction = new Vector2D(isRightSideCastle ? -2 : 3, 0);
-			makeMove(rookPos, Vector2D.add(rookPos, direction));
-			return true;
-		}
-
-		return false;
+		Vector2D rookDirection = new Vector2D(isRightSideCastle ? -2 : 3, 0);
+		Vector2D kingDirection = new Vector2D(isRightSideCastle ? 2 : -2, 0);
+		makeMove(rookPos, Vector2D.add(rookPos, rookDirection));
+		makeMove(king.getPosition(), Vector2D.add(king.getPosition(), kingDirection));
 	}
 
-	public boolean checkInCastlingMove(Vector2D kingPos, Vector2D rookPos) {
+	public void executeEnPassant(Vector2D oldPos, Vector2D newPos) {
+		boolean whiteOnMove = getPiece(oldPos).getColor().isWhite();
+		Vector2D direction = new Vector2D(0, whiteOnMove ? 1 : -1);
+		Piece attackedPiece = getPiece(Vector2D.add(newPos, direction));
+
+		makeMove(oldPos, newPos);
+		if (whiteOnMove)
+			blackPieces.remove(attackedPiece);
+		else
+			whitePieces.remove(attackedPiece);
+
+		Vector2D attackedPiecePos = attackedPiece.getPosition(); 
+		board[attackedPiecePos.getY()][attackedPiecePos.getX()] = null;  // or NoPiece! 
+	}
+
+	public boolean isCheckBetween(Vector2D kingPos, Vector2D rookPos) {
 		int x = kingPos.getX() - rookPos.getX();
 		int y = kingPos.getY() - rookPos.getY();
 		int length = Math.max(Math.abs(x), Math.abs(y));
@@ -281,7 +300,7 @@ public class BoardRepresentation {
 			resultBlack += "\n";
 		}
 
-		return resultWhite + " \n" + "#".repeat(50) + "\n \n" + resultBlack;
+		return "WHITE: \n" + resultWhite + " \n" + "#".repeat(50) + "\n \n" + "BLACK: \n" + resultBlack+ " \n" + toBoardString();
 	}
 
 }

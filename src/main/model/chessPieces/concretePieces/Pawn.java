@@ -10,7 +10,7 @@ import main.model.chessPieces.ChessPieceName;
 public class Pawn extends Piece {
 
 	private Vector2D[] directions = { new Vector2D(0, -1) };
-	private Vector2D[] attackDirections = { new Vector2D(0, -1), new Vector2D(-1, -1) };
+	private Vector2D[] attackDirections = { new Vector2D(1, -1), new Vector2D(-1, -1) };
 	private boolean firstMove = true;
 
 	public Pawn(ChessPieceColor color, int row, int column) {
@@ -43,7 +43,6 @@ public class Pawn extends Piece {
 
 		if (firstMove) {
 			if (Vector2D.add(Vector2D.add(position, directions[0]), directions[0]).equals(newPosition)) {
-				firstMove = !firstMove;
 				return true;
 			}
 		}
@@ -72,6 +71,16 @@ public class Pawn extends Piece {
 		return moves;
 	}
 
+	public boolean isValidAttack(Vector2D position) {
+		for (List<Vector2D> movesInDirection : this.getAttackableSquares()) {
+			for (Vector2D move : movesInDirection) {
+				if(move.equals(position))
+					return true;
+			}
+		}
+		return false; 
+	}
+
 	public boolean isFirstMove() {
 		return firstMove;
 	}
@@ -79,21 +88,23 @@ public class Pawn extends Piece {
 	public void setFirstMove(boolean firstMove) {
 		this.firstMove = firstMove;
 	}
-	
+
 	@Override
 	public void setPosition(Vector2D position) {
 		if (this.position == null) {
 			this.position = position;
 			return;
 		}
-		this.position = position; 
-		firstMove = false; 
+		this.position = position;
+
+		if (firstMove)
+			firstMove = false;
 	}
 
 	@Override
 	public Piece clone() {
-		Pawn pawn =  new Pawn(color, position.getY(), position.getX());
+		Pawn pawn = new Pawn(color, position.getY(), position.getX());
 		pawn.setFirstMove(firstMove);
-		return pawn; 
+		return pawn;
 	}
 }

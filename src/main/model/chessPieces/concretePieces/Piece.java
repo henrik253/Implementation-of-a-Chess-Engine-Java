@@ -50,6 +50,22 @@ public abstract class Piece {
 		this.position = position;
 	}
 
+	public List<List<Vector2D>> getAttackableSquares() {
+		return attackableSquares;
+	}
+
+	public void setAttackableSquares(List<List<Vector2D>> attackableSquares) {
+		this.attackableSquares = attackableSquares;
+	}
+
+	public Vector2D[] getAttackDirections() {
+		return attackDirections;
+	}
+
+	public void setAttackDirections(Vector2D[] attackDirections) {
+		this.attackDirections = attackDirections;
+	}
+
 	public String toString() {
 		return this.name + " " + this.color;
 	}
@@ -61,6 +77,6 @@ public abstract class Piece {
 	public void setColor(ChessPieceColor color) {
 		this.color = color;
 	}
-	
+
 	public abstract Piece clone();
 }

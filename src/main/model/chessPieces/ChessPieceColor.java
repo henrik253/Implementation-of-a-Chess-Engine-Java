@@ -10,4 +10,10 @@ public enum ChessPieceColor {
 	public boolean isBlack() {
 		return this == ChessPieceColor.BLACK;
 	}
+	
+	public ChessPieceColor getOpponentColor() {
+		return this == ChessPieceColor.WHITE ? ChessPieceColor.BLACK : ChessPieceColor.WHITE; 
+	}
 }
+
+
