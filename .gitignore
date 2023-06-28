@@ -1,6 +1,9 @@
 *.class
 *
+.idea
+.idea/.*
 !.gitignore
 !src/
 !src/**
-
+src/resources
+!pom.xml
