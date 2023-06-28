@@ -7,10 +7,17 @@
   <name>Archetype - Teamprojekt</name>
   <url>http://maven.apache.org</url>
   <properties>
-    <dl4j.version>0.9.1</dl4j.version>
+    <dl4j.version>1.0.0-M2.1</dl4j.version>
   </properties>
+    <repositories>
+        <repository>
+            <id>data-local</id>
+            <name>data</name>
+            <url>file://${project.basedir}/lib</url>
+        </repository>
+    </repositories>
 
-  <dependencies>
+    <dependencies>
 
     <dependency>
       <groupId>org.nd4j</groupId>
@@ -23,6 +30,41 @@
       <artifactId>deeplearning4j-core</artifactId>
       <version>${dl4j.version}</version>
     </dependency>
-  </dependencies>
+      <dependency>
+          <groupId>org.datavec</groupId>
+          <artifactId>datavec-api</artifactId>
+          <version>1.0.0-M2.1</version>
+      </dependency>
+
+        <dependency>
+            <groupId>org.openjfx</groupId>
+            <artifactId>javafx-controls</artifactId>
+            <version>21-ea+17</version>
+        </dependency>
+        <dependency>
+            <groupId>org.deeplearning4j</groupId>
+            <artifactId>deeplearning4j-nn</artifactId>
+            <version>1.0.0-M2.1</version>
+        </dependency>
+        <dependency>
+            <groupId>org.deeplearning4j</groupId>
+            <artifactId>deeplearning4j-nn</artifactId>
+            <version>1.0.0-beta3</version>
+        </dependency>
+
+
+    </dependencies>
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <configuration>
+                    <source>20</source>
+                    <target>20</target>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
 
 </project>
