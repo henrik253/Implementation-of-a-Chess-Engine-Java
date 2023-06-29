@@ -1,16 +1,12 @@
 package main.model.gameLogic;
 
-import java.util.List;
-
 import main.model.Model;
 import main.model.Move;
 import main.model.Vector2D;
 import main.model.chessPieces.ChessPieceColor;
-import main.model.chessPieces.concretePieces.King;
-import main.model.chessPieces.concretePieces.Knight;
-import main.model.chessPieces.concretePieces.Pawn;
-import main.model.chessPieces.concretePieces.Piece;
-import main.model.chessPieces.concretePieces.Rook;
+import main.model.chessPieces.concretePieces.*;
+
+import java.util.List;
 
 public class MoveValidation {
 	private Model model;
@@ -41,6 +37,9 @@ public class MoveValidation {
 
 	public boolean makeMove(Vector2D oldPos, Vector2D newPos) {
 		Piece piece = board.getPiece(oldPos);
+		if(piece == null){
+			return false;
+		}
 		boolean moveSucceed = false;
 
 		if (!isOnMove(piece))
@@ -132,9 +131,13 @@ public class MoveValidation {
 	public boolean isEnPassantMove(Pawn pawn, Vector2D newPos) {
 		Piece p = this.board.getPiece(newPos);
 		Vector2D direction = new Vector2D(0, onMove.isWhite() ? 1 : -1);
-		Piece attackedPiece = board.getPiece(Vector2D.add(newPos, direction));
-		return pawn.isValidAttack(newPos) && p == null && attackedPiece instanceof Pawn
-				&& ((Pawn) attackedPiece).getColor() != onMove && lastMoveIsDoublePawnMove();
+		Vector2D attackedPieceCoords = Vector2D.add(newPos, direction);
+		if(attackedPieceCoords.getX() >= 0 && attackedPieceCoords.getY() >= 0){
+			Piece attackedPiece = board.getPiece(attackedPieceCoords);
+			return pawn.isValidAttack(newPos) && p == null && attackedPiece instanceof Pawn
+					&& ((Pawn) attackedPiece).getColor() != onMove && lastMoveIsDoublePawnMove();
+		}
+		return false;
 	}
 
 	private boolean lastMoveIsDoublePawnMove() {

@@ -39,10 +39,11 @@ public class Main extends Application {
 	private Board board;
 	private Overlay overlay;
 
-	private Model model; 
+	private Model model;
 	private MoveValidation moveValidation;
-	private GameLogic gameLogic; 
-	
+	private GameLogic gameLogic;
+
+
 	@Override
 	public void start(Stage primaryStage) throws Exception {
 		initGUIComponents();
@@ -139,7 +140,7 @@ public class Main extends Application {
 		String fen = getRandomFEN();
 		settings.selectedFEN.set(settings.defaultFENString);
 		mainPresenter.loadBoard(settings.selectedFEN.get());
-		
+
 
 		// Scene
 		scene = new Scene(mainView, settings.WINDOW_WIDTH, settings.WINDOW_HEIGHT);
@@ -148,11 +149,11 @@ public class Main extends Application {
 
 	public void initModelComponents() {
 		model = new Model();
-		moveValidation = new MoveValidation(); 
+		moveValidation = new MoveValidation();
 		model.setSettings(settings);
 		model.setMoveValidation(moveValidation);
 		moveValidation.setModel(model);
-	
+
 	}
 
 	public void combineGUItoModel() {
@@ -162,9 +163,13 @@ public class Main extends Application {
 	public String getRandomFEN() {
 		return settings.fenExamples[(int) (Math.random() * settings.fenExamples.length)];
 	}
-	
+
 	public static void main(String[] args) {
+		//testAi();
 		launch(args);
 	}
 
+	static void testAi(){
+
+	}
 }

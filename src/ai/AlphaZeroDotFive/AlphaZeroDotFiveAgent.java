@@ -13,9 +13,11 @@ public class AlphaZeroDotFiveAgent {
     private IPolicyNetWork policyNet;
     private IValueNetWork valueNet;
     MonteCarloTree tree;
-    public AlphaZeroDotFiveAgent(float c, int simulations) {
+    public int player;
+    public AlphaZeroDotFiveAgent(float c, int simulations, int player) {
 
         this.tree = new MonteCarloTree(this, new LogicTranslator(), c, simulations);
+        this.player = player;
     }
 
     public void initRandom() {

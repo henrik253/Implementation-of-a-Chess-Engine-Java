@@ -17,7 +17,7 @@ public class MonteCarloTree {
 
     }
     public float[] search(int[][] board){
-        Node root = new Node(getLogic(), this, board, this.c, this.simulations);
+        Node root = new Node(getLogic(), this, board, this.c, this.simulations, this.ai.player);
         for (int i = 0; i < this.simulations; i++) {
             runSimulation(root);
         }
@@ -50,7 +50,7 @@ public class MonteCarloTree {
         //if the game hasnt ended, expand node before backtracking
         if(!getLogic().endingMove(node.board, node.moveLeadingTo)){
             //run policy and value network
-            float[] policy = this.ai.getPolicyNet().getPolicy(node.board, getLogic().getValidMoves(node.board));
+            float[] policy = this.ai.getPolicyNet().getPolicy(node.board, getLogic().getValidMoves(node.board, node.player));
             value = this.ai.getValueNet().getValue(node.board);//for backtracking to root
             //expand the node with new policy
             node.expand(policy);

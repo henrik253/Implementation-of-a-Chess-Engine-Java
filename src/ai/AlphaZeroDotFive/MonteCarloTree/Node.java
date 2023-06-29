@@ -16,7 +16,8 @@ public class Node {
     float valueSum;
     int visitCount;
     float prior;
-    public Node(LogicTranslator logic, MonteCarloTree tree, int[][] board, float c, int simulations, Node parent, int moveLeadingTo, float prior){
+    int player;
+    public Node(LogicTranslator logic, MonteCarloTree tree, int[][] board, float c, int simulations, Node parent, int moveLeadingTo, float prior, int player){
         this.logic = logic;
         this.tree = tree;
         this.c = c;
@@ -28,8 +29,9 @@ public class Node {
         this.valueSum = 0.f;
         this.visitCount = 0;
         this.prior = prior;
+        this.player = player;
     }
-    public Node(LogicTranslator logic, MonteCarloTree tree, int[][] board, float c, int simulations){
+    public Node(LogicTranslator logic, MonteCarloTree tree, int[][] board, float c, int simulations, int player){
         this.logic = logic;
         this.tree = tree;
         this.c = c;
@@ -40,6 +42,7 @@ public class Node {
         this.visitCount = 0;
         this.moveLeadingTo = -1000;
         this.prior = 0.f;
+
     }
 
     boolean alreadyExpanded(){
@@ -80,7 +83,7 @@ public class Node {
                         newBoard[i][j] *= -1;
                     }
                 }
-                Node child = new Node(this.logic, this.tree, newBoard, this.c, this.simulations, this, move, policy[move]);
+                Node child = new Node(this.logic, this.tree, newBoard, this.c, this.simulations, this, move, policy[move], this.player * -1);
                 this.children.add(child);
             }
         }

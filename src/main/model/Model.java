@@ -1,8 +1,6 @@
 package main.model;
 
 import main.Settings;
-import main.gui.MainPresenter;
-import main.model.chessPieces.SimplePiece;
 import main.model.chessPieces.concretePieces.Piece;
 import main.model.gameLogic.BoardRepresentation;
 import main.model.gameLogic.MoveValidation;
@@ -47,11 +45,11 @@ public class Model {
 		this.settings = settings;
 	}
 
-	public BoardRepresentation getBoardRepresentatio() {
+	public BoardRepresentation getBoardRepresentation() {
 		return board;
 	}
 
-	public void setBoardRepresentatio(BoardRepresentation board) {
+	public void setBoardRepresentation(BoardRepresentation board) {
 		this.board = board;
 	}
 
