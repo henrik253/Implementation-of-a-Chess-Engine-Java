@@ -3,11 +3,13 @@ package ai.AlphaZeroDotFive.Logic;
 import main.model.Model;
 import main.model.Vector2D;
 import main.model.chessPieces.ChessPieceColor;
+import main.model.chessPieces.ChessPieceName;
 import main.model.chessPieces.concretePieces.*;
 import main.model.gameLogic.BoardRepresentation;
 import main.model.gameLogic.MoveValidation;
 
 import java.util.LinkedList;
+import java.util.List;
 
 public class LogicTranslator {
     private int[][][] boardBuffer;
@@ -24,23 +26,95 @@ public class LogicTranslator {
         this.boardBuffer = new int[4096][8][8];
         inCheckMoves = new boolean[4096];
     }
-    public boolean[] getValidMoves(int[][] board, int playerOnMove){
+    //Slow Method thats tested very well
+    public List<Integer> getValidMoves(int[][] board, int playerOnMove){
         Piece[][] currentBoard = translateBoard(board);
-        boolean[] result = new boolean[board.length * board[0].length * board.length * board[0].length];
+        List<Integer> result = new LinkedList<>();
         int[] coords;
         int index = 0;
         for(int sx = 0; sx < 8; sx++){
             for(int sy = 0; sy < 8; sy++){
-                for(int dx = 0; dx < 8; dx++){
-                    for(int dy = 0; dy < 8; dy++){
-                        result[index] = validateMove(
+                if(board[sy][sx] != 0) {
+                    for (int dx = 0; dx < 8; dx++) {
+                        for (int dy = 0; dy < 8; dy++) {
+                            int currentIndex = coordinatesToInt(sx, sy, dx, dy);
+                            if(validateMove(
+                                    sx, sy, dx, dy,
+                                    currentBoard,
+                                    currentIndex,
+                                    playerOnMove
+                            )){
+                                result.add(currentIndex);
+                            }
+                        }
+                    }
+                }else{
+                    index+=64;
+                }
+            }
+        }
+        return result;
+    }
+    //faster Method
+    public List<Integer> getValidMovesAlt(int[][] board, int playerOnMove){
+        Piece[][] currentBoard = translateBoard(board);
+        List<Integer> result = new LinkedList<>();
+        //boolean[] result = new boolean[board.length * board[0].length * board.length * board[0].length];
+        this.model = new Model();
+        model.setBoardRepresentation(new BoardRepresentation(currentBoard));
+        model.setMoveValidation(new MoveValidation());
+        model.getMoveValidation().setBoard(model.getBoardRepresentation());
+        model.getMoveValidation().setOnMove(playerOnMove == 1 ? ChessPieceColor.WHITE : ChessPieceColor.BLACK);
+        List<Piece> pieces = playerOnMove == 1 ? model.getBoardRepresentation().getWhitePieces() : model.getBoardRepresentation().getBlackPieces();
+
+        List<List<Vector2D>> attackableSquares;
+        Vector2D posStart;
+        int currentIndex;
+        int sx, sy, dx, dy;
+        for(Piece piece : pieces) {
+            if (piece.getName() != ChessPieceName.PAWN) {
+                attackableSquares = piece.calculateAttackablePositions(piece.getPosition());
+                posStart = piece.getPosition();
+                for (List<Vector2D> direction : attackableSquares) {
+                    for (Vector2D move : direction) {
+                        sx = posStart.getX();
+                        sy = posStart.getY();
+                        dx = move.getX();
+                        dy = move.getY();
+                        currentIndex = coordinatesToInt(sx, sy, dx, dy);
+                        if(validateMoveAlt(
                                 sx, sy, dx, dy,
                                 currentBoard,
-                                index,
-                                playerOnMove);
-                        index++;
+                                currentIndex,
+                                playerOnMove
+                        )){
+                            result.add(currentIndex);
+                        }
                     }
                 }
+            }else{
+
+                sx = piece.getPosition().getX();
+                sy = piece.getPosition().getY();
+
+                for(int x = -1; x < 2; x++){
+                    for(int y = -2; y < 3; y++){
+                        dx = sx + x;
+                        dy = sy + y;
+                        if(dx < 8 && dx >= 0 && dy < 8 && dy >= 0){
+                            currentIndex = coordinatesToInt(sx, sy, dx, dy);
+                            if(validateMoveAlt(
+                                    sx, sy, dx, dy,
+                                    currentBoard,
+                                    currentIndex,
+                                    playerOnMove
+                            )){
+                                result.add(currentIndex);
+                            }
+                        }
+                    }
+                }
+
             }
         }
         return result;
@@ -48,6 +122,19 @@ public class LogicTranslator {
 
 
     public boolean validateMove(int sx, int sy, int dx, int dy, Piece[][] currentBoard, int index, int playerOnMove){
+        this.model = new Model();
+        model.setBoardRepresentation(new BoardRepresentation(currentBoard));
+        model.setMoveValidation(new MoveValidation());
+        model.getMoveValidation().setBoard(model.getBoardRepresentation());
+        model.getMoveValidation().setOnMove(playerOnMove == 1 ? ChessPieceColor.WHITE : ChessPieceColor.BLACK);
+        if(model.getMoveValidation().makeMove(new Vector2D(sx, sy), new Vector2D(dx, dy))){
+            this.boardBuffer[index] = translateBoard(model.getBoard());
+            inCheckMoves[index] = model.getMoveValidation().enemyInCheck();
+            return true;
+        }
+        return false;
+    }
+    public boolean validateMoveAlt(int sx, int sy, int dx, int dy, Piece[][] currentBoard, int index, int playerOnMove){
         this.model = new Model();
         model.setBoardRepresentation(new BoardRepresentation(currentBoard));
         model.setMoveValidation(new MoveValidation());
@@ -162,4 +249,5 @@ public class LogicTranslator {
     public int[][][] getBoardBuffer() {
         return boardBuffer;
     }
+
 }

@@ -9,6 +9,7 @@ public class MonteCarloTree {
     private final float c;
     private final int simulations;
     AlphaZeroDotFiveAgent ai;
+    boolean lastSimulation;
 
     public MonteCarloTree(AlphaZeroDotFiveAgent ai, LogicTranslator logic, float c, int simulations){
         this.simNum = 0;
@@ -16,13 +17,15 @@ public class MonteCarloTree {
         this.c = c;
         this.simulations = simulations;
         this.ai = ai;
-
+        lastSimulation = false;
     }
     public float[] search(int[][] board){
         Node root = new Node(this, board, this.c, this.simulations, this.ai.player);
         for (int i = 0; i < this.simulations; i++) {
             runSimulation(root);
         }
+        lastSimulation = true;
+        runSimulation(root);
         return childVisitCountsToProbabilities(root);
     }
 

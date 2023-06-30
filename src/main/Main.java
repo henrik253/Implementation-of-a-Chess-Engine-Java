@@ -1,7 +1,6 @@
 package main;
 
 import ai.AlphaZeroDotFive.AlphaZeroDotFiveAgent;
-import ai.AlphaZeroDotFive.Logic.LogicTranslator;
 import javafx.application.Application;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
@@ -175,21 +174,17 @@ public class Main extends Application {
 
 	static void testAi(){
 		Settings settings = new Settings();
-		Piece[][] board = FENConverter.convertPieceBoard(settings.defaultFENString);
-		AlphaZeroDotFiveAgent ai = new AlphaZeroDotFiveAgent(2, 500, 1);
-		int[][] zeroBoard = new int[8][8];
+		Piece[][] board = FENConverter.convertPieceBoard(settings.fenExamples[0]);
+		AlphaZeroDotFiveAgent ai = new AlphaZeroDotFiveAgent(2, 5000, -1);
+		ai.getLogic().printBoard(board);
 		ai.initRandom();
-		long start  = System.currentTimeMillis();
+		long start = System.currentTimeMillis();
 		ai.getNextMove(ai.getLogic().translateBoard(board));
-		/*for(int[][] i : ai.getLogic().getBoardBuffer()){
-			if(!arrEq(i, zeroBoard) && !arrEq(i, ai.getLogic().translateBoard(board))){
-				ai.getLogic().printBoard(i);
-			}
-		}*/
-		long end  = System.currentTimeMillis();
-		System.out.println(end - start);
+		long end = System.currentTimeMillis();
+		System.out.println(end - start + "ms");
 		System.exit(0);
 	}
+
 	static boolean arrEq(int[][] arr1, int[][] arr2){
 		for(int i = 0; i < arr1.length; i++){
 			for (int j = 0; j < arr1[0].length; j++) {

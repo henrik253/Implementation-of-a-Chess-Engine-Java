@@ -1,13 +1,13 @@
 package main.model.gameLogic;
 
-import java.util.LinkedList;
-import java.util.List;
-
 import main.model.Vector2D;
 import main.model.chessPieces.ChessPieceColor;
 import main.model.chessPieces.concretePieces.King;
 import main.model.chessPieces.concretePieces.Pawn;
 import main.model.chessPieces.concretePieces.Piece;
+
+import java.util.LinkedList;
+import java.util.List;
 
 public class BoardRepresentation {
 
@@ -303,4 +303,11 @@ public class BoardRepresentation {
 		return "WHITE: \n" + resultWhite + " \n" + "#".repeat(50) + "\n \n" + "BLACK: \n" + resultBlack+ " \n" + toBoardString();
 	}
 
+	public List<Piece> getWhitePieces() {
+		return this.whitePieces;
+	}
+
+	public List<Piece> getBlackPieces() {
+		return this.blackPieces;
+	}
 }

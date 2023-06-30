@@ -1,11 +1,11 @@
 package ai.AlphaZeroDotFive.NeuralNets;
 
-import java.util.Random;
+import java.security.SecureRandom;
 
 public class RPolicyNetwork implements IPolicyNetWork {
-    Random rand;
+    SecureRandom rand;
     public RPolicyNetwork(){
-        rand = new Random();
+        rand = new SecureRandom();
     }
     @Override
     public float[] getPolicy(int[][] board) {

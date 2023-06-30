@@ -1,9 +1,7 @@
 package ai.AlphaZeroDotFive.MonteCarloTree;
 
-import ai.AlphaZeroDotFive.Logic.LogicTranslator;
-
 import java.util.ArrayList;
-import java.util.Arrays;
+import java.util.List;
 
 public class Node {
     MonteCarloTree tree;
@@ -17,7 +15,8 @@ public class Node {
     int visitCount;
     float prior;
     int player;
-    public Node(MonteCarloTree tree, int[][] board, float c, int simulations, Node parent, int moveLeadingTo, float prior, int player){
+    int depth;
+    public Node(MonteCarloTree tree, int[][] board, float c, int simulations, Node parent, int moveLeadingTo, float prior, int player, int depth){
         this.tree = tree;
         this.c = c;
         this.simulations = simulations;
@@ -29,6 +28,7 @@ public class Node {
         this.visitCount = 0;
         this.prior = prior;
         this.player = player;
+        this.depth = depth;
     }
     public Node(MonteCarloTree tree, int[][] board, float c, int simulations, int player){
         this.tree = tree;
@@ -41,7 +41,7 @@ public class Node {
         this.moveLeadingTo = 0;
         this.prior = 0.f;
         this.player = player;
-
+        this.depth = 0;
     }
 
     boolean alreadyExpanded(){
@@ -70,23 +70,21 @@ public class Node {
     }
 
     public void expand(float[] policy) {
-        boolean[] validMoves = this.tree.getLogic().getValidMoves(this.board, this.player);
-        for(int move = 0; move < policy.length; move++){
-            if(validMoves[move]){
-
-                int[][]newBoard = this.tree.getLogic().getBoardBuffer()[move];
-                Node child = new Node(
-                        this.tree,
-                        newBoard,
-                        this.c,
-                        this.simulations,
-                        this,
-                        move,
-                        policy[move],
-                        this.player * -1
-                );
-                this.children.add(child);
-            }
+        List<Integer> validMoves = this.tree.getLogic().getValidMovesAlt(this.board, this.player);
+        for(int move : validMoves) {
+            int[][] newBoard = this.tree.getLogic().getBoardBuffer()[move];
+            Node child = new Node(
+                    this.tree,
+                    newBoard,
+                    this.c,
+                    this.simulations,
+                    this,
+                    move,
+                    policy[move],
+                    this.player * -1,
+                    this.depth + 1
+            );
+            this.children.add(child);
         }
     }
 
@@ -98,6 +96,12 @@ public class Node {
         if(parent != null){
             parent.backtrackToRoot(value * -1);
         }
-
+        if(this.tree.lastSimulation){
+            int[] move = this.tree.getLogic().intToCoordinates(this.moveLeadingTo);
+            System.out.println("Move leading to: " + move[0] + ", " + move[1] + " -> " + move[2] + ", " + move[3]);
+            System.out.println();
+            this.tree.getLogic().printBoard(this.board);
+        }
     }
+
 }
