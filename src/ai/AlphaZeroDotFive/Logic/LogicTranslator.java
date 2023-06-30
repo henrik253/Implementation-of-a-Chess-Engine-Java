@@ -11,6 +11,7 @@ import java.util.LinkedList;
 
 public class LogicTranslator {
     private int[][][] boardBuffer;
+    boolean[] inCheckMoves;
     int rows;
     int cols;
     public int moveSize;
@@ -21,22 +22,8 @@ public class LogicTranslator {
         this.moveSize = 64 * 64;
         this.model = new Model();
         this.boardBuffer = new int[4096][8][8];
+        inCheckMoves = new boolean[4096];
     }
-
-    public int[][] applyMove(int[][] previous, int move, int player){
-        int[] xy = getRowAndColFromMove(move);
-        previous[xy[0]][xy[1]] = addPiece(player, move);
-        return previous;
-    }
-    //TODO
-    private int[] getRowAndColFromMove(int move) {
-        return new int[]{Math.floorDiv(move, this.cols), move%this.cols};
-    }
-    //TODO
-    int addPiece(int player, int move){
-        return player;
-    }
-    //TODO
     public boolean[] getValidMoves(int[][] board, int playerOnMove){
         Piece[][] currentBoard = translateBoard(board);
         boolean[] result = new boolean[board.length * board[0].length * board.length * board[0].length];
@@ -51,9 +38,6 @@ public class LogicTranslator {
                                 currentBoard,
                                 index,
                                 playerOnMove);
-                        if(result[index]){
-                            System.out.println(index);
-                        }
                         index++;
                     }
                 }
@@ -64,18 +48,22 @@ public class LogicTranslator {
 
 
     public boolean validateMove(int sx, int sy, int dx, int dy, Piece[][] currentBoard, int index, int playerOnMove){
+        this.model = new Model();
         model.setBoardRepresentation(new BoardRepresentation(currentBoard));
         model.setMoveValidation(new MoveValidation());
         model.getMoveValidation().setBoard(model.getBoardRepresentation());
         model.getMoveValidation().setOnMove(playerOnMove == 1 ? ChessPieceColor.WHITE : ChessPieceColor.BLACK);
         if(model.getMoveValidation().makeMove(new Vector2D(sx, sy), new Vector2D(dx, dy))){
-            getBoardBuffer()[index] = translateBoard(model.getBoard());
+            this.boardBuffer[index] = translateBoard(model.getBoard());
+            inCheckMoves[index] = model.getMoveValidation().enemyInCheck();
             return true;
         }
         return false;
     }
     //TODO
-    public boolean endingMove(int[][] board, int move){
+    //Only returns if the enemy is in check!
+    public boolean endingMove(int move){
+        //return inCheckMoves[move];
         return false;
     }
 
@@ -153,6 +141,22 @@ public class LogicTranslator {
             }
             System.out.print("|\n");
         }
+    }
+
+    public void printBoard(int[][] intBoard){
+        Piece[][] board = this.translateBoard(intBoard);
+        int number;
+        for(Piece[] pieces : board){
+            for(Piece piece : pieces){
+                if(pieceToNumber(piece) < 0){
+                    System.out.print("|" + pieceToNumber(piece));
+                }else{
+                    System.out.print("| " + pieceToNumber(piece));
+                }
+            }
+            System.out.print("|\n");
+        }
+        System.out.print("\n");
     }
 
     public int[][][] getBoardBuffer() {

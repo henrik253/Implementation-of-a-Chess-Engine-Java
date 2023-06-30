@@ -22,7 +22,9 @@ public class MoveValidation {
 	private Move lastMove;
 
 	public MoveValidation(ChessPieceColor startingColor) {
+
 		this.onMove = startingColor;
+		this.lastMove = new Move(new Vector2D(0,0), new Vector2D(0,0));
 	}
 
 	public MoveValidation() {
@@ -132,7 +134,8 @@ public class MoveValidation {
 		Piece p = this.board.getPiece(newPos);
 		Vector2D direction = new Vector2D(0, onMove.isWhite() ? 1 : -1);
 		Vector2D attackedPieceCoords = Vector2D.add(newPos, direction);
-		if(attackedPieceCoords.getX() >= 0 && attackedPieceCoords.getY() >= 0){
+		if(attackedPieceCoords.getX() >= 0 && attackedPieceCoords.getY() >= 0 &&
+				attackedPieceCoords.getX() < 8 && attackedPieceCoords.getY() < 8){
 			Piece attackedPiece = board.getPiece(attackedPieceCoords);
 			return pawn.isValidAttack(newPos) && p == null && attackedPiece instanceof Pawn
 					&& ((Pawn) attackedPiece).getColor() != onMove && lastMoveIsDoublePawnMove();

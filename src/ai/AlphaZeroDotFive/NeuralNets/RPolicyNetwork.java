@@ -8,14 +8,11 @@ public class RPolicyNetwork implements IPolicyNetWork {
         rand = new Random();
     }
     @Override
-    public float[] getPolicy(int[][] board, boolean[] validMoves) {
-        float[] result = new float[board.length * board[0].length];
+    public float[] getPolicy(int[][] board) {
+        float[] result = new float[board.length * board[0].length * board.length * board[0].length];
         for(int i = 0; i < result.length; i++){
-            if(validMoves[i]){
-                result[i] = this.rand.nextFloat();
-            }else{
-                result[i] = 0.f;
-            }
+            result[i] = Math.abs(this.rand.nextFloat());
+
         }
         return result;
     }

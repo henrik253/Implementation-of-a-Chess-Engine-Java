@@ -1,5 +1,7 @@
 package main;
 
+import ai.AlphaZeroDotFive.AlphaZeroDotFiveAgent;
+import ai.AlphaZeroDotFive.Logic.LogicTranslator;
 import javafx.application.Application;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
@@ -16,8 +18,10 @@ import main.gui.game.gameStart.GameStartView;
 import main.gui.game.settings.SettingsPresenter;
 import main.gui.game.settings.SettingsView;
 import main.model.Model;
+import main.model.chessPieces.concretePieces.Piece;
 import main.model.gameLogic.GameLogic;
 import main.model.gameLogic.MoveValidation;
+import main.model.start.FENConverter;
 
 public class Main extends Application {
 
@@ -170,6 +174,30 @@ public class Main extends Application {
 	}
 
 	static void testAi(){
-
+		Settings settings = new Settings();
+		Piece[][] board = FENConverter.convertPieceBoard(settings.defaultFENString);
+		AlphaZeroDotFiveAgent ai = new AlphaZeroDotFiveAgent(2, 500, 1);
+		int[][] zeroBoard = new int[8][8];
+		ai.initRandom();
+		long start  = System.currentTimeMillis();
+		ai.getNextMove(ai.getLogic().translateBoard(board));
+		/*for(int[][] i : ai.getLogic().getBoardBuffer()){
+			if(!arrEq(i, zeroBoard) && !arrEq(i, ai.getLogic().translateBoard(board))){
+				ai.getLogic().printBoard(i);
+			}
+		}*/
+		long end  = System.currentTimeMillis();
+		System.out.println(end - start);
+		System.exit(0);
+	}
+	static boolean arrEq(int[][] arr1, int[][] arr2){
+		for(int i = 0; i < arr1.length; i++){
+			for (int j = 0; j < arr1[0].length; j++) {
+				if(arr1[i][j] != arr2[i][j]){
+					return false;
+				}
+			}
+		}
+		return true;
 	}
 }
