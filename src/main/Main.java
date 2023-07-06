@@ -156,10 +156,6 @@ public class Main extends Application {
 		model.setSettings(settings);
 		model.setMoveValidation(moveValidation);
 		moveValidation.setModel(model);
-<<<<<<< Updated upstream
-
-=======
->>>>>>> Stashed changes
 	}
 
 	public void combineGUItoModel() {
