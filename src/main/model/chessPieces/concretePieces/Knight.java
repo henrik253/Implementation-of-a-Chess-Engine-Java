@@ -9,8 +9,8 @@ import main.model.chessPieces.ChessPieceName;
 
 public class Knight extends Piece {
 
-	protected Vector2D[] attackDirections = { new Vector2D(2, 1), new Vector2D(1, 2), new Vector2D(-2, 1), new Vector2D(-1, 2),
-			new Vector2D(-2, -1), new Vector2D(-1, -2), new Vector2D(1, -2), new Vector2D(2, -1) };
+	protected Vector2D[] attackDirections = { new Vector2D(2, 1), new Vector2D(1, 2), new Vector2D(-2, 1),
+			new Vector2D(-1, 2), new Vector2D(-2, -1), new Vector2D(-1, -2), new Vector2D(1, -2), new Vector2D(2, -1) };
 
 	public Knight(ChessPieceColor color, int row, int column) {
 		super(ChessPieceName.KNIGHT, color, row, column);
@@ -19,14 +19,13 @@ public class Knight extends Piece {
 
 	@Override
 	public List<List<Vector2D>> calculateAttackablePositions(Vector2D position) {
-
 		List<List<Vector2D>> moves = new LinkedList<>();
 
 		if (outOfBounds(position))
 			return moves;
 
 		for (Vector2D direction : attackDirections) {
-			List<Vector2D> movesInDirection = new LinkedList<>(); 
+			List<Vector2D> movesInDirection = new LinkedList<>();
 			Vector2D possiblePosition = position.clone();
 
 			possiblePosition.add(direction);
@@ -39,10 +38,10 @@ public class Knight extends Piece {
 		this.attackableSquares = moves;
 		return moves;
 	}
-	
+
 	@Override
 	public Piece clone() {
-		return new Knight(color,position.getY(),position.getX());
+		return new Knight(color, position.getY(), position.getX());
 	}
 
 }

@@ -49,15 +49,15 @@ public class Board extends GridPane {
 
 	private void onDragDropped(DragEvent event) {
 		Piece draggedPiece = Move.getPiece();
-		
+
 		int oldX = draggedPiece.getRow();
 		int oldY = draggedPiece.getColumn();
-		
+
 		int newX = (int) (event.getSceneX() / settings.squareWidth.get());
 		int newY = (int) (event.getSceneY() / settings.squareHeight.get());
 
 		boolean validMove = false;
-		
+
 		if (oldX != newX || oldY != newY)
 			validMove = gameView.moveRequest(oldX, oldY, newX, newY);
 
@@ -74,17 +74,6 @@ public class Board extends GridPane {
 		this.getChildren().remove(piece);
 		this.add(piece, x, y);
 	}
-
-//	public void removePiece(Vector2D pos) {
-//
-//		for (Piece piece : piecesOnBoard) {
-//			// ROWS AND COLUMNS ARE SWITCHED ??? NEED TO BE FIXED !!!!
-//			if (piece.getRow() == pos.getX() && piece.getColumn() == pos.getY()) {
-//				this.getChildren().remove(piece);
-//
-//			}
-//		}
-//	}
 
 	public void drawBoard() {
 

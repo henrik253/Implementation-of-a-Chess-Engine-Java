@@ -26,7 +26,7 @@ public abstract class Piece {
 	}
 
 	// Not the best approach, but the easiest to implement
-	public boolean isValidMove(Vector2D newPosition) { // Attack and move are same for all Pieces except Pawn
+	public boolean isValidMove(Vector2D newPosition) { // Attack and move are same for all Pieces except Pawn or special Moves
 		for (List<Vector2D> positionsInDirection : attackableSquares) {
 			for (Vector2D position : positionsInDirection) {
 				if (newPosition.equals(position))

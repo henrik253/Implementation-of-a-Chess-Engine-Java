@@ -93,16 +93,16 @@ public class BoardRepresentation {
 	public void makeMove(Vector2D oldPos, Vector2D newPos) {
 		Piece movedPiece = this.getPiece(oldPos);
 		Piece pieceOnNewPos = this.getPiece(newPos);
-
-		board[oldPos.getY()][oldPos.getX()] = null;
-		board[newPos.getY()][newPos.getX()] = movedPiece;
-
+		
 		if (pieceOnNewPos != null) {
 			if (pieceOnNewPos.getColor().isWhite()) {
 				whitePieces.remove(pieceOnNewPos);
 			} else
 				blackPieces.remove(pieceOnNewPos);
 		}
+
+		board[oldPos.getY()][oldPos.getX()] = null;
+		board[newPos.getY()][newPos.getX()] = movedPiece;
 
 		movedPiece.setPosition(newPos);
 	}
@@ -116,7 +116,7 @@ public class BoardRepresentation {
 		} else if (movedPiece instanceof Pawn && getPiece(newPos) == null) {
 			executeEnPassant(oldPos, newPos); // == null to check if its really enPassant
 		} else { // in MoveValidation enPassant rules were checked so == null compare is enough
-			board[oldPos.getY()][oldPos.getX()] = null;
+			board[oldPos.getY()][oldPos.getX()] = null; // this case is for the Pawn Attack!
 			board[newPos.getY()][newPos.getX()] = movedPiece;
 		}
 
@@ -153,8 +153,8 @@ public class BoardRepresentation {
 		else
 			whitePieces.remove(attackedPiece);
 
-		Vector2D attackedPiecePos = attackedPiece.getPosition(); 
-		board[attackedPiecePos.getY()][attackedPiecePos.getX()] = null;  // or NoPiece! 
+		Vector2D attackedPiecePos = attackedPiece.getPosition();
+		board[attackedPiecePos.getY()][attackedPiecePos.getX()] = null; // or NoPiece!
 	}
 
 	public boolean isCheckBetween(Vector2D kingPos, Vector2D rookPos) {
@@ -300,7 +300,8 @@ public class BoardRepresentation {
 			resultBlack += "\n";
 		}
 
-		return "WHITE: \n" + resultWhite + " \n" + "#".repeat(50) + "\n \n" + "BLACK: \n" + resultBlack+ " \n" + toBoardString();
+		return "WHITE: \n" + resultWhite + " \n" + "#".repeat(50) + "\n \n" + "BLACK: \n" + resultBlack + " \n"
+				+ toBoardString();
 	}
 
 	public List<Piece> getWhitePieces() {

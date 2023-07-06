@@ -39,7 +39,7 @@ public class SettingsView extends Pane implements Component {
 		this.getChildren().add(gameContent);
 	}
 
-	public void inGame() {
+	public void inGame() { // TODO CHANGE IN AND NO GAME TO Method if(Game.isRunning) - Settings haben nichts damit zu tun, ob ein Spiel läuft oder nicht
 		gameContent.getChildren().clear();
 		gameContent.getChildren().add(inGameContent);
 	}
@@ -77,7 +77,7 @@ public class SettingsView extends Pane implements Component {
 
 		public InGamePane() {
 			this.setPrefWidth(settings.settingsViewInGamePrefWidth.get());
-			this.setPrefHeight(settings.settingsViewPrefHeight.get() / 5);
+			this.setPrefHeight(settings.settingsViewPrefHeight.get() / 5); // TODO: Remove Magical Numbers 5 And 2
 			this.setTranslateX(settings.settingsViewInGameWidthOffset.get() / 2);
 			this.setTranslateY(settings.settingsViewPrefHeight.get() / 2);
 			this.setId("InGamePane");

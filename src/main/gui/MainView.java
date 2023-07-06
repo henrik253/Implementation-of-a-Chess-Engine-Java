@@ -23,11 +23,8 @@ public class MainView extends AnchorPane {
 		this.getChildren().add(settingsView);
 		this.getChildren().add(gameStartView);
 		this.getChildren().add(gameOverView);
-		
+
 		this.gameOverView.setVisible(false);
-		
-		
-		
 	}
 
 	public void drawGameStart() {

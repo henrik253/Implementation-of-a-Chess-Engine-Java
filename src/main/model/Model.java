@@ -18,10 +18,11 @@ public class Model {
 	}
 
 	public void startGame(String fen) {
-		this.board = new BoardRepresentation(FENConverter.convertPieceBoard(fen));
+		this.board = new BoardRepresentation(FENConverter.convertPieceBoard(fen)); // <----
+		// moveValidation needs to be started. depending on the inserted FEN
 	}
 
-	public boolean movePiece(int oldColumn, int oldRow, int newColumn, int newRow) {
+	public boolean movePiece(int oldColumn, int oldRow, int newColumn, int newRow) { // <----
 		return moveValidation.makeMove(new Vector2D(oldColumn, oldRow), new Vector2D(newColumn, newRow));
 	}
 
@@ -52,7 +53,5 @@ public class Model {
 	public void setBoardRepresentation(BoardRepresentation board) {
 		this.board = board;
 	}
-
-
 
 }

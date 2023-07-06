@@ -68,8 +68,8 @@ public class Main extends Application {
 		gameStartPresenter = new GameStartPresenter();
 
 		// All Views
-		mainView = new MainView();
-		gameView = new GameView();
+		mainView = new MainView(); // TODO new Class View with 3 Objects Main,Game and OverlayView
+		gameView = new GameView(); 
 		settingsView = new SettingsView();
 		gameOverView = new GameOverView();
 		gameStartView = new GameStartView();
@@ -156,7 +156,10 @@ public class Main extends Application {
 		model.setSettings(settings);
 		model.setMoveValidation(moveValidation);
 		moveValidation.setModel(model);
+<<<<<<< Updated upstream
 
+=======
+>>>>>>> Stashed changes
 	}
 
 	public void combineGUItoModel() {

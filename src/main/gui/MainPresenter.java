@@ -22,18 +22,66 @@ public class MainPresenter extends Presenter {
 	private Model model;
 
 	public boolean moveRequest(int oldX, int oldY, int newX, int newY) {
-		
+
 		boolean validMove = model.movePiece(oldX, oldY, newX, newY); // after model.moveRequest
+		
+		if(validMove) // TODO AI 
+		{
+			
+		}
+		
+		checkStates();
+
 		return validMove;
 	}
 
-	public void startGame() {
-		gameStartPresenter.setDisableView(false);
-		loadBoard(settings.selectedFEN.get());
-		settingsPresenter.setInGameContent(); // PauseGame Button etc... 
-		model.startGame(); 
+	public void checkStates() {
+
+		if (State.gameState.inGame()) {
+			return; // Game can continue normally
+		}
+
+		if (State.gameState.isGameOver()) {
+			checkGameOverStates();
+		}
 	}
-	
+
+	private void checkGameOverStates() {
+		if (State.gameOverReason.isNone()) {
+
+		}
+
+		if (State.gameOverReason.isBlackWon()) {
+			// show winning Screen for Black
+		}
+
+		if (State.gameOverReason.isWhiteWon()) {
+			// show winning Screen for White
+		}
+
+		if (State.gameOverReason.isDraw()) {
+			// show Draw Screen
+		}
+	}
+
+	public void startGame() {
+		startGameViews();
+		startBoard();
+		startModel();
+	}
+
+	private void startGameViews() {
+		gameStartPresenter.setDisableView(false);
+		settingsPresenter.setInGameContent(); // PauseGame Button etc...
+	} // specific gui content for the game
+
+	private void startBoard() {
+		loadBoard(settings.selectedFEN.get());
+	} // load the board
+
+	private void startModel() {
+		model.startGame();
+	}
 
 	public void surrenderGame() {
 	}
@@ -101,11 +149,7 @@ public class MainPresenter extends Presenter {
 
 	public SimplePiece[][] getGameBoard() {
 		return BoardConverter.convertToSimple(model.getBoard());
-		
+
 	}
 
-//	public void removePieceFromBoard(Vector2D pos ) {
-//		gamePresenter.removePieceFromBoard(pos);
-//		
-//	}
 }

@@ -53,6 +53,9 @@ public class MoveValidation {
 		if (!noPiecesBetween(piece, newPos))
 			return false;
 
+		if (isPawnMovingOnEnemyPiece(piece, newPos))
+			return false;
+
 		if (noPiece(newPos)) {
 			moveSucceed = tryMove(oldPos, newPos);
 		} else if (isEnemyPiece(piece, newPos)) {
@@ -66,13 +69,20 @@ public class MoveValidation {
 
 		if (moveSucceed) {
 			if (enemyInCheck()) {
-				System.out.println("IN CHECK!!!!");
+				System.out.println("Check!");
+				if (isCheckMate(onMove.isWhite() ? this.blackKing : this.whiteKing)) {
+					System.out.println("CheckMate");
+				}
 			}
 			setNextPlayerOnMove();
 			moveCounter++;
 			lastMove = new Move(oldPos, newPos);
 		}
 		return moveSucceed;
+	}
+
+	private boolean isPawnMovingOnEnemyPiece(Piece piece, Vector2D newPos) {
+		return piece instanceof Pawn && ((Pawn) piece).isValidMove(newPos) && board.getPiece(newPos) != null;
 	}
 
 	private boolean tryMove(Vector2D oldPos, Vector2D newPos) {
@@ -91,12 +101,14 @@ public class MoveValidation {
 		King king = onMove.isWhite() ? (King) boardClone.getKing(ChessPieceColor.WHITE)
 				: (King) boardClone.getKing(ChessPieceColor.BLACK);
 
-		if (inCheck(attackedSquares, king)) {
+		if (inCheck(attackedSquares, king)) { // checks if own side would be in check if it does the move
 			return false;
 		}
+		boardClone.calcAttackedSquaresBy(onMove); // neccessary if we want to proof if we check the enemy side
 
 		this.board.setBoard(boardClone.getBoard());
-		this.board.calcAttackedSquaresBy(onMove);
+		this.board.setAttackedSquaresByWhite(boardClone.getAttackedSquaresByWhite());
+		this.board.setAttackedSquaresByBlack(boardClone.getAttackedSquaresByBlack());
 
 		return true;
 	}
@@ -105,13 +117,8 @@ public class MoveValidation {
 
 		if (piece instanceof Pawn) {
 			Pawn pawn = (Pawn) piece;
-
-			if (isPawnAttack(pawn, newPos))
+			if (isPawnAttack(pawn, newPos) || isEnPassantMove(pawn, newPos))
 				return true;
-			
-			if(isEnPassantMove(pawn,newPos))
-				return true;
-
 		}
 
 		if (piece instanceof King) {
@@ -130,7 +137,7 @@ public class MoveValidation {
 
 	}
 
-	public boolean isEnPassantMove(Pawn pawn, Vector2D newPos) {
+	public boolean isEnPassantMove(Pawn pawn, Vector2D newPos) { // Game Logic???
 		Piece p = this.board.getPiece(newPos);
 		Vector2D direction = new Vector2D(0, onMove.isWhite() ? 1 : -1);
 		Vector2D attackedPieceCoords = Vector2D.add(newPos, direction);
@@ -143,13 +150,13 @@ public class MoveValidation {
 		return false;
 	}
 
-	private boolean lastMoveIsDoublePawnMove() {
+	private boolean lastMoveIsDoublePawnMove() { // Game Logic???
 		Piece piece = board.getPiece(lastMove.getNewPos());
 		int yLength = (int) Math.abs(lastMove.getOldPos().getY() - lastMove.getNewPos().getY());
 		return piece instanceof Pawn && !(((Pawn) piece).isFirstMove()) && yLength == 2;
 	}
 
-	public boolean isCastleMove(King king, Vector2D newPos) {
+	public boolean isCastleMove(King king, Vector2D newPos) { // Game Logic???
 		if (!king.isFirstMove())
 			return false;
 
@@ -179,7 +186,7 @@ public class MoveValidation {
 		return true;
 	}
 
-	public boolean tryCastling(Vector2D oldPos, Vector2D newPos) {
+	public boolean tryCastling(Vector2D oldPos, Vector2D newPos) { // Game Logic???
 		Piece piece = board.getPiece(oldPos);
 		if (!(piece instanceof King))
 			return false;
@@ -217,20 +224,25 @@ public class MoveValidation {
 		return false;
 	}
 
-	private boolean inCheck(int[][] attackedSquares, King king) {
+	private boolean inCheck(int[][] attackedSquares, King king) {//TODO Game Logic???
 		return attackedSquares[king.getPosition().getY()][king.getPosition().getX()] > 0;
 	}
 
-	private boolean isCheckMate() {
+	private boolean isCheckMate(King king) {// Game Logic???
 		King k = onMove.isWhite() ? blackKing : whiteKing;
 		int[][] attackableSqaures = onMove.isWhite() ? this.board.getAttackedSquaresByWhite()
 				: this.board.getAttackedSquaresByBlack();
-		List<Vector2D> moveablePositions = k.calculateMoveablePositions();
+		List<List<Vector2D>> moveablePositions = k.getAttackableSquares();
 
-		for (Vector2D pos : moveablePositions) {
-
+		for (List<Vector2D> movesInDirection : moveablePositions) {
+			for (Vector2D move : movesInDirection) {
+				Piece p = board.getPiece(move);
+				if (p == null || p.getColor() != king.getColor() || attackableSqaures[move.getY()][move.getX()] > 0) {
+					return false;
+				} // checks if king can move on a square if he can, its not a checkmate
+			}
 		}
-		return false;
+		return true;
 	}
 
 	private boolean noPiecesBetween(Piece piece, Vector2D newPos) {
