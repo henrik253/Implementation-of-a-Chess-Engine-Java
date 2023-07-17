@@ -1,41 +1,49 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
-  <modelVersion>4.0.0</modelVersion>
-  <groupId>org.example</groupId>
-  <artifactId>Teamprojekt</artifactId>
-  <version>1.0-SNAPSHOT</version>
-  <name>Archetype - Teamprojekt</name>
-  <url>http://maven.apache.org</url>
-  <properties>
-    <dl4j.version>1.0.0-M2.1</dl4j.version>
-  </properties>
-    <repositories>
-        <repository>
-            <id>data-local</id>
-            <name>data</name>
-            <url>file://${project.basedir}/lib</url>
-        </repository>
-    </repositories>
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <groupId>org.example</groupId>
+    <artifactId>Teamprojekt</artifactId>
+    <version>1.0-SNAPSHOT</version>
+    <name>Archetype - Teamprojekt</name>
+    <url>http://maven.apache.org</url>
+    <properties>
+        <dl4j.version>1.0.0-beta7</dl4j.version>
+    </properties>
 
     <dependencies>
 
-    <dependency>
-      <groupId>org.nd4j</groupId>
-      <artifactId>nd4j-native-platform</artifactId>
-      <version>${dl4j.version}</version>
-    </dependency>
+        <dependency>
+            <groupId>org.nd4j</groupId>
+            <artifactId>nd4j-native-platform</artifactId>
+            <version>${dl4j.version}</version>
+        </dependency>
 
-    <dependency>
-      <groupId>org.deeplearning4j</groupId>
-      <artifactId>deeplearning4j-core</artifactId>
-      <version>${dl4j.version}</version>
-    </dependency>
-      <dependency>
-          <groupId>org.datavec</groupId>
-          <artifactId>datavec-api</artifactId>
-          <version>1.0.0-M2.1</version>
-      </dependency>
+        <dependency>
+            <groupId>org.deeplearning4j</groupId>
+            <artifactId>deeplearning4j-core</artifactId>
+            <version>${dl4j.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.datavec</groupId>
+            <artifactId>datavec-api</artifactId>
+            <version>1.0.0-beta7</version>
+        </dependency>
+        <dependency>
+            <groupId>org.deeplearning4j</groupId>
+            <artifactId>deeplearning4j-nn</artifactId>
+            <version>1.0.0-beta7</version>
+        </dependency>
 
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-api</artifactId>
+            <version>2.0.5</version>
+        </dependency>
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-log4j12</artifactId>
+            <version>2.0.5</version>
+        </dependency>
         <dependency>
             <groupId>org.openjfx</groupId>
             <artifactId>javafx-controls</artifactId>
@@ -43,13 +51,18 @@
         </dependency>
         <dependency>
             <groupId>org.deeplearning4j</groupId>
-            <artifactId>deeplearning4j-nn</artifactId>
-            <version>1.0.0-M2.1</version>
+            <artifactId>deeplearning4j-core</artifactId>
+            <version>1.0.0-beta7</version>
         </dependency>
         <dependency>
             <groupId>org.deeplearning4j</groupId>
             <artifactId>deeplearning4j-nn</artifactId>
-            <version>1.0.0-beta3</version>
+            <version>1.0.0-beta7</version>
+        </dependency>
+        <dependency>
+            <groupId>org.datavec</groupId>
+            <artifactId>datavec-api</artifactId>
+            <version>1.0.0-beta7</version>
         </dependency>
 
 
@@ -60,8 +73,8 @@
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
                 <configuration>
-                    <source>20</source>
-                    <target>20</target>
+                    <source>17</source>
+                    <target>17</target>
                 </configuration>
             </plugin>
         </plugins>

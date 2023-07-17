@@ -2,10 +2,9 @@ package ai.AlphaZeroDotFive;
 
 import ai.AlphaZeroDotFive.Logic.LogicTranslator;
 import ai.AlphaZeroDotFive.MonteCarloTree.MonteCarloTree;
-import ai.AlphaZeroDotFive.NeuralNets.IPolicyNetWork;
-import ai.AlphaZeroDotFive.NeuralNets.IValueNetWork;
-import ai.AlphaZeroDotFive.NeuralNets.RPolicyNetwork;
-import ai.AlphaZeroDotFive.NeuralNets.RValueNetWork;
+import ai.AlphaZeroDotFive.NeuralNets.*;
+
+import java.io.IOException;
 
 public class AlphaZeroDotFiveAgent {
     //logic specific data
@@ -23,6 +22,9 @@ public class AlphaZeroDotFiveAgent {
     public void initRandom() {
         this.policyNet = new RPolicyNetwork();
         this.valueNet = new RValueNetWork();
+    }
+    public void addActualValueNet() throws IOException {
+        this.valueNet = new ValueNetwork("./resources/TrainedValueNetForRunning.zip", false);
     }
     public int[] getNextMove(int[][] board){
         int[][] monteBoard = new int[board.length][board[0].length];

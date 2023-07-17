@@ -22,6 +22,8 @@ import main.model.gameLogic.GameLogic;
 import main.model.gameLogic.MoveValidation;
 import main.model.start.FENConverter;
 
+import java.io.IOException;
+
 public class Main extends Application {
 
 	private Scene scene;
@@ -175,8 +177,12 @@ public class Main extends Application {
 		Settings settings = new Settings();
 		Piece[][] board = FENConverter.convertPieceBoard(settings.selectedFEN.get());
 		AlphaZeroDotFiveAgent ai = new AlphaZeroDotFiveAgent(2, 4000, -1);
-		ai.getLogic().printBoard(board);
 		ai.initRandom();
+		try{
+			ai.addActualValueNet();
+		} catch (IOException e) {
+			throw new RuntimeException(e);
+		}
 		long start = System.currentTimeMillis();
 		ai.getNextMove(ai.getLogic().translateBoard(board));
 		long end = System.currentTimeMillis();
