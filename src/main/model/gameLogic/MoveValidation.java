@@ -69,7 +69,7 @@ public class MoveValidation {
 
 		if (moveSucceed) {
 			if (enemyInCheck()) {
-				System.out.println("Check!");
+				//System.out.println("Check!");
 				if (isCheckMate(onMove.isWhite() ? this.blackKing : this.whiteKing)) {
 					System.out.println("CheckMate");
 				}
@@ -228,7 +228,7 @@ public class MoveValidation {
 		return attackedSquares[king.getPosition().getY()][king.getPosition().getX()] > 0;
 	}
 
-	private boolean isCheckMate(King king) {// Game Logic???
+	public boolean isCheckMate(King king) {// Game Logic???
 		King k = onMove.isWhite() ? blackKing : whiteKing;
 		int[][] attackableSqaures = onMove.isWhite() ? this.board.getAttackedSquaresByWhite()
 				: this.board.getAttackedSquaresByBlack();

@@ -54,7 +54,7 @@ public class MonteCarloTree {
         }
         float value = -1;
         //if the game hasnt ended, expand node before backtracking
-        if(!getLogic().endingMove(node.moveLeadingTo)){
+        if(!getLogic().endingMove(node.moveLeadingTo, node.player, node.board)){
             //run policy and value network
             float[] policy = this.ai.getPolicyNet().getPolicy(node.board);
             value = this.ai.getValueNet().getValue(node.board);//for backtracking to root

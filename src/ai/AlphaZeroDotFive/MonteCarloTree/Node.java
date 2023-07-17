@@ -96,12 +96,6 @@ public class Node {
         if(parent != null){
             parent.backtrackToRoot(value * -1);
         }
-        if(this.tree.lastSimulation){
-            int[] move = this.tree.getLogic().intToCoordinates(this.moveLeadingTo);
-            System.out.println("Move leading to: " + move[0] + ", " + move[1] + " -> " + move[2] + ", " + move[3]);
-            System.out.println();
-            this.tree.getLogic().printBoard(this.board);
-        }
     }
 
 }

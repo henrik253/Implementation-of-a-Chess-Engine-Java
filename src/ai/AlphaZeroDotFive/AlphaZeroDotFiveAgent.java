@@ -24,7 +24,7 @@ public class AlphaZeroDotFiveAgent {
         this.policyNet = new RPolicyNetwork();
         this.valueNet = new RValueNetWork();
     }
-    public int getNextMove(int[][] board){
+    public int[] getNextMove(int[][] board){
         int[][] monteBoard = new int[board.length][board[0].length];
         for(int i = 0; i < monteBoard.length; i++){
             for(int j = 0; j < monteBoard[0].length; j++){
@@ -40,7 +40,7 @@ public class AlphaZeroDotFiveAgent {
                 bestMoveIndex = i;
             }
         }
-        return bestMoveIndex;
+        return getLogic().intToCoordinates(bestMoveIndex);
     }
     public LogicTranslator getLogic(){
         return this.tree.getLogic();

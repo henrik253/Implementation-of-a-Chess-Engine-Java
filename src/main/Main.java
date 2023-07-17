@@ -173,8 +173,8 @@ public class Main extends Application {
 
 	static void testAi(){
 		Settings settings = new Settings();
-		Piece[][] board = FENConverter.convertPieceBoard(settings.fenExamples[0]);
-		AlphaZeroDotFiveAgent ai = new AlphaZeroDotFiveAgent(2, 5000, -1);
+		Piece[][] board = FENConverter.convertPieceBoard(settings.selectedFEN.get());
+		AlphaZeroDotFiveAgent ai = new AlphaZeroDotFiveAgent(2, 4000, -1);
 		ai.getLogic().printBoard(board);
 		ai.initRandom();
 		long start = System.currentTimeMillis();

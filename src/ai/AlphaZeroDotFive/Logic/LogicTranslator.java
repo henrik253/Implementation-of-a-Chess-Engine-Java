@@ -149,9 +149,19 @@ public class LogicTranslator {
     }
     //TODO
     //Only returns if the enemy is in check!
-    public boolean endingMove(int move){
-        //return inCheckMoves[move];
-        return false;
+    public boolean endingMove(int move, int playerOnMove, int[][] currentBoard){
+        if(inCheckMoves[move]){
+            this.model = new Model();
+            model.setBoardRepresentation(new BoardRepresentation(translateBoard(currentBoard)));
+            model.setMoveValidation(new MoveValidation());
+            model.getMoveValidation().setBoard(model.getBoardRepresentation());
+            model.getMoveValidation().setOnMove(playerOnMove == 1 ? ChessPieceColor.WHITE : ChessPieceColor.BLACK);
+            ChessPieceColor enemyColor = playerOnMove == 1 ? ChessPieceColor.BLACK : ChessPieceColor.WHITE;
+            return this.model.getMoveValidation().isCheckMate((King)this.model.getBoardRepresentation().getKing(enemyColor));
+        }
+        else{
+            return false;
+        }
     }
 
     //converts a numberArray that represents an octal number to the decimal system;

@@ -1,11 +1,11 @@
 package main.gui;
 
+import ai.AlphaZeroDotFive.AlphaZeroDotFiveAgent;
 import main.Settings;
 import main.gui.game.board.GamePresenter;
 import main.gui.game.gameStart.GameStartPresenter;
 import main.gui.game.settings.SettingsPresenter;
 import main.model.Model;
-import main.model.Vector2D;
 import main.model.chessPieces.SimplePiece;
 import main.model.gameStates.State;
 import main.model.start.BoardConverter;
@@ -24,12 +24,15 @@ public class MainPresenter extends Presenter {
 	public boolean moveRequest(int oldX, int oldY, int newX, int newY) {
 
 		boolean validMove = model.movePiece(oldX, oldY, newX, newY); // after model.moveRequest
-		
-		if(validMove) // TODO AI 
+
+		if(validMove) // TODO AI
 		{
-			
+			AlphaZeroDotFiveAgent ai = new AlphaZeroDotFiveAgent(2, 500, -1);
+			ai.initRandom();
+			int[] coords = ai.getNextMove(ai.getLogic().translateBoard(model.getBoardRepresentation().getBoard()));
+			model.movePiece(coords[0], coords[1], coords[2], coords[3]);
 		}
-		
+
 		checkStates();
 
 		return validMove;
