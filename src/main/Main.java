@@ -170,8 +170,8 @@ public class Main extends Application {
 	}
 
 	public static void main(String[] args) {
-		testAi();
-		//launch(args);
+		//testAi();
+		launch(args);
 	}
 
 	static void testAi(){
