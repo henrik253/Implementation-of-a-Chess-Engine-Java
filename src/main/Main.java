@@ -1,5 +1,6 @@
 package main;
 
+import BitboardValidation.MoveValidation.BitBoardMoveValidation;
 import ai.AlphaZeroDotFive.AlphaZeroDotFiveAgent;
 import javafx.application.Application;
 import javafx.scene.Scene;
@@ -20,9 +21,9 @@ import main.model.Model;
 import main.model.chessPieces.concretePieces.Piece;
 import main.model.gameLogic.GameLogic;
 import main.model.gameLogic.MoveValidation;
-import main.model.start.FENConverter;
 
 import java.io.IOException;
+import java.util.List;
 
 public class Main extends Application {
 
@@ -71,7 +72,7 @@ public class Main extends Application {
 
 		// All Views
 		mainView = new MainView(); // TODO new Class View with 3 Objects Main,Game and OverlayView
-		gameView = new GameView(); 
+		gameView = new GameView();
 		settingsView = new SettingsView();
 		gameOverView = new GameOverView();
 		gameStartView = new GameStartView();
@@ -169,25 +170,48 @@ public class Main extends Application {
 	}
 
 	public static void main(String[] args) {
-		//testAi();
-		launch(args);
+		testAi();
+		//launch(args);
 	}
 
 	static void testAi(){
 		Settings settings = new Settings();
-		Piece[][] board = FENConverter.convertPieceBoard(settings.selectedFEN.get());
+
+		int[][] testBoard = new int[][]{
+				{ 0, 0, 0, 3, 0, 0, 0, 0},
+				{ 4, 6, 5, 6, 0, 0, 0, 1},
+				{ 0, 6, 0, 0,-2, 0, 0, 0},
+				{ 0, 0,-6, 0, 0,-6, 0, 0},
+				{-5, 0, 0,-2,-6, 0, 0, 0},
+				{ 0, 0, 0, 6, 0,-3,-1, 0},
+				{ 0, 0, 0, 0, 0, 0, 0, 0},
+				{ 0, 0, 0, 0, 0, 0, 0, 0},
+		};
+
+		BitBoardMoveValidation moveValidation1 = new BitBoardMoveValidation(testBoard);
 		AlphaZeroDotFiveAgent ai = new AlphaZeroDotFiveAgent(2, 4000, -1);
 		ai.initRandom();
+		Piece[][] board = ai.getLogic().translateBoard(testBoard);
 		try{
 			ai.addActualValueNet();
 		} catch (IOException e) {
 			throw new RuntimeException(e);
 		}
-		long start = System.currentTimeMillis();
-		ai.getNextMove(ai.getLogic().translateBoard(board));
-		long end = System.currentTimeMillis();
-		System.out.println(end - start + "ms");
-		System.exit(0);
+		long start, end;
+		start = System.currentTimeMillis();
+		for(int i = 0; i < 1000; i++){
+			ai.getLogic().getValidMoves(testBoard, 1);
+		}
+		end = System.currentTimeMillis();
+		System.out.println(end - start);
+		start = System.currentTimeMillis();
+		for(int i = 0; i < 1000; i++){
+			moveValidation1.getValidMoves();
+		}
+		end = System.currentTimeMillis();
+		System.out.println(end - start);
+		List<Integer> result = ai.getLogic().getValidMoves(testBoard, 1);
+
 	}
 
 	static boolean arrEq(int[][] arr1, int[][] arr2){
