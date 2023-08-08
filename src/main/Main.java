@@ -203,13 +203,14 @@ public class Main extends Application {
 			ai.getLogic().getValidMoves(testBoard, 1);
 		}
 		end = System.currentTimeMillis();
-		System.out.println(end - start);
+		System.out.println(end - start+"ms");
 		start = System.currentTimeMillis();
 		for(int i = 0; i < 1000; i++){
+			moveValidation1.changeBoard(testBoard);
 			moveValidation1.getValidMoves();
 		}
 		end = System.currentTimeMillis();
-		System.out.println(end - start);
+		System.out.println(end - start+"ms");
 		List<Integer> result = ai.getLogic().getValidMoves(testBoard, 1);
 
 	}

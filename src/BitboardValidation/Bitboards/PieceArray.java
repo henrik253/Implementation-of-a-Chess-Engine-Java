@@ -5,11 +5,13 @@ public class PieceArray {
     public ULong combinedPieces;
     public PieceArray(int[][] intBoard, int player, BitMaskArr arr) {
         initPieces(arr);
-        flipBoardToPlayer(intBoard, player);
         for(int row = 0; row < intBoard.length; row++){
             for (int col = 0; col < intBoard[0].length; col++) {
-                if(intBoard[row][col] > 0){
+                if((intBoard[row][col] > 0 && player == 1)){
                     pieces[intBoard[row][col] - 1].set(row, col);
+                    this.combinedPieces.set(row, col);
+                }else if(intBoard[row][col] < 0 && player == -1){
+                    pieces[-1*intBoard[row][col] - 1].set(row, col);
                     this.combinedPieces.set(row, col);
                 }
             }

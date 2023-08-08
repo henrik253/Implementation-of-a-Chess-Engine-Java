@@ -42,6 +42,15 @@ public class BitBoardMoveValidation {
                 new PawnUpCorrection(this.board, this.generator),//needs to switch when player switches
         };
     }
+    public void changeBoard(int[][] board){
+        this.board = new Bitboard(board, this.generator.bitMaskArr);
+        this.flippedBoard = new Bitboard(this.board);
+        this.flippedBoard.flipPlayer();
+        for(int i = 0; i < this.rayCasters.length; i++){
+            this.rayCasters[i].bitboard = this.board;
+            this.corrections[i].board = this.board;
+        }
+    }
 
     public int coordinatesToInt(int sx, int sy, int dx, int dy){
         return sx * (8*8*8)+ sy * (8*8) + dx * 8 + dy;
