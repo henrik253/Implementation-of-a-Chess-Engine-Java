@@ -29,7 +29,7 @@ public class MainPresenter extends Presenter {
 
 		if(validMove) // TODO AI
 		{
-			AlphaZeroDotFiveAgent ai = new AlphaZeroDotFiveAgent(2, 100, -1);
+			AlphaZeroDotFiveAgent ai = new AlphaZeroDotFiveAgent(2, 500, -1);
 			ai.initRandom();
 			try {
 				ai.addActualValueNet();

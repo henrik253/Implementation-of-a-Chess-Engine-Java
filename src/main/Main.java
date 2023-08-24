@@ -1,7 +1,5 @@
 package main;
 
-import BitboardValidation.MoveValidation.BitBoardMoveValidation;
-import ai.AlphaZeroDotFive.AlphaZeroDotFiveAgent;
 import javafx.application.Application;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
@@ -18,12 +16,8 @@ import main.gui.game.gameStart.GameStartView;
 import main.gui.game.settings.SettingsPresenter;
 import main.gui.game.settings.SettingsView;
 import main.model.Model;
-import main.model.chessPieces.concretePieces.Piece;
 import main.model.gameLogic.GameLogic;
 import main.model.gameLogic.MoveValidation;
-
-import java.io.IOException;
-import java.util.List;
 
 public class Main extends Application {
 
@@ -175,43 +169,7 @@ public class Main extends Application {
 	}
 
 	static void testAi(){
-		Settings settings = new Settings();
 
-		int[][] testBoard = new int[][]{
-				{ 0, 0, 0, 3, 0, 0, 0, 0},
-				{ 4, 6, 5, 6, 0, 0, 0, 1},
-				{ 0, 6, 0, 0,-2, 0, 0, 0},
-				{ 0, 0,-6, 0, 0,-6, 0, 0},
-				{-5, 0, 0,-2,-6, 0, 0, 0},
-				{ 0, 0, 0, 6, 0,-3,-1, 0},
-				{ 0, 0, 0, 0, 0, 0, 0, 0},
-				{ 0, 0, 0, 0, 0, 0, 0, 0},
-		};
-
-		BitBoardMoveValidation moveValidation1 = new BitBoardMoveValidation(testBoard);
-		AlphaZeroDotFiveAgent ai = new AlphaZeroDotFiveAgent(2, 4000, -1);
-		ai.initRandom();
-		Piece[][] board = ai.getLogic().translateBoard(testBoard);
-		try{
-			ai.addActualValueNet();
-		} catch (IOException e) {
-			throw new RuntimeException(e);
-		}
-		long start, end;
-		start = System.currentTimeMillis();
-		for(int i = 0; i < 1000; i++){
-			ai.getLogic().getValidMoves(testBoard, 1);
-		}
-		end = System.currentTimeMillis();
-		System.out.println(end - start+"ms");
-		start = System.currentTimeMillis();
-		for(int i = 0; i < 1000; i++){
-			moveValidation1.changeBoard(testBoard);
-			moveValidation1.getValidMoves();
-		}
-		end = System.currentTimeMillis();
-		System.out.println(end - start+"ms");
-		List<Integer> result = ai.getLogic().getValidMoves(testBoard, 1);
 
 	}
 
