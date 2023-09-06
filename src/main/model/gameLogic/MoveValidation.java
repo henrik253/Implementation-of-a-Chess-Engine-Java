@@ -39,9 +39,11 @@ public class MoveValidation {
 
 	public boolean makeMove(Vector2D oldPos, Vector2D newPos) {
 		Piece piece = board.getPiece(oldPos);
+		
 		if(piece == null){
 			return false;
 		}
+		
 		boolean moveSucceed = false;
 
 		if (!isOnMove(piece))
@@ -69,7 +71,7 @@ public class MoveValidation {
 
 		if (moveSucceed) {
 			if (enemyInCheck()) {
-				//System.out.println("Check!");
+	
 				if (isCheckMate(onMove.isWhite() ? this.blackKing : this.whiteKing)) {
 					System.out.println("CheckMate");
 				}
@@ -228,7 +230,7 @@ public class MoveValidation {
 		return attackedSquares[king.getPosition().getY()][king.getPosition().getX()] > 0;
 	}
 
-	public boolean isCheckMate(King king) {// Game Logic???
+	public boolean isCheckMate(King king) {//TODO Game Logic???
 		King k = onMove.isWhite() ? blackKing : whiteKing;
 		int[][] attackableSqaures = onMove.isWhite() ? this.board.getAttackedSquaresByWhite()
 				: this.board.getAttackedSquaresByBlack();
@@ -239,7 +241,7 @@ public class MoveValidation {
 				Piece p = board.getPiece(move);
 				if (p == null || p.getColor() != king.getColor() || attackableSqaures[move.getY()][move.getX()] > 0) {
 					return false;
-				} // checks if king can move on a square if he can, its not a checkmate
+				} //TODO checks if king can move on a square if he can, its not a checkmate
 			}
 		}
 		return true;

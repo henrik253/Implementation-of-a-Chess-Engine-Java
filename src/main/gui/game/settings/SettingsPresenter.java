@@ -9,11 +9,11 @@ public class SettingsPresenter {
 	private MainPresenter mainPresenter;
 
 	public void setInGameContent() {
-		settingsView.inGame();
+		settingsView.setInGameContent();
 	}
 
 	public void setNoGameContent() {
-		settingsView.noGame();
+	
 	}
 
 	public Settings getSettings() {

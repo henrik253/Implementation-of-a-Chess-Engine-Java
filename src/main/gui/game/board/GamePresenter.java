@@ -9,21 +9,28 @@ public class GamePresenter extends Presenter {
 	private GameView gameView;
 	private MainPresenter mainPresenter;
 
-	
 	public void setBoard(SimplePiece[][] simplePieceBoard) {
 		gameView.initSimplePieceBoard(simplePieceBoard);
 	}
-	
-	public boolean moveRequest(int oldX,int oldY,int newX,int newY) {
-		boolean succeedMove = mainPresenter.moveRequest(oldX,oldY,newX,newY);
-		
-		if(succeedMove)
-		{
+
+	public boolean moveRequest(int oldX, int oldY, int newX, int newY) {
+		boolean succeedMove = mainPresenter.moveRequest(oldX, oldY, newX, newY);
+
+		if (succeedMove) {
 			gameView.loadSimpleBoard(mainPresenter.getGameBoard());
+
+			try {
+				Thread.sleep(1000);
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+			}
+
+			gameView.loadSimpleBoard(mainPresenter.requestBotMove());
 		}
+
 		return succeedMove;
 	}
-	
+
 	public GameView getGameView() {
 		return gameView;
 	}

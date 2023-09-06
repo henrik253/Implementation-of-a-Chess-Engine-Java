@@ -113,5 +113,17 @@
 	-fx-background-color: #e8e8e8;
 }
 
+#BotSelectButton{
+	-fx-background-color: #55a630;
+    -fx-background-radius: 3.0;
+    -fx-border-width: 2.0;
+    -fx-font-family: "Helvetica";
+    -fx-font-size: 20.0px;
+    -fx-text-fill: white;
+    -fx-effect: dropshadow( gaussian , rgba(0.0,0.0,0.0,0.5) , 2.0,0.0,0.0,1.0 );
+}
 
+#BotSelectButton:hover{
+ -fx-background-color: #63b037;
+}
 

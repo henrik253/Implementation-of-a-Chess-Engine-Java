@@ -29,7 +29,8 @@ public class King extends Piece {
 	public boolean isValidCastle(Vector2D position) {
 		if (!firstMove)
 			return false;
-
+		
+		
 		return (int) Math.abs((((double) (position.getX() - this.position.getX())))) == 2;
 	}
 

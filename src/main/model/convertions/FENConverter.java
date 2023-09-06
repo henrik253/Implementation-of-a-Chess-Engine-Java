@@ -1,4 +1,4 @@
-package main.model.start;
+package main.model.convertions;
 
 import main.model.chessPieces.ChessPieceColor;
 import main.model.chessPieces.ChessPieceName;
@@ -11,7 +11,7 @@ import main.model.chessPieces.concretePieces.Piece;
 import main.model.chessPieces.concretePieces.Queen;
 import main.model.chessPieces.concretePieces.Rook;
 
-public class FENConverter {
+public class FENConverter { // Converting a FEN String to 
 
 	private static final int ROWS = 8;
 	private static final int COLUMNS = 8;

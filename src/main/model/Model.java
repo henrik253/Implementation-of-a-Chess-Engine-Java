@@ -2,32 +2,48 @@ package main.model;
 
 import main.Settings;
 import main.model.chessPieces.concretePieces.Piece;
+import main.model.convertions.FENConverter;
 import main.model.gameLogic.BoardRepresentation;
 import main.model.gameLogic.MoveValidation;
-import main.model.start.FENConverter;
 
 public class Model {
 
 	private Settings settings;
-	private BoardRepresentation board;
+	private BoardRepresentation boardRepresentation;
 	private MoveValidation moveValidation;
 
+	private ChessBot selectedChessBot; 
+	
 	public void startGame() {
 		startGame(settings.selectedFEN.get());
-		moveValidation.setBoard(board);
+		moveValidation.setBoard(boardRepresentation);
+		
+//		if(chessBot == null)
+//			throw new IllegalArgumentException("No ChessBot selected");
+		
+
 	}
 
 	public void startGame(String fen) {
-		this.board = new BoardRepresentation(FENConverter.convertPieceBoard(fen)); // <----
+		this.boardRepresentation = new BoardRepresentation(FENConverter.convertPieceBoard(fen)); // <----
+		
 		// moveValidation needs to be started. depending on the inserted FEN
 	}
 
 	public boolean movePiece(int oldColumn, int oldRow, int newColumn, int newRow) { // <----
 		return moveValidation.makeMove(new Vector2D(oldColumn, oldRow), new Vector2D(newColumn, newRow));
 	}
+	
+	public Piece[][] makeBotMove() {
+		return selectedChessBot.makeMove();
+	}
+	
+	public void setChessBot(ChessBot chessBot) {
+		this.selectedChessBot = chessBot;
+	}
 
 	public Piece[][] getBoard() {
-		return board.getBoard();
+		return boardRepresentation.getBoard();
 	}
 
 	public MoveValidation getMoveValidation() {
@@ -47,11 +63,11 @@ public class Model {
 	}
 
 	public BoardRepresentation getBoardRepresentation() {
-		return board;
+		return boardRepresentation;
 	}
 
 	public void setBoardRepresentation(BoardRepresentation board) {
-		this.board = board;
+		this.boardRepresentation = board;
 	}
 
 }

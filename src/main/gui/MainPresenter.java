@@ -7,9 +7,9 @@ import main.gui.game.gameStart.GameStartPresenter;
 import main.gui.game.settings.SettingsPresenter;
 import main.model.Model;
 import main.model.chessPieces.SimplePiece;
+import main.model.convertions.BoardConverter;
+import main.model.convertions.FENConverter;
 import main.model.gameStates.State;
-import main.model.start.BoardConverter;
-import main.model.start.FENConverter;
 
 import java.io.IOException;
 
@@ -27,23 +27,27 @@ public class MainPresenter extends Presenter {
 
 		boolean validMove = model.movePiece(oldX, oldY, newX, newY); // after model.moveRequest
 
-		if(validMove) // TODO AI
-		{
-			AlphaZeroDotFiveAgent ai = new AlphaZeroDotFiveAgent(2, 500, -1);
-			ai.initRandom();
-			try {
-				ai.addActualValueNet();
-			} catch (IOException e) {
-				throw new RuntimeException(e);
-			}
-			int[] coords = ai.getNextMove(ai.getLogic().translateBoard(model.getBoardRepresentation().getBoard()));
-			model.movePiece(coords[0], coords[1], coords[2], coords[3]);
-
-		}
+//		if(validMove) // TODO AI
+//		{
+//			AlphaZeroDotFiveAgent ai = new AlphaZeroDotFiveAgent(2, 500, -1);
+//			ai.initRandom();
+//			try {
+//				ai.addActualValueNet();
+//			} catch (IOException e) {
+//				throw new RuntimeException(e);
+//			}
+//			int[] coords = ai.getNextMove(ai.getLogic().translateBoard(model.getBoardRepresentation().getBoard()));
+//			model.movePiece(coords[0], coords[1], coords[2], coords[3]);
+//
+//		}
 
 		checkStates();
 
 		return validMove;
+	}
+
+	public SimplePiece[][] requestBotMove() {
+		return BoardConverter.convertToSimple(model.makeBotMove());
 	}
 
 	public void checkStates() {

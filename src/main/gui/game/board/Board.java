@@ -68,7 +68,7 @@ public class Board extends GridPane {
 
 	}
 
-	private void movePiece(Piece piece, int x, int y) {
+	private void movePiece(Piece piece, int x, int y) { // pieces are not moved, the board will be inserted
 		piece.setRow(x);
 		piece.setColumn(y);
 		this.getChildren().remove(piece);
@@ -76,7 +76,6 @@ public class Board extends GridPane {
 	}
 
 	public void drawBoard() {
-
 		drawBoard(false);
 	}
 

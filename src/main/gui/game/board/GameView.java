@@ -1,11 +1,10 @@
 package main.gui.game.board;
 
 import javafx.scene.layout.Pane;
-import main.gui.Component;
 import main.model.Vector2D;
 import main.model.chessPieces.SimplePiece;
 
-public class GameView extends Pane implements Component {
+public class GameView extends Pane  {
 
 	private GamePresenter gamePresenter;
 
@@ -15,7 +14,7 @@ public class GameView extends Pane implements Component {
 
 	}
 
-	@Override
+	
 	public void init() {
 		// TODO Auto-generated method stub
 

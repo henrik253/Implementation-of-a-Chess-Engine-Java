@@ -131,7 +131,7 @@ public class BoardRepresentation {
 
 	}
 
-	public void executeCastling(King king, Vector2D oldPos, Vector2D newPos) {
+	public void executeCastling(King king, Vector2D oldPos, Vector2D newPos) { // TODO in Game logic
 		boolean isRightSideCastle = newPos.getX() - king.getPosition().getX() > 0;
 		int xPosRook = isRightSideCastle ? this.board.length - 1 : 0;
 		Vector2D rookPos = new Vector2D(xPosRook, king.getPosition().getY());
@@ -142,7 +142,7 @@ public class BoardRepresentation {
 		makeMove(king.getPosition(), Vector2D.add(king.getPosition(), kingDirection));
 	}
 
-	public void executeEnPassant(Vector2D oldPos, Vector2D newPos) {
+	public void executeEnPassant(Vector2D oldPos, Vector2D newPos) { // TODO in Game logic
 		boolean whiteOnMove = getPiece(oldPos).getColor().isWhite();
 		Vector2D direction = new Vector2D(0, whiteOnMove ? 1 : -1);
 		Piece attackedPiece = getPiece(Vector2D.add(newPos, direction));
@@ -157,11 +157,11 @@ public class BoardRepresentation {
 		board[attackedPiecePos.getY()][attackedPiecePos.getX()] = null; // or NoPiece!
 	}
 
-	public boolean isCheckBetween(Vector2D kingPos, Vector2D rookPos) {
+	public boolean isCheckBetween(Vector2D kingPos, Vector2D rookPos) { // TODO in Game logic
 		int x = kingPos.getX() - rookPos.getX();
 		int y = kingPos.getY() - rookPos.getY();
 		int length = Math.max(Math.abs(x), Math.abs(y));
-
+		
 		int countX = kingPos.getX();
 		int countY = kingPos.getY();
 
@@ -173,7 +173,11 @@ public class BoardRepresentation {
 
 		int[][] attackedSquares = getPiece(kingPos).getColor().isWhite() ? attackedSquaresByBlack
 				: attackedSquaresByWhite;
-
+		
+		if(attackedSquares[kingPos.getX()][kingPos.getY()] > 0)
+			return true;
+		
+		
 		for (int step = 0; step < length - 1; step++) {
 			countX -= incX;
 			countY -= incY;

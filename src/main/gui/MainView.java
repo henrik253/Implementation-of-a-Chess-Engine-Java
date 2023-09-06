@@ -13,6 +13,7 @@ public class MainView extends AnchorPane {
 	private MainPresenter mainPresenter;
 
 	private Settings settings;
+	
 	private SettingsView settingsView;
 	private GameView gameView;
 	private GameOverView gameOverView;
@@ -32,6 +33,7 @@ public class MainView extends AnchorPane {
 	}
 
 	public void drawGame() {
+		
 	}
 
 	public void drawGameOver() {

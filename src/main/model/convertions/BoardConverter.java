@@ -1,4 +1,4 @@
-package main.model.start;
+package main.model.convertions;
 
 import main.model.chessPieces.ChessPieceName;
 import main.model.chessPieces.SimplePiece;

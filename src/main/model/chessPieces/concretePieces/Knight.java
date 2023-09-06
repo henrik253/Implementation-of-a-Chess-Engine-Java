@@ -14,7 +14,6 @@ public class Knight extends Piece {
 
 	public Knight(ChessPieceColor color, int row, int column) {
 		super(ChessPieceName.KNIGHT, color, row, column);
-
 	}
 
 	@Override
