@@ -1,5 +1,6 @@
 package main.model;
 
+import main.ChessBotStub;
 import main.Settings;
 import main.model.chessPieces.concretePieces.Piece;
 import main.model.convertions.FENConverter;
@@ -16,6 +17,7 @@ public class Model {
 	
 	public void startGame() {
 		startGame(settings.selectedFEN.get());
+		selectedChessBot = new ChessBotStub();
 		moveValidation.setBoard(boardRepresentation);
 		
 //		if(chessBot == null)
@@ -26,7 +28,6 @@ public class Model {
 
 	public void startGame(String fen) {
 		this.boardRepresentation = new BoardRepresentation(FENConverter.convertPieceBoard(fen)); // <----
-		
 		// moveValidation needs to be started. depending on the inserted FEN
 	}
 
@@ -35,7 +36,8 @@ public class Model {
 	}
 	
 	public Piece[][] makeBotMove() {
-		return selectedChessBot.makeMove();
+		Piece[][] board =  boardRepresentation.getBoard().clone();
+		return selectedChessBot.makeMove(board);
 	}
 	
 	public void setChessBot(ChessBot chessBot) {

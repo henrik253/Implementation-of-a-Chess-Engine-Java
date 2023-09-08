@@ -46,8 +46,8 @@ public class MoveValidation {
 		
 		boolean moveSucceed = false;
 
-		if (!isOnMove(piece))
-			return false;
+//		if (!isOnMove(piece))
+//			return false;
 
 		if (!piece.isValidMove(newPos) && !isSpecialMove(piece, newPos))
 			return false;

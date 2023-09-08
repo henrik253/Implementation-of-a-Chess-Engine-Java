@@ -1,5 +1,7 @@
 package main.gui.game.board;
 
+import java.util.concurrent.CompletableFuture;
+
 import main.gui.MainPresenter;
 import main.gui.Presenter;
 import main.model.Vector2D;
@@ -18,13 +20,8 @@ public class GamePresenter extends Presenter {
 
 		if (succeedMove) {
 			gameView.loadSimpleBoard(mainPresenter.getGameBoard());
-			gameView.loadSimpleBoard(mainPresenter.requestBotMove());
 			
-			try {
-				Thread.sleep(1000);
-			} catch (InterruptedException e) {
-				e.printStackTrace();
-			}
+			gameView.loadSimpleBoard(mainPresenter.requestBotMove());
 		}
 
 		return succeedMove;
