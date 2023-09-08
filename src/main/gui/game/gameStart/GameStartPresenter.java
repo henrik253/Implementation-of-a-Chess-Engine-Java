@@ -3,6 +3,7 @@ package main.gui.game.gameStart;
 import main.Settings;
 import main.gui.MainPresenter;
 import main.gui.Presenter;
+import main.gui.game.settings.settingsViewComponents.BotRepresentation;
 
 public class GameStartPresenter extends Presenter {
 
@@ -44,6 +45,10 @@ public class GameStartPresenter extends Presenter {
 
 	public void setSettings(Settings settings) {
 		this.settings = settings;
+	}
+
+	public void botSelected(BotRepresentation source) {
+		gameStartView.drawSelectedBot(source);
 	}
 
 }

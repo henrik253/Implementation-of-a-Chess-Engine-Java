@@ -18,14 +18,13 @@ public class GamePresenter extends Presenter {
 
 		if (succeedMove) {
 			gameView.loadSimpleBoard(mainPresenter.getGameBoard());
-
+			gameView.loadSimpleBoard(mainPresenter.requestBotMove());
+			
 			try {
 				Thread.sleep(1000);
 			} catch (InterruptedException e) {
 				e.printStackTrace();
 			}
-
-			gameView.loadSimpleBoard(mainPresenter.requestBotMove());
 		}
 
 		return succeedMove;

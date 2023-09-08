@@ -5,6 +5,7 @@ import main.Settings;
 import main.gui.game.board.GamePresenter;
 import main.gui.game.gameStart.GameStartPresenter;
 import main.gui.game.settings.SettingsPresenter;
+import main.gui.game.settings.settingsViewComponents.BotRepresentation;
 import main.model.Model;
 import main.model.chessPieces.SimplePiece;
 import main.model.convertions.BoardConverter;
@@ -165,6 +166,10 @@ public class MainPresenter extends Presenter {
 	public SimplePiece[][] getGameBoard() {
 		return BoardConverter.convertToSimple(model.getBoard());
 
+	}
+
+	public void botSelected(BotRepresentation source) {
+		gameStartPresenter.botSelected(source);
 	}
 
 }

@@ -12,8 +12,9 @@ import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Text;
+import main.model.chessPieces.ChessPieceColor;
 
-public class BotRepresentationView extends Pane {
+public class BotRepresentation extends Pane {
 
 	
 	private static final Double OFFSET = 25.0;
@@ -21,10 +22,14 @@ public class BotRepresentationView extends Pane {
 	private static final Double IMAGE_WIDTH = 64.0;
 	private static final Double IMAGE_HEIGHT = 64.0;
 	
-	private static final Double IMAGE_HEADING_OFFSET = 5.0;
+	private static final Double IMAGE_HEADING_OFFSET = 15.0;
 	private static final Double INFO_TEXT_OFFSET = 20.0;
 	private static final Double WINDOW_WIDTH = 400 - OFFSET * 2;
 	
+	private static final String SELECT_BUTTON_TEXT1 = "select";
+	private static final String SELECT_BUTTON_TEXT2 = "selected";
+	
+	private Pane imageWrapper = new Pane();
 	private ImageView imageView = new ImageView();
 	private Text heading = new Text("Heading");
 	private Text informationText = new Text("");
@@ -34,27 +39,34 @@ public class BotRepresentationView extends Pane {
 	private Button remisButton = new Button("Remis");
 
 	private BotSelectionView botSelectionView;
-
-	public BotRepresentationView(BotSelectionView botSelectionView) {
+	
+	private ChessPieceColor selectedColor; 
+	
+	public BotRepresentation(BotSelectionView botSelectionView) {
 		this.botSelectionView = botSelectionView;
+		selectedColor = ChessPieceColor.BLACK; // By default black 
 		init();
 	
 
 	}
 
 	private void init() { // TODO Select button is going to change to surr & Remi B. when game is Running
-		
+		this.setId("BotRepresentationMenue");
 		this.setTranslateY(OFFSET * 2);
 		this.setTranslateX(OFFSET + OFFSET / 2);
 		this.setPrefSize(WINDOW_WIDTH,200);
 		
-		this.getChildren().add(this.imageView);
-		this.imageView.setTranslateY(-OFFSET);
-		this.imageView.setTranslateX(-OFFSET);
+		
+		imageWrapper.getChildren().add(this.imageView);
+		this.imageWrapper.setTranslateY(-OFFSET);
+		this.imageWrapper.setTranslateX(-OFFSET);
+		this.getChildren().add(imageWrapper);
 		
 		this.getChildren().add(heading);
-		this.heading.setTranslateX(IMAGE_WIDTH + IMAGE_HEADING_OFFSET );
-		this.heading.setTranslateY(IMAGE_HEIGHT / 3);
+		this.heading.setTranslateX(IMAGE_WIDTH / 2
+				+ IMAGE_HEADING_OFFSET );
+		this.heading.setTranslateY(IMAGE_HEIGHT / 2);
+		this.heading.setId("BotHeadingText");
 		
 		this.getChildren().add(informationText);
 	
@@ -68,9 +80,9 @@ public class BotRepresentationView extends Pane {
 		this.selectButton.setMinWidth(WINDOW_WIDTH / 2);
 		this.selectButton.setTranslateX(WINDOW_WIDTH / 4);
 		this.selectButton.setId("BotSelectButton");
+		
 		selectButton.setOnAction(event -> {
-			botSelectionView.selectedPressed(heading.toString());
-			selectButton.setDisable(true);
+			botSelectionView.selectedPressed(this);
 		});
 		
 		
@@ -107,10 +119,16 @@ public class BotRepresentationView extends Pane {
 	public Button getSelectButton() {
 		return selectButton;
 	}
+	
 
 	public void setSelectButton(Button selectButton) {
 		this.selectButton = selectButton;
 
+	}
+	
+	public void setDisableSelectButton(boolean disable) {
+		selectButton.setDisable(disable);
+		selectButton.setText(disable ? SELECT_BUTTON_TEXT2: SELECT_BUTTON_TEXT1 );
 	}
 
 	public BotSelectionView getBotSelectionView() {
@@ -120,5 +138,13 @@ public class BotRepresentationView extends Pane {
 	public void setBotSelectionView(BotSelectionView botSelectionView) {
 		this.botSelectionView = botSelectionView;
 	}
+	
+	public Pane getImageWrapper() {
+		return imageWrapper;
+	}
+	
+	public ChessPieceColor getBotColor() {
+		return selectedColor;
+	} 
 
 }

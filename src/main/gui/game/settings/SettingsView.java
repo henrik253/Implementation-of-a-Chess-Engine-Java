@@ -8,6 +8,7 @@ import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import main.Settings;
+import main.gui.game.settings.settingsViewComponents.BotRepresentation;
 import main.gui.game.settings.settingsViewComponents.BotSelectionView;
 
 
@@ -32,7 +33,7 @@ public class SettingsView extends Pane  {
 		//inGameContent = new InGamePane();
 		noGameContent = new NoGamePane();
 		
-		this.getChildren().add(new BotSelectionView());
+		this.getChildren().add(new BotSelectionView(this));
 
 	}
 
@@ -121,6 +122,11 @@ public class SettingsView extends Pane  {
 
 	private class NoGamePane extends HBox {
 
+	}
+
+	public void botSelectedPressed(BotRepresentation source) {
+		settingsPresenter.botSelected(source);
+		
 	}
 
 }

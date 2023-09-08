@@ -123,7 +123,90 @@
     -fx-effect: dropshadow( gaussian , rgba(0.0,0.0,0.0,0.5) , 2.0,0.0,0.0,1.0 );
 }
 
+BotSelectButton:disabled{
+ -fx-background-color: #33cc33;
+}
+
+
 #BotSelectButton:hover{
  -fx-background-color: #63b037;
 }
 
+#BotHeadingText{
+	-fx-font-family: "Helvetica";
+    -fx-font-size: 23.0px;
+    -fx-text-fill: white;
+}
+
+#bot1Button{
+	-fx-background-color: linear-gradient(to bottom, #a6a6a6, #7a7979);
+    -fx-text-fill: white;
+    -fx-border-radius: 5;
+    -fx-background-radius: 5;
+    -fx-padding: 10 20 10 20;
+    -fx-font-size: 14pt;
+    -fx-cursor: hand;
+}
+
+#bot1Button:disabled{
+	-fx-opacity: 1.0;
+	-fx-background-color: linear-gradient(to bottom, #63b037, #678a70);
+}
+
+#bot2Button{
+	-fx-background-color: linear-gradient(to bottom, #a6a6a6, #7a7979);
+    -fx-text-fill: white;
+    -fx-border-radius: 5;
+    -fx-background-radius: 5;
+    -fx-padding: 10 20 10 20;
+    -fx-font-size: 14pt;
+    -fx-cursor: hand;
+}
+/* 
+#bot2Button:hover{
+	-fx-background-color: linear-gradient(to bottom, #4bab65, #2e8044);
+}
+*/
+
+
+#bot2Button:disabled{
+	-fx-opacity: 1.0;
+	-fx-background-color: linear-gradient(to bottom, #63b037, #678a70);
+}
+
+/* 
+#bot2Button:pressed{
+	-fx-background-color: linear-gradient(to bottom, #4bab65, #408f55);
+}
+*/
+#BotRepresentationMenue{
+	-fx-effect: dropshadow( gaussian , rgba(0.0,0.0,0.0,0.5) , 2.0,0.0,0.0,1.0 );
+}
+
+#gameStartHeading{
+	-fx-font-family: "Impact";
+    -fx-font-size: 30.0px;
+}
+
+#gameStartBotWrapper{
+	-fx-border-color: #f0ebeb; 
+	-fx-border-insets: -5;
+	-fx-border-width: 5;
+
+}
+
+#gameStartPlayerWrapper{
+	-fx-border-color: #f0ebeb; 
+	-fx-border-insets: -5;
+	-fx-border-width: 5;
+}
+
+#gameStartPlayerHeading{
+	-fx-font-family: "Helvetica";
+    -fx-font-size: 20.0px;
+}
+
+#gameStartBotHeading{
+	-fx-font-family: "Helvetica";
+    -fx-font-size: 20.0px;
+}

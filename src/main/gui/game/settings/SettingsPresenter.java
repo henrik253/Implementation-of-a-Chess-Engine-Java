@@ -2,6 +2,7 @@ package main.gui.game.settings;
 
 import main.Settings;
 import main.gui.MainPresenter;
+import main.gui.game.settings.settingsViewComponents.BotRepresentation;
 
 public class SettingsPresenter {
 	private Settings settings;
@@ -47,5 +48,12 @@ public class SettingsPresenter {
 	public void setDisableView(boolean disable) {
 		settingsView.setDisable(disable);
 	}
+
+	public void botSelected(BotRepresentation source) {
+		mainPresenter.botSelected(source);
+		
+	}
+	
+	
 
 }
