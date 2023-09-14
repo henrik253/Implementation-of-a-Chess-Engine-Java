@@ -43,7 +43,6 @@ public class Main extends Application {
 	private MoveValidation moveValidation;
 	private GameLogic gameLogic;
 
-
 	@Override
 	public void start(Stage primaryStage) throws Exception {
 		initGUIComponents();
@@ -83,6 +82,7 @@ public class Main extends Application {
 		mainPresenter.setSettingsPresenter(settingsPresenter);
 		mainPresenter.setMainView(mainView);
 		mainPresenter.setSettings(settings);
+		mainPresenter.setGameOverPresenter(gameOverPresenter);
 
 		gamePresenter.setGameView(gameView);
 		gamePresenter.setMainPresenter(mainPresenter);
@@ -136,11 +136,10 @@ public class Main extends Application {
 		// Execute
 		// Board
 		board.drawBoard();
-		mainPresenter.loadBoard(settings.defaultFENString);
+		// mainPresenter.loadBoard(settings.defaultFENString);
 		String fen = getRandomFEN();
 		settings.selectedFEN.set(settings.defaultFENString);
-		mainPresenter.loadBoard(settings.selectedFEN.get());
-
+		mainPresenter.loadBoard(getRandomFEN());
 
 		// Scene
 		scene = new Scene(mainView, settings.WINDOW_WIDTH, settings.WINDOW_HEIGHT);
@@ -164,19 +163,18 @@ public class Main extends Application {
 	}
 
 	public static void main(String[] args) {
-		//testAi();
+		// testAi();
 		launch(args);
 	}
 
-	static void testAi(){
-
+	static void testAi() {
 
 	}
 
-	static boolean arrEq(int[][] arr1, int[][] arr2){
-		for(int i = 0; i < arr1.length; i++){
+	static boolean arrEq(int[][] arr1, int[][] arr2) {
+		for (int i = 0; i < arr1.length; i++) {
 			for (int j = 0; j < arr1[0].length; j++) {
-				if(arr1[i][j] != arr2[i][j]){
+				if (arr1[i][j] != arr2[i][j]) {
 					return false;
 				}
 			}

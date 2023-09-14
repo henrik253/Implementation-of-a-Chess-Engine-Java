@@ -1,10 +1,9 @@
 package main.gui.game.board;
 
-import java.util.concurrent.CompletableFuture;
-
 import main.gui.MainPresenter;
 import main.gui.Presenter;
 import main.model.Vector2D;
+import main.model.chessPieces.ChessPieceColor;
 import main.model.chessPieces.SimplePiece;
 
 public class GamePresenter extends Presenter {
@@ -15,16 +14,18 @@ public class GamePresenter extends Presenter {
 		gameView.initSimplePieceBoard(simplePieceBoard);
 	}
 
-	public boolean moveRequest(int oldX, int oldY, int newX, int newY) {
-		boolean succeedMove = mainPresenter.moveRequest(oldX, oldY, newX, newY);
+	public boolean moveRequest(Vector2D oldPos, Vector2D newPos) {
+		boolean isValidMove = mainPresenter.moveRequest(oldPos, newPos);
 
-		if (succeedMove) {
+		if (isValidMove) {
 			gameView.loadSimpleBoard(mainPresenter.getGameBoard());
-			
-			gameView.loadSimpleBoard(mainPresenter.requestBotMove());
 		}
 
-		return succeedMove;
+		return isValidMove;
+	}
+
+	public void requestBotMove() {
+		gameView.loadSimpleBoard(mainPresenter.requestBotMove());
 	}
 
 	public GameView getGameView() {
@@ -43,9 +44,8 @@ public class GamePresenter extends Presenter {
 		this.mainPresenter = mainPresenter;
 	}
 
-//	public void removePieceFromBoard(Vector2D pos) {
-//		gameView.removePieceFromBoard(pos);
-//		
-//	}
+	public void userPlaysAs(ChessPieceColor selectedColor) {
+		gameView.userPlaysAs(selectedColor);
+	}
 
 }

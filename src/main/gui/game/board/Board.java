@@ -30,6 +30,7 @@ public class Board extends GridPane {
 	private static final String FILE_FORMAT = ".png";
 
 	private List<Piece> piecesOnBoard = new LinkedList<>();
+	private boolean inverted = false;
 
 	public Board() {
 		this.setTranslateX(0);
@@ -58,28 +59,35 @@ public class Board extends GridPane {
 
 		boolean validMove = false;
 
-		if (oldX != newX || oldY != newY)
-			validMove = gameView.moveRequest(oldX, oldY, newX, newY);
+		if (oldX != newX || oldY != newY) {
+			Vector2D oldPos = new Vector2D(oldX, oldY);
+			Vector2D newPos = new Vector2D(newX, newY);
 
-		if (validMove) {
-			// movePiece(draggedPiece, newX, newY);
+			if (inverted) {
+				oldPos.invertY(settings.rows - 1);
+				oldPos.invertX(settings.rows - 1);
+				newPos.invertX(settings.rows - 1);
+				newPos.invertY(settings.rows - 1);
+			}
 
+			validMove = gameView.moveRequest(oldPos, newPos);
 		}
 
+		// if (validMove) {
+//			// movePiece(draggedPiece, newX, newY);
+//
+//		}
+
 	}
 
-	private void movePiece(Piece piece, int x, int y) { // pieces are not moved, the board will be inserted
-		piece.setRow(x);
-		piece.setColumn(y);
-		this.getChildren().remove(piece);
-		this.add(piece, x, y);
-	}
+//	private void movePiece(Piece piece, int x, int y) { // pieces are not moved, the board will be inserted
+//		piece.setRow(x);
+//		piece.setColumn(y);
+//		this.getChildren().remove(piece);
+//		this.add(piece, x, y);
+//	}
 
 	public void drawBoard() {
-		drawBoard(false);
-	}
-
-	public void drawBoard(boolean inverted) {
 		this.getChildren().clear();
 		Color color1 = settings.brightColor.get();
 		Color color2 = settings.darkColor.get();
@@ -95,14 +103,12 @@ public class Board extends GridPane {
 			}
 
 		}
+
 	}
 
 	public void drawPiecesOnBoard(SimplePiece[][] board) {
-		drawPiecesOnBoard(board, false);
-	}
-
-	public void drawPiecesOnBoard(SimplePiece[][] board, boolean inverted) {
 		clearPiecesOnBoard();
+
 		if (inverted) {
 			board = invertBoard(board);
 		}
@@ -121,6 +127,7 @@ public class Board extends GridPane {
 				this.add(piece, column, row);
 			}
 		}
+
 	}
 
 	private SimplePiece[][] invertBoard(SimplePiece[][] board) {
@@ -184,14 +191,6 @@ public class Board extends GridPane {
 			this.setVisible(false);
 		}
 
-		public void setColumn(int column) {
-			this.column.set(column);
-		}
-
-		public void setRow(int row) {
-			this.row.set(row);
-		}
-
 		private void onDragDone(DragEvent event) {
 			this.setVisible(true);
 		}
@@ -245,6 +244,10 @@ public class Board extends GridPane {
 		public static Piece getPiece() {
 			return move.figure;
 		}
+	}
+
+	public void setInverted(boolean inverted) {
+		this.inverted = inverted;
 	}
 
 }

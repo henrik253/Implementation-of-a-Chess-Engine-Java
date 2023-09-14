@@ -16,14 +16,14 @@ public class King extends Piece {
 
 	public King(ChessPieceColor color, int row, int column) {
 		super(ChessPieceName.KING, color, row, column);
-		// TODO Auto-generated constructor stub
+		
 	}
 
 	@Override
 	public boolean isValidMove(Vector2D position) {
 		boolean validMovement = super.isValidMove(position);
-
-		return validMovement;
+		
+		return validMovement || isValidCastle(position);
 	}
 
 	public boolean isValidCastle(Vector2D position) {

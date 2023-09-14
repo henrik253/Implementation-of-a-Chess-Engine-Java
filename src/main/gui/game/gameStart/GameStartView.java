@@ -127,19 +127,26 @@ public class GameStartView extends Pane {
 		
 		playerHeading.setId("gameStartPlayerHeading");
 		
-		playerWrapper.setTranslateY(textWrapper.getTranslateY() - IMAGE_SIZE/2);
-		playerWrapper.setTranslateX((contentBox.getPrefWidth() / 4) * 1 - IMAGE_SIZE / 2);
+		double y = textWrapper.getTranslateY() - IMAGE_SIZE/2;
+		double x = (contentBox.getPrefWidth() / 4) * 1 - IMAGE_SIZE / 2;
+		
+		playerWrapper.setTranslateY(y);
+		playerWrapper.setTranslateX(x);
 		playerImageWrapper.setId("gameStartPlayerWrapper");
 		
 		playerImageWrapper.getChildren().add(playerImage); // player Image already init. 
 		playerImageWrapper.setMaxWidth(IMAGE_SIZE);
 		playerWrapper.setCenter(playerImageWrapper);
-
+		
+		
 		playerHeadingWrapper.getChildren().add(playerHeading);	
 		double offset =  playerHeading.getBoundsInLocal().getHeight() * 2;
-		playerHeadingWrapper.setTranslateY(playerImageWrapper.getTranslateY() + offset);
+		playerHeadingWrapper.setTranslateY(y + IMAGE_SIZE + offset);
+		playerHeadingWrapper.setTranslateX(x);
+		
 		playerHeading.setId("gameStartPlayerHeading");
-		playerWrapper.setBottom(playerHeadingWrapper);
+		
+		contentBox.getChildren().add(playerHeadingWrapper);
 	}
 	
 	private void initTextWrapper() { // X and Y are Centered 
@@ -199,8 +206,8 @@ public class GameStartView extends Pane {
 
 	public void drawSelectedBot(BotRepresentation source) {
 		this.botImage = new ImageView(source.getImage().getImage());
-		botWrapper.setBackground(Background.fill(source.getBotColor().isBlack() ? Color.web(BLACK) : Color.WHITE));
-		playerWrapper.setBackground(Background.fill(source.getBotColor().isBlack() ? Color.WHITE : Color.web(BLACK)));
+		botWrapper.setBackground(Background.fill(source.getSelectedColor().isWhite()? Color.web(BLACK) : Color.WHITE));
+		playerWrapper.setBackground(Background.fill(source.getSelectedColor().isWhite()? Color.WHITE : Color.web(BLACK)));
 		
 		drawBotRepresentation();
 		drawBotName(source);

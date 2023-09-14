@@ -5,8 +5,12 @@ import main.model.Move;
 import main.model.Vector2D;
 import main.model.chessPieces.ChessPieceColor;
 import main.model.chessPieces.concretePieces.*;
+import main.model.gameStates.GameOverReason;
+import main.model.gameStates.GameState;
+import main.model.gameStates.State;
 
 import java.util.List;
+import java.util.stream.Stream;
 
 public class MoveValidation {
 	private Model model;
@@ -17,14 +21,12 @@ public class MoveValidation {
 	private King whiteKing;
 	private King blackKing;
 
-	private int moveCounter = 0;
-
 	private Move lastMove;
 
 	public MoveValidation(ChessPieceColor startingColor) {
 
 		this.onMove = startingColor;
-		this.lastMove = new Move(new Vector2D(0,0), new Vector2D(0,0));
+		this.lastMove = new Move(new Vector2D(0, 0), new Vector2D(0, 0));
 	}
 
 	public MoveValidation() {
@@ -39,15 +41,15 @@ public class MoveValidation {
 
 	public boolean makeMove(Vector2D oldPos, Vector2D newPos) {
 		Piece piece = board.getPiece(oldPos);
-		
-		if(piece == null){
+
+		if (piece == null) {
 			return false;
 		}
-		
+
 		boolean moveSucceed = false;
 
-//		if (!isOnMove(piece))
-//			return false;
+		if (!isOnMove(piece))
+			return false;
 
 		if (!piece.isValidMove(newPos) && !isSpecialMove(piece, newPos))
 			return false;
@@ -58,7 +60,7 @@ public class MoveValidation {
 		if (isPawnMovingOnEnemyPiece(piece, newPos))
 			return false;
 
-		if (noPiece(newPos)) {
+		if (noPieceOn(newPos)) {
 			moveSucceed = tryMove(oldPos, newPos);
 		} else if (isEnemyPiece(piece, newPos)) {
 			if (tryMove(oldPos, newPos)) {
@@ -70,17 +72,29 @@ public class MoveValidation {
 		}
 
 		if (moveSucceed) {
+
+			piece.setPosition(newPos);
+
 			if (enemyInCheck()) {
-	
-				if (isCheckMate(onMove.isWhite() ? this.blackKing : this.whiteKing)) {
-					System.out.println("CheckMate");
+				initiateCheck();
+				if (isCheckMate(onMove.isWhite() ? this.blackKing : this.whiteKing, piece)) {
+					initiateCheckMate();
 				}
 			}
 			setNextPlayerOnMove();
-			moveCounter++;
 			lastMove = new Move(oldPos, newPos);
 		}
+
 		return moveSucceed;
+	}
+
+	private void initiateCheck() {
+
+	}
+
+	private void initiateCheckMate() {
+		State.gameState = GameState.GAME_OVER;
+		State.gameOverReason = onMove.isWhite() ? GameOverReason.WHITE_WON : GameOverReason.BLACK_WON;
 	}
 
 	private boolean isPawnMovingOnEnemyPiece(Piece piece, Vector2D newPos) {
@@ -143,8 +157,8 @@ public class MoveValidation {
 		Piece p = this.board.getPiece(newPos);
 		Vector2D direction = new Vector2D(0, onMove.isWhite() ? 1 : -1);
 		Vector2D attackedPieceCoords = Vector2D.add(newPos, direction);
-		if(attackedPieceCoords.getX() >= 0 && attackedPieceCoords.getY() >= 0 &&
-				attackedPieceCoords.getX() < 8 && attackedPieceCoords.getY() < 8){
+		if (attackedPieceCoords.getX() >= 0 && attackedPieceCoords.getY() >= 0 && attackedPieceCoords.getX() < 8
+				&& attackedPieceCoords.getY() < 8) {
 			Piece attackedPiece = board.getPiece(attackedPieceCoords);
 			return pawn.isValidAttack(newPos) && p == null && attackedPiece instanceof Pawn
 					&& ((Pawn) attackedPiece).getColor() != onMove && lastMoveIsDoublePawnMove();
@@ -226,25 +240,58 @@ public class MoveValidation {
 		return false;
 	}
 
-	private boolean inCheck(int[][] attackedSquares, King king) {//TODO Game Logic???
+	private boolean inCheck(int[][] attackedSquares, King king) {// TODO Game Logic???
 		return attackedSquares[king.getPosition().getY()][king.getPosition().getX()] > 0;
 	}
 
-	public boolean isCheckMate(King king) {//TODO Game Logic???
-		King k = onMove.isWhite() ? blackKing : whiteKing;
-		int[][] attackableSqaures = onMove.isWhite() ? this.board.getAttackedSquaresByWhite()
-				: this.board.getAttackedSquaresByBlack();
-		List<List<Vector2D>> moveablePositions = k.getAttackableSquares();
+	public boolean isCheckMate(King king, Piece movedPiece) {// TODO Game Logic???
+		return !allyPieceStopsCheck(king, movedPiece) && !kingIsMoveable(king);
+	}
 
-		for (List<Vector2D> movesInDirection : moveablePositions) {
-			for (Vector2D move : movesInDirection) {
-				Piece p = board.getPiece(move);
-				if (p == null || p.getColor() != king.getColor() || attackableSqaures[move.getY()][move.getX()] > 0) {
-					return false;
-				} //TODO checks if king can move on a square if he can, its not a checkmate
+	private boolean allyPieceStopsCheck(King king, Piece movedPiece) {
+		List<Piece> enemyPieces = onMove.isWhite() ? board.getBlackPieces() : board.getWhitePieces();
+		List<List<Vector2D>> attackingSquares = movedPiece.calculateAttackablePositions(movedPiece.getPosition());
+		// movedPiece.getPosition() returns the updated position of the moved piece
+		for (List<Vector2D> movesInDirection : attackingSquares) {
+			System.out.println(movesInDirection);
+			if (movesInDirection.contains(king.getPosition())) { // direction the piece is checking the king
+
+				for (Piece enemyPiece : enemyPieces) {
+					List<Vector2D> enemyPieceMoves = enemyPiece.getAttackableSquares().stream()
+							.flatMap(list -> list.stream()).toList();
+
+					// Blocking the piece(s) delivering check || Capturing the checking piece.
+					for (Vector2D move : enemyPieceMoves) {
+						if (movesInDirection.contains(move) || move.equals(enemyPiece.getPosition())) {
+							return true;
+						}
+
+					}
+				}
 			}
 		}
-		return true;
+
+		return false;
+	}
+
+	private boolean kingIsMoveable(King king) {
+		King k = onMove.isWhite() ? blackKing : whiteKing;
+		int[][] attackedSquares = onMove.isWhite() ? this.board.getAttackedSquaresByWhite()
+				: this.board.getAttackedSquaresByBlack();
+
+		List<List<Vector2D>> moveablePositions = k.getAttackableSquares();
+
+		// 1. Moving your king to a non-attacked square
+		for (List<Vector2D> movesInDirection : moveablePositions) {
+			for (Vector2D move : movesInDirection) {
+				Piece piece = board.getPiece(move);
+
+				if (attackedSquares[move.getY()][move.getX()] == 0 && !this.isAllyPiece(piece, move)) {
+					return true; // King can move on that square
+				}
+			}
+		}
+		return false;
 	}
 
 	private boolean noPiecesBetween(Piece piece, Vector2D newPos) {
@@ -259,12 +306,12 @@ public class MoveValidation {
 		onMove = onMove.isWhite() ? ChessPieceColor.BLACK : ChessPieceColor.WHITE;
 	}
 
-	private boolean noPiece(Vector2D pos) {
+	private boolean noPieceOn(Vector2D pos) {
 		return board.getPiece(pos) == null;
 	}
 
 	private boolean isPiece(Vector2D pos) {
-		return !noPiece(pos);
+		return !noPieceOn(pos);
 	}
 
 	private boolean isEnemyPiece(Piece piece, Vector2D pos) {
@@ -272,13 +319,19 @@ public class MoveValidation {
 	}
 
 	private boolean isAllyPiece(Piece piece, Vector2D pos) {
-		return board.getPiece(pos).getColor() == piece.getColor();
+		Piece otherPiece = board.getPiece(pos);
+
+		if (otherPiece == null)
+			return false;
+
+		return otherPiece.getColor() == piece.getColor();
 	}
 
 	public boolean enemyInCheck() {
 		int[][] attackedSquares = onMove.isWhite() ? board.getAttackedSquaresByWhite()
 				: board.getAttackedSquaresByBlack();
 		Vector2D pos = onMove.isWhite() ? blackKing.getPosition() : whiteKing.getPosition();
+
 		return attackedSquares[pos.getY()][pos.getX()] > 0;
 	}
 

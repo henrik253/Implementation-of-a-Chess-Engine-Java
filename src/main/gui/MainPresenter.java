@@ -3,10 +3,12 @@ package main.gui;
 import ai.AlphaZeroDotFive.AlphaZeroDotFiveAgent;
 import main.Settings;
 import main.gui.game.board.GamePresenter;
+import main.gui.game.gameOver.GameOverPresenter;
 import main.gui.game.gameStart.GameStartPresenter;
 import main.gui.game.settings.SettingsPresenter;
 import main.gui.game.settings.settingsViewComponents.BotRepresentation;
 import main.model.Model;
+import main.model.Vector2D;
 import main.model.chessPieces.SimplePiece;
 import main.model.convertions.BoardConverter;
 import main.model.convertions.FENConverter;
@@ -20,13 +22,14 @@ public class MainPresenter extends Presenter {
 	private Settings settings;
 	private GamePresenter gamePresenter;
 	private GameStartPresenter gameStartPresenter;
+	private GameOverPresenter gameOverPresenter;
 	private MainView mainView;
 
 	private Model model;
 
-	public boolean moveRequest(int oldX, int oldY, int newX, int newY) {
+	public boolean moveRequest(Vector2D oldPos, Vector2D newPos) {
 
-		boolean validMove = model.movePiece(oldX, oldY, newX, newY); // after model.moveRequest
+		boolean validMove = model.movePiece(oldPos, newPos); // after model.moveRequest
 
 //		if(validMove) // TODO AI
 //		{
@@ -41,14 +44,15 @@ public class MainPresenter extends Presenter {
 //			model.movePiece(coords[0], coords[1], coords[2], coords[3]);
 //
 //		}
-
 		checkStates();
 
 		return validMove;
 	}
 
 	public SimplePiece[][] requestBotMove() {
-		return BoardConverter.convertToSimple(model.makeBotMove());
+		SimplePiece[][] simpleBoard = BoardConverter.convertToSimple(model.makeBotMove());
+		checkStates();
+		return simpleBoard;
 	}
 
 	public void checkStates() {
@@ -68,11 +72,11 @@ public class MainPresenter extends Presenter {
 		}
 
 		if (State.gameOverReason.isBlackWon()) {
-			// show winning Screen for Black
+			
 		}
 
 		if (State.gameOverReason.isWhiteWon()) {
-			// show winning Screen for White
+
 		}
 
 		if (State.gameOverReason.isDraw()) {
@@ -93,7 +97,11 @@ public class MainPresenter extends Presenter {
 
 	private void startBoard() {
 		loadBoard(settings.selectedFEN.get());
-	} // load the board
+	}
+
+	public void loadBoard(String fen) {
+		gamePresenter.setBoard(FENConverter.convertSimplePieceBoard(fen));
+	}
 
 	private void startModel() {
 		model.startGame();
@@ -104,10 +112,6 @@ public class MainPresenter extends Presenter {
 
 	public void endGame() {
 
-	}
-
-	public void loadBoard(String fen) {
-		gamePresenter.setBoard(FENConverter.convertSimplePieceBoard(fen));
 	}
 
 	public MainView getMainView() {
@@ -142,6 +146,14 @@ public class MainPresenter extends Presenter {
 		this.gameStartPresenter = gameStartPresenter;
 	}
 
+	public GameOverPresenter getGameOverPresenter() {
+		return gameOverPresenter;
+	}
+
+	public void setGameOverPresenter(GameOverPresenter gameOverPresenter) {
+		this.gameOverPresenter = gameOverPresenter;
+	}
+
 	public Settings getSettings() {
 		return settings;
 	}
@@ -165,11 +177,11 @@ public class MainPresenter extends Presenter {
 
 	public SimplePiece[][] getGameBoard() {
 		return BoardConverter.convertToSimple(model.getBoard());
-
 	}
 
 	public void botSelected(BotRepresentation source) {
 		gameStartPresenter.botSelected(source);
+		gamePresenter.userPlaysAs(source.getSelectedColor());
 	}
 
 }

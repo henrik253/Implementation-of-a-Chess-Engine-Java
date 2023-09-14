@@ -47,7 +47,7 @@ public class BoardRepresentation {
 		calcAttackedSquaresBy(ChessPieceColor.BLACK);
 	}
 
-	public void calcAttackedSquaresBy(ChessPieceColor color) { // inefficient solution
+	public void calcAttackedSquaresBy(ChessPieceColor color) {
 		int[][] attackedSquares = new int[board.length][board.length];
 		if (color.isWhite()) {
 			whitePieces.forEach(piece -> markAttackedSquares(piece, attackedSquares));
@@ -107,7 +107,7 @@ public class BoardRepresentation {
 		movedPiece.setPosition(newPos);
 	}
 
-	public void makeSpecialMove(Vector2D oldPos, Vector2D newPos) {
+	public void makeSpecialMove(Vector2D oldPos, Vector2D newPos) { // e.g. castling
 		Piece movedPiece = this.getPiece(oldPos);
 		Piece pieceOnNewPos = this.getPiece(newPos);
 

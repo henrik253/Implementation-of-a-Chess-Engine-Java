@@ -202,11 +202,62 @@ BotSelectButton:disabled{
 }
 
 #gameStartPlayerHeading{
-	-fx-font-family: "Helvetica";
+	-fx-font-family: "Tahoma";
     -fx-font-size: 20.0px;
 }
 
 #gameStartBotHeading{
-	-fx-font-family: "Helvetica";
+	-fx-font-family: "Tahoma";
     -fx-font-size: 20.0px;
+}
+
+#SelectWhiteButton{
+	-fx-background-color: linear-gradient(to bottom, #f7f7f7, #e3e3e3);
+	-fx-border-width: 1.0;
+    -fx-border-color: #c2c0c0;
+ 	-fx-background-insets: 0;
+    -fx-cursor: hand;
+}
+
+#SelectWhiteButton:disabled{
+	-fx-opacity: 1.0;
+	-fx-background-color: linear-gradient(to bottom, #f7f7f7, #e3e3e3);
+     -fx-border-width: 1.0;
+    -fx-border-color: #63b037;
+    -fx-cursor: hand;
+}
+
+#SelectBlackButton{
+	-fx-border-width: 1.0;
+    -fx-border-color: #c2c0c0;
+	-fx-background-color: linear-gradient(to bottom, #4d4c4c, #333232);
+	-fx-cursor: hand;
+	-fx-background-insets: 0; /*<- ! The visual effect is caused due to background insets when the button is not focus */
+}
+
+
+#SelectBlackButton:disabled{
+	-fx-opacity: 1.0;
+	-fx-background-color: linear-gradient(to bottom, #4d4c4c, #333232);
+	 -fx-border-width: 1.0;
+    -fx-border-color: #63b037;
+	-fx-cursor: hand;
+}
+
+#SelectRandButton{
+	
+	-fx-background-color: linear-gradient(to top, #f7f7f7, #4d4c4c);
+	-fx-border-width: 1.0;
+    -fx-border-color: #c2c0c0;
+	-fx-cursor: hand;
+	-fx-font-family: "Helvetica";
+	-fx-font-size: 15.0px;
+	-fx-background-insets: 0;
+}
+
+#SelectRandButton:disabled{
+	-fx-opacity: 1.0;
+	 -fx-border-width: 1.0;
+    -fx-border-color: #63b037;
+
 }

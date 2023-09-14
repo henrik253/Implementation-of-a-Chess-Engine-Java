@@ -12,7 +12,7 @@ import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
 import main.gui.game.settings.SettingsView;
 
-public class BotSelectionView extends BorderPane { // TODO REMOVE BorderPane Wrapper, so that Image and Text 
+public class BotSelectionView extends BorderPane { // TODO REMOVE BorderPane Wrapper, so that Image and Text
 	// are independend from another
 
 	private static final String IMAGE_PATH = "file:resources/";
@@ -20,26 +20,26 @@ public class BotSelectionView extends BorderPane { // TODO REMOVE BorderPane Wra
 	private static final String IMAGE2_NAME = "Bot2";
 	private static final String FILE_FORMAT = ".png";
 
-	private static final Double OFFSET = 25.0; 
-	
+	private static final Double OFFSET = 25.0;
+
 	private static final Double TOPBAR_PADDING = 20.0;
 	private static final Double BUTTON_PADDING = 10.0;
 	private static final Double TOPBAR_SPACING = 20.0;
-	
+
 	private static final String BOT_NAME1 = "Computer 1";
 	private static final String BOT_NAME2 = "Bot 2";
-	
+
 	private SettingsView settingsView;
-	
+
 	private HBox topBar;
 	private Button button1;
 	private Button button2;
 
 	private BotRepresentation botRepresentation1; // GUI Repr. for the ChessBots
 	private BotRepresentation botRepresentation2;
-	
-	private BotRepresentation selected; 
-	
+
+	private BotRepresentation selected;
+
 	public BotSelectionView(SettingsView settingsView) { // settingsView to send buttonCalls to presenters
 		this.settingsView = settingsView;
 		initBotRepresentation();
@@ -54,31 +54,29 @@ public class BotSelectionView extends BorderPane { // TODO REMOVE BorderPane Wra
 		button1 = new Button("Computer 1");
 		button2 = new Button("Computer 2");
 		topBar.getChildren().addAll(button1, button2);
-		topBar.setPadding(new Insets(TOPBAR_PADDING,TOPBAR_PADDING,TOPBAR_PADDING,TOPBAR_PADDING));
+		topBar.setPadding(new Insets(TOPBAR_PADDING, TOPBAR_PADDING, TOPBAR_PADDING, TOPBAR_PADDING));
 		this.setTop(topBar);
-		
+
 		button1.setDisable(true); // bot1 is auto selected
 		this.setCenter(botRepresentation1);
-		
+
 		button1.setId("bot1Button");
 		button1.setStyle("-fx-base: green");
-		button1.setPadding(new Insets(BUTTON_PADDING,BUTTON_PADDING,BUTTON_PADDING,BUTTON_PADDING));
+		button1.setPadding(new Insets(BUTTON_PADDING, BUTTON_PADDING, BUTTON_PADDING, BUTTON_PADDING));
 		button1.setOnAction(event -> {
 			button1.setDisable(true);
 			button2.setDisable(false);
 			this.setCenter(botRepresentation1);
 		});
-		
-		
+
 		button2.setId("bot2Button");
-		button2.setPadding(new Insets(BUTTON_PADDING,BUTTON_PADDING,BUTTON_PADDING,BUTTON_PADDING));
+		button2.setPadding(new Insets(BUTTON_PADDING, BUTTON_PADDING, BUTTON_PADDING, BUTTON_PADDING));
 		button2.setOnAction(event -> {
 			button1.setDisable(false);
 			button2.setDisable(true);
 			this.setCenter(botRepresentation2);
 		});
-		
-		
+
 	}
 
 	private void initBotRepresentation() {
@@ -95,25 +93,24 @@ public class BotSelectionView extends BorderPane { // TODO REMOVE BorderPane Wra
 				"Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum.");
 
 	}
-	
 
 	public void selectedPressed(BotRepresentation source) {
 		source.setDisableSelectButton(true);
-		
-		if(source == botRepresentation1) 
+
+		if (source == botRepresentation1)
 			botRepresentation2.setDisableSelectButton(false);
 		else
 			botRepresentation1.setDisableSelectButton(false);
-		
-		selected = source; 
-		
+
+		selected = source;
+
 		settingsView.botSelectedPressed(source);
 	}
-	
+
 	private void preSelect(BotRepresentation source) {
 		selectedPressed(source);
 	}
-	
+
 	public BotRepresentation getSelected() {
 		return selected;
 	}

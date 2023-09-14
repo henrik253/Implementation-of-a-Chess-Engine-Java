@@ -2,6 +2,7 @@ package main.model;
 
 import main.ChessBotStub;
 import main.Settings;
+import main.model.chessPieces.ChessPieceColor;
 import main.model.chessPieces.concretePieces.Piece;
 import main.model.convertions.FENConverter;
 import main.model.gameLogic.BoardRepresentation;
@@ -13,33 +14,30 @@ public class Model {
 	private BoardRepresentation boardRepresentation;
 	private MoveValidation moveValidation;
 
-	private ChessBot selectedChessBot; 
-	
+	private ChessBot selectedChessBot;
+
+	// GAME START 
 	public void startGame() {
-		startGame(settings.selectedFEN.get());
+		startGame(settings.selectedFEN.get()); 
 		selectedChessBot = new ChessBotStub();
 		moveValidation.setBoard(boardRepresentation);
-		
-//		if(chessBot == null)
-//			throw new IllegalArgumentException("No ChessBot selected");
-		
-
 	}
 
 	public void startGame(String fen) {
 		this.boardRepresentation = new BoardRepresentation(FENConverter.convertPieceBoard(fen)); // <----
-		// moveValidation needs to be started. depending on the inserted FEN
+		this.moveValidation.setOnMove(ChessPieceColor.WHITE);
+	}
+	
+	// GAME RUNNING
+	public boolean movePiece(Vector2D oldPos, Vector2D newPos) { // <----
+		return moveValidation.makeMove(oldPos, newPos);
 	}
 
-	public boolean movePiece(int oldColumn, int oldRow, int newColumn, int newRow) { // <----
-		return moveValidation.makeMove(new Vector2D(oldColumn, oldRow), new Vector2D(newColumn, newRow));
-	}
-	
 	public Piece[][] makeBotMove() {
-		Piece[][] board =  boardRepresentation.getBoard().clone();
+		Piece[][] board = boardRepresentation.getBoard().clone();
 		return selectedChessBot.makeMove(board);
 	}
-	
+
 	public void setChessBot(ChessBot chessBot) {
 		this.selectedChessBot = chessBot;
 	}

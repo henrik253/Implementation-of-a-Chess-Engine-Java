@@ -26,13 +26,15 @@ public abstract class Piece {
 	}
 
 	// Not the best approach, but the easiest to implement
-	public boolean isValidMove(Vector2D newPosition) { // Attack and move are same for all Pieces except Pawn or special Moves
+	public boolean isValidMove(Vector2D newPosition) { // Attack and move are same for all Pieces except Pawn or special
+														// Moves
 		for (List<Vector2D> positionsInDirection : attackableSquares) {
 			for (Vector2D position : positionsInDirection) {
 				if (newPosition.equals(position))
 					return true;
 			}
 		}
+
 		return false;
 	}
 
@@ -54,6 +56,10 @@ public abstract class Piece {
 		return attackableSquares;
 	}
 
+	public List<List<Vector2D>> getMoveablePositions() {
+		return this.getAttackableSquares();
+	}
+
 	public void setAttackableSquares(List<List<Vector2D>> attackableSquares) {
 		this.attackableSquares = attackableSquares;
 	}
@@ -67,7 +73,7 @@ public abstract class Piece {
 	}
 
 	public String toString() {
-		return this.name + " " + this.color;
+		return "( " + this.name + " " + this.color + " " + position.toString() + " )";
 	}
 
 	public ChessPieceColor getColor() {
@@ -79,7 +85,6 @@ public abstract class Piece {
 	}
 
 	public abstract Piece clone();
-
 
 	public ChessPieceName getName() {
 		return this.name;

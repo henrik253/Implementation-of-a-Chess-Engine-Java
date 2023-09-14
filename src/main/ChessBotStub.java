@@ -11,7 +11,7 @@ import main.model.chessPieces.concretePieces.Piece;
 public class ChessBotStub implements ChessBot {
 
 	private Piece[][] board;
-	private ChessPieceColor color = ChessPieceColor.BLACK;
+	private ChessPieceColor color = ChessPieceColor.WHITE;
 
 	@Override
 	public Piece[][] makeMove(Piece[][] board) {
@@ -46,6 +46,8 @@ public class ChessBotStub implements ChessBot {
 			board[randPiece.getPosition().getY()][randPiece.getPosition().getX()] = null;
 			break;
 		}
+	
+		
 		return this.board;
 	}
 
