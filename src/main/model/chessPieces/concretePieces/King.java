@@ -16,24 +16,25 @@ public class King extends Piece {
 
 	public King(ChessPieceColor color, int row, int column) {
 		super(ChessPieceName.KING, color, row, column);
-		
+
 	}
 
 	@Override
 	public boolean isValidMove(Vector2D position) {
 		boolean validMovement = super.isValidMove(position);
-		
+
 		return validMovement || isValidCastle(position);
 	}
 
 	public boolean isValidCastle(Vector2D position) {
 		if (!firstMove)
 			return false;
-		
-		
+
 		return (int) Math.abs((((double) (position.getX() - this.position.getX())))) == 2;
 	}
 
+	// calculateAttackablePositions shows squares where king would be in check ,
+	// moveValidation checks that this wont happen
 	@Override
 	public List<List<Vector2D>> calculateAttackablePositions(Vector2D position) {
 		List<List<Vector2D>> moves = new LinkedList<>();
@@ -45,14 +46,22 @@ public class King extends Piece {
 			List<Vector2D> movesInDirection = new LinkedList<>();
 			Vector2D possiblePosition = position.clone();
 
-			possiblePosition.add(direction); // currentPosition should not be included
+			possiblePosition.plus(direction); // currentPosition should not be included
 
 			if (!outOfBounds(possiblePosition)) {
-				movesInDirection.add(possiblePosition.clone());
+				Piece piece = board.getPiece(possiblePosition);
+
+				if (piece != null && piece.getColor() == color) // cant step on ally piece
+					continue;
+
+				movesInDirection.add(possiblePosition.clone()); // add to linked list
+				possiblePosition.plus(direction); // addition
+
 			}
 			moves.add(movesInDirection);
 		}
 		this.attackableSquares = moves;
+
 		return moves;
 	}
 
@@ -64,7 +73,7 @@ public class King extends Piece {
 
 		for (Vector2D direction : attackDirections) {
 			Vector2D possiblePosition = position.clone();
-			possiblePosition.add(direction);
+			possiblePosition.plus(direction);
 			if (!outOfBounds(possiblePosition)) {
 				moves.add(possiblePosition.clone());
 			}

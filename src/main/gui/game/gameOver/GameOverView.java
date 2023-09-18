@@ -5,14 +5,28 @@ import javafx.scene.layout.Pane;
 import main.Settings;
 import main.gui.game.Overlay;
 
-public class GameOverView extends Overlay {
+public class GameOverView extends Pane {
 
 	private GameOverPresenter gameOverPresenter;
 	private Settings settings;
 	private Overlay overlay;
 
 	private Pane contentBox;
-	private Button playButton;
+	private Button playAgainButton;
+
+	public void init() {
+		initContentBox();
+		initPlayButton();
+
+		style();
+	}
+
+	private void style() {
+		this.getChildren().add(overlay);
+		this.getChildren().add(contentBox);
+
+		this.contentBox.getChildren().addAll(playAgainButton);
+	}
 
 	private void initContentBox() {
 		contentBox = new Pane();
@@ -24,12 +38,12 @@ public class GameOverView extends Overlay {
 	}
 
 	private void initPlayButton() {
-		playButton = new Button(settings.playButtonTextStart.get());
-		playButton.setPrefHeight(contentBox.getPrefHeight() / 5);
-		playButton.setPrefWidth((contentBox.getPrefWidth() / 5) * 4);
-		playButton.setTranslateX((contentBox.getPrefWidth() - playButton.getPrefWidth()) / 2);
-		playButton.setTranslateY((contentBox.getPrefHeight() / 4) * 3);
-		playButton.setOnMousePressed(this::handle);
+		playAgainButton = new Button(settings.playButtonTextStart.get());
+		playAgainButton.setPrefHeight(contentBox.getPrefHeight() / 5);
+		playAgainButton.setPrefWidth((contentBox.getPrefWidth() / 5) * 4);
+		playAgainButton.setTranslateX((contentBox.getPrefWidth() - playAgainButton.getPrefWidth()) / 2);
+		playAgainButton.setTranslateY((contentBox.getPrefHeight() / 4) * 3);
+		playAgainButton.setOnMousePressed(event -> gameOverPresenter.playAgainButtonPressed());
 	}
 
 	public Overlay getOverlay() {
@@ -38,6 +52,14 @@ public class GameOverView extends Overlay {
 
 	public void setOverlay(Overlay overlay) {
 		this.overlay = overlay;
+	}
+
+	public Settings getSettings() {
+		return settings;
+	}
+
+	public void setSettings(Settings settings) {
+		this.settings = settings;
 	}
 
 	public GameOverPresenter getGameOverPresenter() {

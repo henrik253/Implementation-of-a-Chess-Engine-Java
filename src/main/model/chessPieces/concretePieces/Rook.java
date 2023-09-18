@@ -30,14 +30,21 @@ public class Rook extends Piece {
 			List<Vector2D> movesInDirection = new LinkedList<>();
 			Vector2D possiblePosition = position.clone();
 
-			possiblePosition.add(direction); // currentPosition should not be included
+			possiblePosition.plus(direction); // currentPosition should not be included
 
 			while (!outOfBounds(possiblePosition)) {
-				movesInDirection.add(possiblePosition.clone());
-				possiblePosition.add(direction);
+				Piece piece = board.getPiece(possiblePosition);
+				if (piece == null) {
+					movesInDirection.add(possiblePosition.clone()); // add to linked list
+					possiblePosition.plus(direction); // addition
+				} else {
+					movesInDirection.add(possiblePosition.clone());
+					break;
+				}
 			}
 			moves.add(movesInDirection);
 		}
+
 		this.attackableSquares = moves;
 		return moves;
 	}

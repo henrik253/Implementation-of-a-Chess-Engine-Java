@@ -36,7 +36,7 @@ public class Vector2D {
 		return new Vector2D(getX(), getY());
 	}
 
-	public void add(Vector2D vec) {
+	public void plus(Vector2D vec) {
 		this.x += vec.x;
 		this.y += vec.y;
 	}

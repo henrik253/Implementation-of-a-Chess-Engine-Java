@@ -11,13 +11,11 @@ import main.model.chessPieces.concretePieces.Piece;
 import main.model.chessPieces.concretePieces.Queen;
 import main.model.chessPieces.concretePieces.Rook;
 
-public class FENConverter { // Converting a FEN String to 
+public class FENConverter { // Converting a FEN String to
 
 	private static final int ROWS = 8;
 	private static final int COLUMNS = 8;
 
-	
-	
 	public static SimplePiece[][] convertSimplePieceBoard(String fen) {
 		SimplePiece[][] board = new SimplePiece[ROWS][COLUMNS];
 
@@ -64,7 +62,7 @@ public class FENConverter { // Converting a FEN String to
 		};
 
 	}
-	
+
 	public static Piece[][] convertPieceBoard(String fen) {
 		Piece[][] board = new Piece[ROWS][COLUMNS];
 
@@ -83,7 +81,7 @@ public class FENConverter { // Converting a FEN String to
 					continue;
 				}
 				if (Character.isLetter(c)) {
-					board[row][++column] = buildPiece(c,row,column);
+					board[row][++column] = buildPiece(c, row, column);
 					continue;
 				}
 				if (Character.getNumericValue(c) != -1) {
@@ -91,27 +89,25 @@ public class FENConverter { // Converting a FEN String to
 				}
 			}
 		} catch (Exception e) {
-			throw new IllegalArgumentException("not a valid FEN-String");
+			e.printStackTrace();
 		}
 
 		return board;
 	}
 
-	public static Piece buildPiece(char c,int row,int column) {
+	public static Piece buildPiece(char c, int row, int column) {
 		ChessPieceColor color = Character.isUpperCase(c) ? ChessPieceColor.WHITE : ChessPieceColor.BLACK;
 		c = Character.toLowerCase(c);
 		return switch (c) {
-		case 'p' -> new Pawn(color,row,column);
-		case 'r' -> new Rook(color,row,column);
-		case 'b' -> new Bishop(color,row,column);
-		case 'n' -> new Knight(color,row,column);
-		case 'q' -> new Queen(color,row,column);
-		case 'k' -> new King(color,row,column);
+		case 'p' -> new Pawn(color, row, column);
+		case 'r' -> new Rook(color, row, column);
+		case 'b' -> new Bishop(color, row, column);
+		case 'n' -> new Knight(color, row, column);
+		case 'q' -> new Queen(color, row, column);
+		case 'k' -> new King(color, row, column);
 		default -> throw new IllegalArgumentException();
 		};
 
 	}
-
-	
 
 }

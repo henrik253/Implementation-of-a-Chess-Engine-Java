@@ -9,12 +9,12 @@ import main.model.chessPieces.ChessPieceName;
 
 public class Queen extends Piece {
 
-	private Vector2D[] attackDirections = { new Vector2D(1, 0), new Vector2D(-1, 0), new Vector2D(0, 1), new Vector2D(0, -1),
-			new Vector2D(1, 1), new Vector2D(-1, -1), new Vector2D(-1, 1), new Vector2D(1, -1) };
+	private Vector2D[] attackDirections = { new Vector2D(1, 0), new Vector2D(-1, 0), new Vector2D(0, 1),
+			new Vector2D(0, -1), new Vector2D(1, 1), new Vector2D(-1, -1), new Vector2D(-1, 1), new Vector2D(1, -1) };
 
 	public Queen(ChessPieceColor color, int row, int column) {
 		super(ChessPieceName.QUEEN, color, row, column);
-		this.attackableSquares = calculateAttackablePositions(this.position);
+
 	}
 
 	@Override
@@ -29,21 +29,27 @@ public class Queen extends Piece {
 			List<Vector2D> movesInDirection = new LinkedList<>();
 			Vector2D possiblePosition = position.clone();
 
-			possiblePosition.add(direction); // currentPosition should not be included
+			possiblePosition.plus(direction); // currentPosition should not be included
 
 			while (!outOfBounds(possiblePosition)) {
-				movesInDirection.add(possiblePosition.clone());
-				possiblePosition.add(direction);
+				Piece piece = board.getPiece(possiblePosition);
+				if (piece == null) {
+					movesInDirection.add(possiblePosition.clone()); // add to linked list
+					possiblePosition.plus(direction); // addition
+				} else {
+					movesInDirection.add(possiblePosition.clone());
+					break;
+				}
 			}
 			moves.add(movesInDirection);
 		}
 		this.attackableSquares = moves;
 		return moves;
 	}
-	
+
 	@Override
 	public Piece clone() {
-		return new Queen(color,position.getY(),position.getX());
+		return new Queen(color, position.getY(), position.getX());
 	}
 
 }

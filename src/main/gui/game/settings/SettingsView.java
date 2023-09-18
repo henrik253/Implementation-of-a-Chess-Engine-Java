@@ -47,7 +47,6 @@ public class SettingsView extends Pane  {
 	}
 
 
-
 	public SettingsPresenter getSettingsPresenter() {
 		return settingsPresenter;
 	}

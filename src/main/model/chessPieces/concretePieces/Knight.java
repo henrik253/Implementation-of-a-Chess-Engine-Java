@@ -27,7 +27,7 @@ public class Knight extends Piece {
 			List<Vector2D> movesInDirection = new LinkedList<>();
 			Vector2D possiblePosition = position.clone();
 
-			possiblePosition.add(direction);
+			possiblePosition.plus(direction);
 
 			if (!outOfBounds(possiblePosition)) {
 				movesInDirection.add(possiblePosition.clone());

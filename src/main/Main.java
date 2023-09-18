@@ -37,7 +37,8 @@ public class Main extends Application {
 
 	private Settings settings;
 	private Board board;
-	private Overlay overlay;
+	private Overlay gameStartOverlay;
+	private Overlay gameOverOverlay;
 
 	private Model model;
 	private MoveValidation moveValidation;
@@ -73,8 +74,8 @@ public class Main extends Application {
 		// All other Class
 		settings = new Settings();
 		board = new Board();
-		overlay = new Overlay();
-
+		gameStartOverlay = new Overlay();
+		gameOverOverlay = new Overlay();
 		// Setting all Classes
 
 		mainPresenter.setGamePresenter(gamePresenter);
@@ -92,7 +93,7 @@ public class Main extends Application {
 		settingsPresenter.setMainPresenter(mainPresenter);
 
 		gameOverPresenter.setGameOverView(gameOverView);
-		gameOverPresenter.setGamePresenter(gamePresenter);
+		gameOverPresenter.setMainPresenter(mainPresenter);
 
 		gameStartPresenter.setGameStartView(gameStartView);
 		gameStartPresenter.setMainPresenter(mainPresenter);
@@ -110,11 +111,11 @@ public class Main extends Application {
 
 		gameStartView.setGameStartPresenter(gameStartPresenter);
 		gameStartView.setSettings(settings);
-		gameStartView.setOverlay(overlay);
+		gameStartView.setOverlay(gameStartOverlay);
 
 		gameOverView.setGameOverPresenter(gameOverPresenter);
 		gameOverView.setSettings(settings);
-		gameOverView.setOverlay(overlay);
+		gameOverView.setOverlay(gameOverOverlay);
 
 		settingsView.setSettings(settings);
 		settingsView.setSettingsPresenter(settingsPresenter);
@@ -122,10 +123,10 @@ public class Main extends Application {
 		board.setSettings(settings);
 		board.setGameView(gameView);
 
-		overlay.setSettings(settings);
+		gameStartOverlay.setSettings(settings);
 
 		// Init other classes
-		overlay.init();
+		gameStartOverlay.init();
 
 		// Init all Views
 		mainView.init();

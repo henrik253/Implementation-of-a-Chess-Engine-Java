@@ -67,12 +67,14 @@ public class MainPresenter extends Presenter {
 	}
 
 	private void checkGameOverStates() {
+		System.out.println("checkGameOverStates");
+		gameOverPresenter.setDisableView(false);
 		if (State.gameOverReason.isNone()) {
 
 		}
 
 		if (State.gameOverReason.isBlackWon()) {
-			
+
 		}
 
 		if (State.gameOverReason.isWhiteWon()) {
@@ -111,7 +113,7 @@ public class MainPresenter extends Presenter {
 	}
 
 	public void endGame() {
-
+		gameOverPresenter.setDisableView(false);
 	}
 
 	public MainView getMainView() {
@@ -182,6 +184,10 @@ public class MainPresenter extends Presenter {
 	public void botSelected(BotRepresentation source) {
 		gameStartPresenter.botSelected(source);
 		gamePresenter.userPlaysAs(source.getSelectedColor());
+	}
+
+	public void playAgainButtonPressed() {
+
 	}
 
 }
