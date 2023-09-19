@@ -26,7 +26,7 @@ public class BoardRepresentation {
 	private King whiteKing;
 	private King blackKing;
 
-	private Move lastMove; // not init. ! 
+	private Move lastMove; // not init. !
 
 	public BoardRepresentation(Piece[][] board) {
 		this.board = board;
@@ -107,11 +107,10 @@ public class BoardRepresentation {
 	}
 
 	public void makeMove(Vector2D oldPos, Vector2D newPos) {
-		lastMove = new Move(oldPos, newPos);
+		lastMove = new Move(oldPos, newPos); // set last move 
+		Piece movedPiece = this.getPiece(oldPos); // get the piece 
 
-		Piece movedPiece = this.getPiece(oldPos);
-
-		removePiece(newPos);
+		removePiece(newPos); // remove the piece that is on the pos the moving piece want to get
 		movedPiece.executeMove(oldPos, newPos);
 		moveHistory.add(lastMove);
 	}
@@ -119,9 +118,20 @@ public class BoardRepresentation {
 	public void undoLastMove() {
 		Vector2D oldPos = lastMove.getOldPos(), newPos = lastMove.getNewPos();
 		Piece capturedPiece = lastMove.getCapturedPiece();
-
 		makeMove(newPos, oldPos);
+
 		board[newPos.getY()][newPos.getX()] = capturedPiece;
+		capturedPieces.remove(capturedPiece);
+
+		if (capturedPiece != null) {
+			if (capturedPiece.getColor().isWhite())
+				whitePieces.add(capturedPiece);
+			else
+				blackPieces.add(capturedPiece);
+		}
+
+		moveHistory.remove(moveHistory.get(moveHistory.size() - 1));
+		lastMove = moveHistory.get(moveHistory.size() - 1);
 	}
 
 	public void removePiece(Vector2D pos) {

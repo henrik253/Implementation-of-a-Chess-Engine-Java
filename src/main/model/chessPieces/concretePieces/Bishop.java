@@ -26,7 +26,7 @@ public class Bishop extends Piece {
 
 		for (Vector2D direction : attackDirections) {
 			List<Vector2D> movesInDirection = new LinkedList<>();
-			Vector2D possiblePosition = position.clone();
+			Vector2D possiblePosition = this.position.clone();
 
 			possiblePosition.plus(direction); // currentPosition should not be included
 

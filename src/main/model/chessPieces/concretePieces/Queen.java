@@ -18,7 +18,7 @@ public class Queen extends Piece {
 	}
 
 	@Override
-	public List<List<Vector2D>> calculateAttackablePositions(Vector2D position) {
+	public List<List<Vector2D>> calculateAttackablePositions(Vector2D position) { // TODO param position useless
 
 		List<List<Vector2D>> moves = new LinkedList<>();
 
@@ -27,7 +27,7 @@ public class Queen extends Piece {
 
 		for (Vector2D direction : attackDirections) {
 			List<Vector2D> movesInDirection = new LinkedList<>();
-			Vector2D possiblePosition = position.clone();
+			Vector2D possiblePosition = this.position.clone();
 
 			possiblePosition.plus(direction); // currentPosition should not be included
 

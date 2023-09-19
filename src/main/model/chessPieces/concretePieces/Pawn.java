@@ -95,10 +95,11 @@ public class Pawn extends Piece {
 
 		for (Vector2D attackDirection : attackDirections) {
 			List<Vector2D> movesInDirection = new LinkedList<>();
-			Vector2D possiblePosition = position.clone();
+			Vector2D possiblePosition = this.position.clone();
 			possiblePosition.plus(attackDirection);
 
-			if (!outOfBounds(possiblePosition) && board.isEnemyPieceOn(possiblePosition, color)) {
+			if (!outOfBounds(possiblePosition) && board.isEnemyPieceOn(possiblePosition, color) 
+					&& possiblePosition.equals(position) ) {
 				movesInDirection.add(possiblePosition.clone());
 			}
 
@@ -109,7 +110,7 @@ public class Pawn extends Piece {
 	}
 
 	public boolean isValidAttack(Vector2D position) {
-		for (List<Vector2D> movesInDirection : this.getAttackableSquares()) {
+		for (List<Vector2D> movesInDirection : this.calculateAttackablePositions(position)) {
 			for (Vector2D move : movesInDirection) {
 				if (move.equals(position))
 					return true;

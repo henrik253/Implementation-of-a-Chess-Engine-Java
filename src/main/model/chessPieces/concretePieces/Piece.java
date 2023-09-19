@@ -48,7 +48,7 @@ public abstract class Piece {
 	}
 
 	public abstract List<List<Vector2D>> calculateAttackablePositions(Vector2D position);
-
+	
 	protected boolean outOfBounds(Vector2D position) {
 		return position.getX() < 0 || position.getX() >= length || position.getY() < 0 || position.getY() >= length;
 	}
