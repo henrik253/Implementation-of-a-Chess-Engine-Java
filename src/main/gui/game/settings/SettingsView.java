@@ -11,8 +11,7 @@ import main.Settings;
 import main.gui.game.settings.settingsViewComponents.BotRepresentation;
 import main.gui.game.settings.settingsViewComponents.BotSelectionView;
 
-
-public class SettingsView extends Pane  {
+public class SettingsView extends Pane {
 
 	private SettingsPresenter settingsPresenter;
 	private Settings settings;
@@ -20,20 +19,23 @@ public class SettingsView extends Pane  {
 	private Pane gameContent;
 	private Pane noGameContent;
 
-	public void init() {
-		this.setTranslateX(settings.settingsViewTranslateX.get());
+	private BotSelectionView botSelectionView;
+
+	public void init() { // init() is called when all Comps. are connected
+		this.setTranslateX(settings.settingsViewTranslateX.get()); 
 		this.setTranslateY(settings.settingsViewTranslateY.get());
 		this.setPrefWidth(settings.settingsViewPrefWidth.get());
 		this.setPrefHeight(settings.settingsViewPrefHeight.get());
 		this.setPrefHeight(settings.WINDOW_HEIGHT);
 		this.setId("SettingsView");
+		this.botSelectionView = new BotSelectionView(this);
 
 		initGameContent();
 
-		//inGameContent = new InGamePane();
+		// inGameContent = new InGamePane();
 		noGameContent = new NoGamePane();
-		
-		this.getChildren().add(new BotSelectionView(this));
+
+		this.getChildren().add(botSelectionView);
 
 	}
 
@@ -42,10 +44,10 @@ public class SettingsView extends Pane  {
 		this.getChildren().add(gameContent);
 	}
 
-	public void setInGameContent() { // TODO CHANGE IN AND NO GAME TO Method if(Game.isRunning) - Settings haben nichts damit zu tun, ob ein Spiel läuft oder nicht
-	
-	}
+	public void setInGameContent() { // TODO CHANGE IN AND NO GAME TO Method if(Game.isRunning) - Settings haben
+										// nichts damit zu tun, ob ein Spiel läuft oder nicht
 
+	}
 
 	public SettingsPresenter getSettingsPresenter() {
 		return settingsPresenter;
@@ -61,6 +63,10 @@ public class SettingsView extends Pane  {
 
 	public void setSettings(Settings settings) {
 		this.settings = settings;
+	}
+
+	public BotRepresentation getSelectedBot() {
+		return botSelectionView.getSelected();
 	}
 
 //	public class InGamePane extends VBox {
@@ -125,7 +131,6 @@ public class SettingsView extends Pane  {
 
 	public void botSelectedPressed(BotRepresentation source) {
 		settingsPresenter.botSelected(source);
-		
 	}
 
 }

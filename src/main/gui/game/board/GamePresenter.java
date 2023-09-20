@@ -1,5 +1,6 @@
 package main.gui.game.board;
 
+import javafx.application.Platform;
 import main.gui.MainPresenter;
 import main.gui.Presenter;
 import main.model.Vector2D;
@@ -25,7 +26,21 @@ public class GamePresenter extends Presenter {
 	}
 
 	public void requestBotMove() {
-		gameView.loadSimpleBoard(mainPresenter.requestBotMove());
+//		new Thread(() -> {
+//			try {
+//				Thread.sleep(200); // Simulate some heavy computation
+//			} catch (InterruptedException e) {
+//				Thread.currentThread().interrupt();
+//			}
+//			// Update UI on JavaFX Application Thread
+//			Platform.runLater(() -> {
+//				gameView.loadSimpleBoard(mainPresenter.requestBotMove());
+//			});
+//		}).start();
+	}
+
+	public void setPieceListenerDisabled(ChessPieceColor color, boolean disabled) {
+		gameView.setPieceListenerDisabled(color, disabled);
 	}
 
 	public GameView getGameView() {

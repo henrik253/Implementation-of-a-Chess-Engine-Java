@@ -34,7 +34,7 @@ public class BotRepresentation extends Pane {
 	private static final Double BUTTON_HEIGHT = 30.0;
 
 	private static final Double PROBABILLITY = 0.5;
-	
+
 	private Pane imageWrapper = new Pane();
 	private ImageView imageView = new ImageView();
 	private Text heading = new Text("Heading");
@@ -46,7 +46,7 @@ public class BotRepresentation extends Pane {
 
 	private BotSelectionView botSelectionView;
 
-	private ChessPieceColor selectedColor;
+	private ChessPieceColor userPlaysAs;
 
 	private VBox colorSelectMenue = new VBox();
 
@@ -59,10 +59,9 @@ public class BotRepresentation extends Pane {
 
 	public BotRepresentation(BotSelectionView botSelectionView) {
 		this.botSelectionView = botSelectionView;
-		selectedColor = ChessPieceColor.WHITE; // By default black
+		userPlaysAs = ChessPieceColor.WHITE; // By default black
 		colorButtonPressed(selectWhiteButton); // By default white is selected
 		init();
-
 	}
 
 	private void init() { // TODO Select button is going to change to surr & Remi B. when game is Running
@@ -139,18 +138,18 @@ public class BotRepresentation extends Pane {
 				b.setDisable(true);
 
 			setDisableSelectButton(false);
-			
+
 			Object userData = source.getUserData();
 			if (userData != null) {
-				this.selectedColor = (ChessPieceColor) userData;
+				this.userPlaysAs = (ChessPieceColor) userData;
 			} else {
-				this.selectedColor = getRandomColor();
-				
+				this.userPlaysAs = getRandomColor();
+
 			}
 
 		});
 	}
-	
+
 	private ChessPieceColor getRandomColor() {
 		return Math.random() < PROBABILLITY ? ChessPieceColor.WHITE : ChessPieceColor.BLACK;
 	}
@@ -207,8 +206,8 @@ public class BotRepresentation extends Pane {
 		return imageWrapper;
 	}
 
-	public ChessPieceColor getSelectedColor() {
-		return selectedColor;
+	public ChessPieceColor getUserColor() {
+		return userPlaysAs;
 	}
 
 }

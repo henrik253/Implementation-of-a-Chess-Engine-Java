@@ -16,9 +16,9 @@ public class Model {
 
 	private ChessBot selectedChessBot;
 
-	// GAME START 
+	// GAME START
 	public void startGame() {
-		startGame(settings.selectedFEN.get()); 
+		startGame(settings.selectedFEN.get());
 		selectedChessBot = new ChessBotStub();
 		moveValidation.setBoard(boardRepresentation);
 	}
@@ -27,15 +27,15 @@ public class Model {
 		this.boardRepresentation = new BoardRepresentation(FENConverter.convertPieceBoard(fen)); // <----
 		this.moveValidation.setOnMove(ChessPieceColor.WHITE);
 	}
-	
+
 	// GAME RUNNING
 	public boolean movePiece(Vector2D oldPos, Vector2D newPos) { // <----
 		return moveValidation.makeMove(oldPos, newPos);
 	}
 
-	public Piece[][] makeBotMove() {
-		Piece[][] board = boardRepresentation.getBoard().clone();
-		return selectedChessBot.makeMove(board);
+	public boolean makeBotMove() {
+		Move move = selectedChessBot.makeMove(boardRepresentation.getBoard().clone());
+		return moveValidation.makeMove(move.getOldPos(), move.getNewPos());
 	}
 
 	public void setChessBot(ChessBot chessBot) {

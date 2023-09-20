@@ -94,18 +94,42 @@ public class Pawn extends Piece {
 			return moves;
 
 		for (Vector2D attackDirection : attackDirections) {
+
 			List<Vector2D> movesInDirection = new LinkedList<>();
 			Vector2D possiblePosition = this.position.clone();
 			possiblePosition.plus(attackDirection);
 
-			if (!outOfBounds(possiblePosition) && board.isEnemyPieceOn(possiblePosition, color) 
-					&& possiblePosition.equals(position) ) {
+			if (!outOfBounds(possiblePosition) && board.isEnemyPieceOn(possiblePosition, color)) {
 				movesInDirection.add(possiblePosition.clone());
 			}
 
 			moves.add(movesInDirection);
 		}
 		this.attackableSquares = moves;
+		return moves;
+	}
+
+	@Override
+	public List<List<Vector2D>> calculateMoveablePositions(Vector2D position) {
+		// Pawn is the only piece that has a different attack then move!
+		List<List<Vector2D>> moves = new LinkedList<>();
+		Vector2D attackDirection = directions[0];
+		List<Vector2D> movesInDirection = new LinkedList<>();
+		Vector2D possiblePosition = this.position.clone();
+		for (int i = 0; i < (firstMove ? 2 : 1); i++) {
+			possiblePosition.plus(attackDirection);
+
+			if (!outOfBounds(possiblePosition)) {
+				if (board.isNoPieceOn(possiblePosition))
+					movesInDirection.add(possiblePosition.clone());
+				else
+					break;
+			}
+		}
+		moves.add(movesInDirection);
+
+		moves.addAll(calculateAttackablePositions(position));
+
 		return moves;
 	}
 

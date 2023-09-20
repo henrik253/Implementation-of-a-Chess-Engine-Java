@@ -4,5 +4,5 @@ import main.model.chessPieces.concretePieces.Piece;
 
 public interface ChessBot {
 
-	Piece[][] makeMove(Piece[][] board);
+	Move makeMove(Piece[][] board);
 }

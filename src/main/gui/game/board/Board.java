@@ -10,15 +10,14 @@ import javafx.scene.image.ImageView;
 import javafx.scene.input.ClipboardContent;
 import javafx.scene.input.DragEvent;
 import javafx.scene.input.Dragboard;
-import javafx.scene.input.MouseDragEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.input.TransferMode;
-import javafx.scene.layout.Border;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import main.Settings;
 import main.model.Vector2D;
+import main.model.chessPieces.ChessPieceColor;
 import main.model.chessPieces.SimplePiece;
 
 public class Board extends GridPane {
@@ -31,6 +30,8 @@ public class Board extends GridPane {
 
 	private List<Piece> piecesOnBoard = new LinkedList<>();
 	private boolean inverted = false;
+
+	private ChessPieceColor disabledSide = ChessPieceColor.BLACK;
 
 	public Board() {
 		this.setTranslateX(0);
@@ -73,19 +74,10 @@ public class Board extends GridPane {
 			validMove = gameView.moveRequest(oldPos, newPos);
 		}
 
-		// if (validMove) {
-//			// movePiece(draggedPiece, newX, newY);
-//
-//		}
-
+		if (validMove) {
+			gameView.userMoveSucceeded();
+		}
 	}
-
-//	private void movePiece(Piece piece, int x, int y) { // pieces are not moved, the board will be inserted
-//		piece.setRow(x);
-//		piece.setColumn(y);
-//		this.getChildren().remove(piece);
-//		this.add(piece, x, y);
-//	}
 
 	public void drawBoard() {
 		this.getChildren().clear();
@@ -122,12 +114,14 @@ public class Board extends GridPane {
 				String imageName = simplePiece.toString();
 				Piece piece = new Piece(row, column);
 				piece.setImage(new Image(IMAGE_PATH + imageName + FILE_FORMAT, 150, 150, false, false));
+				piece.setColor(simplePiece.getColor());
 
 				piecesOnBoard.add(piece);
 				this.add(piece, column, row);
 			}
 		}
-
+		// TODO TEMP
+		// disablePieceListener(disabledSide);
 	}
 
 	private SimplePiece[][] invertBoard(SimplePiece[][] board) {
@@ -147,6 +141,26 @@ public class Board extends GridPane {
 			return;
 		piecesOnBoard.forEach(piece -> this.getChildren().remove(piece));
 		piecesOnBoard.clear();
+	}
+
+	public void disablePieceListener(ChessPieceColor color) {
+		// TODO TEMP DIS- ENABLING BECAUSE PIECES ARE NEW GENERATED AFTER A MOVE
+		if (disabledSide != color)
+			this.disabledSide = color;
+
+		piecesOnBoard.forEach(piece -> {
+			if (piece.getColor() == color) {
+				piece.setOnDragDetected(piece::onDisabled);
+			}
+		});
+	}
+
+	public void enablePieceListener(ChessPieceColor color) {
+		piecesOnBoard.forEach(piece -> {
+			if (piece.getColor() == color) {
+				piece.setOnDragDetected(piece::onDragDetected);
+			}
+		});
 	}
 
 	public Settings getSettings() {
@@ -170,6 +184,7 @@ public class Board extends GridPane {
 		private ImageView imageView;
 		private IntegerProperty column;
 		private IntegerProperty row;
+		private ChessPieceColor color;
 
 		public Piece(int column, int row) {
 			this.setPrefWidth(settings.squareWidth.get());
@@ -189,6 +204,10 @@ public class Board extends GridPane {
 			content.putImage(image);
 			dragboard.setContent(content);
 			this.setVisible(false);
+		}
+
+		private void onDisabled(MouseEvent event) {
+			System.out.println("DISABLED!");
 		}
 
 		private void onDragDone(DragEvent event) {
@@ -216,6 +235,14 @@ public class Board extends GridPane {
 
 		public String toString() {
 			return "( " + column.get() + " | " + row.get() + " )";
+		}
+
+		public void setColor(ChessPieceColor color) {
+			this.color = color;
+		}
+
+		public ChessPieceColor getColor() {
+			return color;
 		}
 	}
 

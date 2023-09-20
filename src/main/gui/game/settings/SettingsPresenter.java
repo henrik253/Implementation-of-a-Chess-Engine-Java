@@ -51,7 +51,10 @@ public class SettingsPresenter {
 
 	public void botSelected(BotRepresentation source) {
 		mainPresenter.botSelected(source);
-		
+	}
+	
+	public BotRepresentation getSelectedBot() {
+		return settingsView.getSelectedBot();
 	}
 	
 	

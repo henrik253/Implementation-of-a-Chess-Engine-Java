@@ -38,6 +38,10 @@ public abstract class Piece {
 
 		return false;
 	}
+	// an attack is always a move, but a move isnt always a attack. e.g. Pawn movement 
+	public List<List<Vector2D>> calculateMoveablePositions(Vector2D position) {
+		return calculateAttackablePositions(position);
+	}
 
 	public void executeMove(Vector2D oldPos, Vector2D newPos) {
 		Piece[][] board = this.board.getBoard();
@@ -48,7 +52,7 @@ public abstract class Piece {
 	}
 
 	public abstract List<List<Vector2D>> calculateAttackablePositions(Vector2D position);
-	
+
 	protected boolean outOfBounds(Vector2D position) {
 		return position.getX() < 0 || position.getX() >= length || position.getY() < 0 || position.getY() >= length;
 	}

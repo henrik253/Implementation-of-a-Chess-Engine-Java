@@ -26,7 +26,7 @@ public class BotSelectionView extends BorderPane { // TODO REMOVE BorderPane Wra
 	private static final Double BUTTON_PADDING = 10.0;
 	private static final Double TOPBAR_SPACING = 20.0;
 
-	private static final String BOT_NAME1 = "Computer 1";
+	private static final String BOT_NAME1 = "Bot 1";
 	private static final String BOT_NAME2 = "Bot 2";
 
 	private SettingsView settingsView;
@@ -105,6 +105,10 @@ public class BotSelectionView extends BorderPane { // TODO REMOVE BorderPane Wra
 		selected = source;
 
 		settingsView.botSelectedPressed(source);
+	}
+
+	public BotRepresentation getSelectedBot() {
+		return selected;
 	}
 
 	private void preSelect(BotRepresentation source) {

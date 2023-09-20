@@ -14,7 +14,6 @@ public class Overlay extends Pane {
 
 	private Settings settings;
 
-	
 	public void init() {
 		this.translateXProperty().set(0);
 		this.translateYProperty().set(0);

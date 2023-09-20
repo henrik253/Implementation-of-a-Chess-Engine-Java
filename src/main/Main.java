@@ -124,10 +124,12 @@ public class Main extends Application {
 		board.setGameView(gameView);
 
 		gameStartOverlay.setSettings(settings);
-
+		
+		gameOverOverlay.setSettings(settings);
 		// Init other classes
 		gameStartOverlay.init();
-
+		gameOverOverlay.init();
+		
 		// Init all Views
 		mainView.init();
 		gameStartView.init();

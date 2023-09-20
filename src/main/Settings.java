@@ -20,7 +20,7 @@ public class Settings { // Settings is not static, to make different saveable se
 	public ObjectProperty<Color> brightColor = new SimpleObjectProperty<>(Color.web("#FFFFFF"));
 	public ObjectProperty<Color> darkColor = new SimpleObjectProperty<>(Color.web("#4f4f4f"));
 	public StringProperty playButtonTextStart = new SimpleStringProperty("Start Game");
-	public StringProperty playButtonTextContinue = new SimpleStringProperty("Continue Game");
+	public StringProperty playButtonTextContinue = new SimpleStringProperty("Continue");
 
 	public DoubleProperty settingsViewTranslateX = new SimpleDoubleProperty();
 	public DoubleProperty settingsViewTranslateY = new SimpleDoubleProperty(0);

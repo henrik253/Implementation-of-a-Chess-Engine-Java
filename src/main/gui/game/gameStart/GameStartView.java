@@ -194,9 +194,9 @@ public class GameStartView extends Pane {
 
 	public void drawSelectedBot(BotRepresentation source) {
 		this.botImage = new ImageView(source.getImage().getImage());
-		botWrapper.setBackground(Background.fill(source.getSelectedColor().isWhite() ? Color.web(BLACK) : Color.WHITE));
+		botWrapper.setBackground(Background.fill(source.getUserColor().isWhite() ? Color.web(BLACK) : Color.WHITE));
 		playerWrapper
-				.setBackground(Background.fill(source.getSelectedColor().isWhite() ? Color.WHITE : Color.web(BLACK)));
+				.setBackground(Background.fill(source.getUserColor().isWhite() ? Color.WHITE : Color.web(BLACK)));
 
 		drawBotRepresentation();
 		drawBotName(source);

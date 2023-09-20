@@ -37,6 +37,13 @@ public class GameView extends Pane {
 		this.getChildren().add(board);
 	}
 
+	public void setPieceListenerDisabled(ChessPieceColor color, boolean disabled) {
+		if (disabled)
+			board.disablePieceListener(color);
+		else
+			board.enablePieceListener(color);
+	}
+
 	public GamePresenter getGamePresenter() {
 		return gamePresenter;
 	}
@@ -52,6 +59,10 @@ public class GameView extends Pane {
 
 	public void userPlaysAs(ChessPieceColor selectedColor) {
 		board.setInverted(selectedColor.isBlack());
+	}
+
+	public void userMoveSucceeded() {
+		gamePresenter.requestBotMove();
 	}
 
 }
