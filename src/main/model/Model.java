@@ -1,6 +1,6 @@
 package main.model;
 
-import main.ChessBotStub;
+import ai.MCTSAgent.MCTSAgent;
 import main.Settings;
 import main.model.chessPieces.ChessPieceColor;
 import main.model.chessPieces.concretePieces.Piece;
@@ -19,7 +19,7 @@ public class Model {
 	// GAME START
 	public void startGame() {
 		startGame(settings.selectedFEN.get());
-		selectedChessBot = new ChessBotStub();
+		selectedChessBot = MCTSAgent.getTestBot(-1);
 		moveValidation.setBoard(boardRepresentation);
 	}
 

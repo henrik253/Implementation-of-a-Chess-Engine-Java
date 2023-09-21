@@ -36,13 +36,15 @@ public class MainPresenter extends Presenter {
 	public SimplePiece[][] requestBotMove() {
 
 		// TODO TEMP
-		while (State.gameState.inGame()) {
+		/*while (State.gameState.inGame()) {
 			if (model.makeBotMove()) {
 				SimplePiece[][] simpleBoard = BoardConverter.convertToSimple(model.getBoard());
 				checkGameStates();
 				return simpleBoard;
 			}
-		}
+		}*/
+		model.makeBotMove();
+		SimplePiece[][] simpleBoard = BoardConverter.convertToSimple(model.getBoard());
 		return BoardConverter.convertToSimple(model.getBoard()); // no move
 		// TODO TEMP
 	}

@@ -29,7 +29,7 @@ public class MCTSAgent implements ChessBot {
         this.player = player;
         this.arr = new BitMaskArr();
     }
-    static MCTSAgent getTestBot(int player){
+    public static MCTSAgent getTestBot(int player){
         MCTSAgent testBot = new MCTSAgent(2, 200, player);
         testBot.initRandom();
         testBot.addMathematicalPolicyNet();
@@ -123,7 +123,8 @@ public class MCTSAgent implements ChessBot {
         }else{
             coordinates = getLogic().intToCoordinates(bestMoveIndex);
         }
-        return new Move(new Vector2D(coordinates[1], coordinates[0]), new Vector2D(coordinates[3],coordinates[2]));
+        System.out.println(coordinates[0] +" "+ coordinates[1] + " " + coordinates[2] +" "+ coordinates[3]);
+        return new Move(new Vector2D(coordinates[0], coordinates[1]), new Vector2D(coordinates[2],coordinates[3]));
 
     }
 }
