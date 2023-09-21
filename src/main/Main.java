@@ -166,22 +166,6 @@ public class Main extends Application {
 	}
 
 	public static void main(String[] args) {
-		// testAi();
 		launch(args);
-	}
-
-	static void testAi() {
-
-	}
-
-	static boolean arrEq(int[][] arr1, int[][] arr2) {
-		for (int i = 0; i < arr1.length; i++) {
-			for (int j = 0; j < arr1[0].length; j++) {
-				if (arr1[i][j] != arr2[i][j]) {
-					return false;
-				}
-			}
-		}
-		return true;
 	}
 }

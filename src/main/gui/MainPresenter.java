@@ -1,7 +1,5 @@
 package main.gui;
 
-import ai.AlphaZeroDotFive.AlphaZeroDotFiveAgent;
-import javafx.application.Platform;
 import main.Settings;
 import main.gui.game.board.GamePresenter;
 import main.gui.game.gameOver.GameOverPresenter;
@@ -10,14 +8,11 @@ import main.gui.game.settings.SettingsPresenter;
 import main.gui.game.settings.settingsViewComponents.BotRepresentation;
 import main.model.Model;
 import main.model.Vector2D;
-import main.model.chessPieces.ChessPieceColor;
 import main.model.chessPieces.SimplePiece;
 import main.model.convertions.BoardConverter;
 import main.model.convertions.FENConverter;
 import main.model.gameStates.GameState;
 import main.model.gameStates.State;
-
-import java.io.IOException;
 
 public class MainPresenter extends Presenter {
 

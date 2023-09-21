@@ -1,4 +1,4 @@
-package ai.AlphaZeroDotFive.NeuralNets;
+package ai.MCTSAgent.NeuralNetsAndEvaluators;
 
 import java.util.Random;
 

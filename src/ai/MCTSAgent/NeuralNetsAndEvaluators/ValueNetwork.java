@@ -1,4 +1,4 @@
-package ai.AlphaZeroDotFive.NeuralNets;
+package ai.MCTSAgent.NeuralNetsAndEvaluators;
 
 import org.deeplearning4j.nn.multilayer.MultiLayerNetwork;
 import org.deeplearning4j.util.ModelSerializer;
@@ -32,7 +32,7 @@ public class ValueNetwork implements IValueNetWork{
         int index = 0;
         for (int[] ints : board) {
             for (int anInt : ints) {
-                converted.putScalar(index, anInt);
+                converted.putScalar(index, ((float)anInt)/6);
                 index++;
             }
         }

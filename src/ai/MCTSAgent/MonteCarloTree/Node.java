@@ -1,7 +1,9 @@
-package ai.AlphaZeroDotFive.MonteCarloTree;
+package ai.MCTSAgent.MonteCarloTree;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import ai.MCTSAgent.Validation.Bitboards.Bitboard;
 
 public class Node {
     MonteCarloTree tree;
@@ -16,6 +18,8 @@ public class Node {
     float prior;
     int player;
     int depth;
+    private Bitboard bitboard;
+
     public Node(MonteCarloTree tree, int[][] board, float c, int simulations, Node parent, int moveLeadingTo, float prior, int player, int depth){
         this.tree = tree;
         this.c = c;
@@ -29,7 +33,25 @@ public class Node {
         this.prior = prior;
         this.player = player;
         this.depth = depth;
+        if(this.player == 1){
+            this.bitboard = new Bitboard(board, this.tree.ai.arr);
+        }else{
+            this.bitboard = new Bitboard(flipIntBoard(board), this.tree.ai.arr);
+            this.bitboard.flipPlayer();
+        }
+
     }
+
+    private int[][] flipIntBoard(int[][] board) {
+        int[][] result = new int[8][8];
+        for (int i = 0; i < 8; i++) {
+            for (int j = 0; j < 8; j++) {
+                result[i][j] = board[i][j] * -1;
+            }
+        }
+        return result;
+    }
+
     public Node(MonteCarloTree tree, int[][] board, float c, int simulations, int player){
         this.tree = tree;
         this.c = c;
@@ -42,6 +64,12 @@ public class Node {
         this.prior = 0.f;
         this.player = player;
         this.depth = 0;
+        if(this.player == 1){
+            this.bitboard = new Bitboard(board, this.tree.ai.arr);
+        }else{
+            this.bitboard = new Bitboard(flipIntBoard(board), this.tree.ai.arr);
+            this.bitboard.flipPlayer();
+        }
     }
 
     boolean alreadyExpanded(){
@@ -70,9 +98,10 @@ public class Node {
     }
 
     public void expand(float[] policy) {
-        List<Integer> validMoves = this.tree.getLogic().getValidMovesAlt(this.board, this.player);
+        List<Integer> validMoves = this.tree.getLogic().getValidMoves(this.board, this.player);
+
         for(int move : validMoves) {
-            int[][] newBoard = this.tree.getLogic().getBoardBuffer()[move];
+            int[][] newBoard = calculateNewBoard(this.bitboard, this.player, move);
             Node child = new Node(
                     this.tree,
                     newBoard,
@@ -88,6 +117,13 @@ public class Node {
         }
     }
 
+    private int[][] calculateNewBoard(Bitboard bitboard, int player, int move) {
+        int[] coordinates = this.tree.ai.getLogic().intToCoordinates(move);
+        int start = coordinates[1] * 8 + coordinates[0];
+        int destination = coordinates[3] * 8 + coordinates[2];
+        Bitboard afterMove = bitboard.simulateMove(new int[]{start, destination});
+        return afterMove.toIntBoard();
+    }
 
 
     public void backtrackToRoot(float value) {

@@ -1,17 +1,17 @@
-package ai.AlphaZeroDotFive.MonteCarloTree;
+package ai.MCTSAgent.MonteCarloTree;
 
-import ai.AlphaZeroDotFive.AlphaZeroDotFiveAgent;
-import ai.AlphaZeroDotFive.Logic.LogicTranslator;
+import ai.MCTSAgent.MCTSAgent;
+import ai.MCTSAgent.Logic.LogicTranslator;
 
 public class MonteCarloTree {
     int simNum;
     private final LogicTranslator logic;
     private final float c;
     private final int simulations;
-    AlphaZeroDotFiveAgent ai;
+    MCTSAgent ai;
     boolean lastSimulation;
 
-    public MonteCarloTree(AlphaZeroDotFiveAgent ai, LogicTranslator logic, float c, int simulations){
+    public MonteCarloTree(MCTSAgent ai, LogicTranslator logic, float c, int simulations){
         this.simNum = 0;
         this.logic = logic;
         this.c = c;
@@ -20,7 +20,7 @@ public class MonteCarloTree {
         lastSimulation = false;
     }
     public float[] search(int[][] board){
-        Node root = new Node(this, board, this.c, this.simulations, this.ai.player);
+        Node root = new Node(this, board, this.c, this.simulations, 1);
         for (int i = 0; i < this.simulations; i++) {
             runSimulation(root);
         }
@@ -54,9 +54,9 @@ public class MonteCarloTree {
         }
         float value = -1;
         //if the game hasnt ended, expand node before backtracking
-        if(!getLogic().endingMove(node.moveLeadingTo, node.player, node.board)){
+        if(!getLogic().endingMove(node.player, node.board)){
             //run policy and value network
-            float[] policy = this.ai.getPolicyNet().getPolicy(node.board);
+            float[] policy = this.ai.getPolicyNet().getPolicy(node.board, node.player);
             value = this.ai.getValueNet().getValue(node.board);//for backtracking to root
             //expand the node with new policy
             node.expand(policy);
