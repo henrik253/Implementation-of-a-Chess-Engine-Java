@@ -33,11 +33,6 @@ public class MCTSAgent implements ChessBot {
         MCTSAgent testBot = new MCTSAgent(2, 200, player);
         testBot.initRandom();
         testBot.addMathematicalPolicyNet();
-        try {
-            testBot.addActualValueNet();
-        } catch (IOException e) {
-            System.out.println("Cant open Value net");
-        }
         return testBot;
     }
 
