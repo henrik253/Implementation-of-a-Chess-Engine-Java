@@ -13,8 +13,9 @@ import main.model.gameStates.State;
 public class GameStatistic {
 
 	private Map<String, Integer> userWon = new HashMap<>();
-	private Map<String, Integer> playedGames = new HashMap<>();
+	private Map<String, Integer> userRemis = new HashMap<>();
 
+	private Map<String, Integer> playedGames = new HashMap<>();
 	private Map<String, List<Move>> moveHistory = new HashMap<>();
 
 	public GameStatistic() {
@@ -43,6 +44,10 @@ public class GameStatistic {
 		}
 	}
 
+	public void enterDraw(String string) {
+		userRemis.put(string, userRemis.getOrDefault(string, 0) + 1);
+	}
+
 	private boolean userWon(ChessPieceColor botColor) {
 		return (State.gameOverReason.isBlackWon() && botColor.isWhite())
 				|| (State.gameOverReason.isWhiteWon() && botColor.isBlack());
@@ -58,6 +63,10 @@ public class GameStatistic {
 
 	public int getBotWins(String bot) {
 		return getPlayedGamesAgainstBot(bot) - getUserWins(bot);
+	}
+
+	public int getDraws(String bot) {
+		return userRemis.get(bot);
 	}
 
 	public int getTotalUserWins() {
@@ -81,4 +90,5 @@ public class GameStatistic {
 	public String toString() {
 		return userWon + " \n" + playedGames + " \n" + moveHistory;
 	}
+
 }

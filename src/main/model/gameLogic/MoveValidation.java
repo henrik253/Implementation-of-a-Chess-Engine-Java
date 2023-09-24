@@ -9,6 +9,7 @@ import main.model.gameStates.GameOverReason;
 import main.model.gameStates.GameState;
 import main.model.gameStates.State;
 
+import java.util.LinkedList;
 import java.util.List;
 import java.util.stream.Stream;
 
@@ -40,12 +41,11 @@ public class MoveValidation {
 		board.calcAttackedSquaresBy(movedPiece.getColor());
 
 		if (enemyInCheck()) {
-			System.out.println("CHEEECK");
 			testCheckMate(movedPiece);
 		}
 
-		if (isDraw()) {
-			//
+		if (enemyInRemi()) {
+			remis();
 		}
 
 		setNextPlayerOnMove(); // TODO in other class
@@ -53,9 +53,29 @@ public class MoveValidation {
 		return true;
 	}
 
-	private boolean isDraw() {
+	private boolean enemyInRemi() { // Fehleranfällig?
+		List<Piece> pieces = onMove.isWhite() ? board.getBlackPieces() : board.getWhitePieces();
+		List<Piece> piecesClone = new LinkedList<>(pieces);
+		// TODO KING CAN WALK ON ATTACKED SQUARES SO IN NEEDS TO BE CHECKED!
+		// java.util.ConcurrentModificationException so we clone pieces
+		// exception is thrown when looping through the list and the list is changed
+		// from another thread
+		for (Piece p : piecesClone) {
+			for (List<Vector2D> moves : p.getMoveablePositions()) {
+				for (Vector2D move : moves) {
+					if (!kingInCheckIfPieceMoves(p.getPosition(), move)) {
+						return false;
+					}
+				}
+			}
+		}
 
-		return false;
+		return true;
+	}
+
+	private void remis() {
+		State.gameState = GameState.GAME_OVER;
+		State.gameOverReason = GameOverReason.DRAW;
 	}
 
 	private boolean isNoValidMove(Vector2D oldPos, Vector2D newPos) {

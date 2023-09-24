@@ -68,7 +68,11 @@ public class Model {
 		State.chessMove = lastMoveSuccess ? ChessMove.VALID : ChessMove.NOT_VALID;
 
 		if (State.gameState.isGameOver()) {
-			gameStatistic.enterGameWinner(selectedChessBot.toString(), selectedChessBot.getColor());
+			if (State.gameOverReason == GameOverReason.DRAW) {
+				gameStatistic.enterDraw(selectedChessBot.toString());
+			} else {
+				gameStatistic.enterGameWinner(selectedChessBot.toString(), selectedChessBot.getColor());
+			}
 		}
 
 	}

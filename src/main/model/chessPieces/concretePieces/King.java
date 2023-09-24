@@ -24,42 +24,10 @@ public class King extends Piece {
 		return validMovement || isValidCastle(position);
 	}
 
-	// Valid Castle if 1. Rook & King didnt move 2. no Pieces between 3. no check
-	// between
-	public boolean isValidCastle(Vector2D pos) {
-		if (!firstMove)
-			return false;
-
-		int[][] aS = this.color.isWhite() ? board.getAttackedSquaresByBlack() : board.getAttackedSquaresByWhite();
-		Piece[][] b = board.getBoard();
-		boolean isRightSideCastle = pos.getX() - this.position.getX() > 0;
-		int rookCol = isRightSideCastle ? this.board.getBoard().length - 1 : 0;
-		Vector2D rookPos = new Vector2D(rookCol, this.position.getY()); // on the same row
-
-		boolean inCheck = false;
-		boolean pieceOnSquare = false;
-
-		if (isRightSideCastle) {
-			int x0 = this.position.getX();
-			int x1 = this.position.getX() + 1, x2 = this.position.getX() + 2;
-			int y0 = this.position.getY();
-			inCheck = aS[y0][x0] > 0 || aS[y0][x1] > 0 || aS[y0][x2] > 0;
-			pieceOnSquare = b[y0][x1] != null || b[y0][x2] != null; // BETWEEN K & R
-		} else { // left Side
-			int x0 = this.position.getX();
-			int x1 = this.position.getX() - 1, x2 = this.position.getX() - 2, x3 = this.position.getX() - 3;
-			int y0 = this.position.getY();
-			inCheck = aS[y0][x0] > 0 || aS[y0][x1] > 0 || aS[y0][x2] > 0 || aS[y0][x3] > 0;
-			pieceOnSquare = b[y0][x1] != null || b[y0][x2] != null || b[y0][x3] != null; // BETWEEN K & R
-		}
-
-		return ((int) Math.abs((((double) (position.getX() - pos.getX())))) == 2) && board.getPiece(rookPos).firstMove
-				&& firstMove && !inCheck && !pieceOnSquare;
-	}
-
 	// calculateAttackablePositions returns squares where king would be in check ,
 	// moveValidation checks that this wont happen, so we dont have to do this in
 	// this class
+	// TODO calculateAttackablePositions or moveablePos the castling
 	@Override
 	public List<List<Vector2D>> calculateAttackablePositions() {
 		List<List<Vector2D>> moves = new LinkedList<>();
@@ -99,6 +67,39 @@ public class King extends Piece {
 		} else {
 			super.executeMove(oldPos, newPos);
 		}
+	}
+
+	// Valid Castle if 1. Rook & King didnt move 2. no Pieces between 3. no check
+	// between
+	public boolean isValidCastle(Vector2D pos) {
+		if (!firstMove)
+			return false;
+
+		int[][] aS = this.color.isWhite() ? board.getAttackedSquaresByBlack() : board.getAttackedSquaresByWhite();
+		Piece[][] b = board.getBoard();
+		boolean isRightSideCastle = pos.getX() - this.position.getX() > 0;
+		int rookCol = isRightSideCastle ? this.board.getBoard().length - 1 : 0;
+		Vector2D rookPos = new Vector2D(rookCol, this.position.getY()); // on the same row
+
+		boolean inCheck = false;
+		boolean pieceOnSquare = false;
+
+		if (isRightSideCastle) {
+			int x0 = this.position.getX();
+			int x1 = this.position.getX() + 1, x2 = this.position.getX() + 2;
+			int y0 = this.position.getY();
+			inCheck = aS[y0][x0] > 0 || aS[y0][x1] > 0 || aS[y0][x2] > 0;
+			pieceOnSquare = b[y0][x1] != null || b[y0][x2] != null; // BETWEEN K & R
+		} else { // left Side
+			int x0 = this.position.getX();
+			int x1 = this.position.getX() - 1, x2 = this.position.getX() - 2, x3 = this.position.getX() - 3;
+			int y0 = this.position.getY();
+			inCheck = aS[y0][x0] > 0 || aS[y0][x1] > 0 || aS[y0][x2] > 0 || aS[y0][x3] > 0;
+			pieceOnSquare = b[y0][x1] != null || b[y0][x2] != null || b[y0][x3] != null; // BETWEEN K & R
+		}
+
+		return ((int) Math.abs((((double) (position.getX() - pos.getX())))) == 2) && board.getPiece(rookPos).firstMove
+				&& firstMove && !inCheck && !pieceOnSquare;
 	}
 
 	private void executeCastling(Vector2D oldPos, Vector2D newPos) { // TODO test Castling
