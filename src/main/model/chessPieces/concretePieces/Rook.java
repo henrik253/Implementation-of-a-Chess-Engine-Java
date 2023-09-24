@@ -9,8 +9,6 @@ import main.model.chessPieces.ChessPieceName;
 
 public class Rook extends Piece {
 
-	private boolean firstMove = true;
-
 	private Vector2D[] attackDirections = { new Vector2D(1, 0), new Vector2D(-1, 0), new Vector2D(0, 1),
 			new Vector2D(0, -1) };
 
@@ -20,7 +18,7 @@ public class Rook extends Piece {
 	}
 
 	@Override
-	public List<List<Vector2D>> calculateAttackablePositions(Vector2D position) {
+	public List<List<Vector2D>> calculateAttackablePositions() {
 		List<List<Vector2D>> moves = new LinkedList<>();
 
 		if (outOfBounds(position))

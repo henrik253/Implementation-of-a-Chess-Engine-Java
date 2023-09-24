@@ -2,12 +2,11 @@ package main.gui.game.board;
 
 import javafx.application.Platform;
 import main.gui.MainPresenter;
-import main.gui.Presenter;
 import main.model.Vector2D;
 import main.model.chessPieces.ChessPieceColor;
 import main.model.chessPieces.SimplePiece;
 
-public class GamePresenter extends Presenter {
+public class GamePresenter  {
 	private GameView gameView;
 	private MainPresenter mainPresenter;
 

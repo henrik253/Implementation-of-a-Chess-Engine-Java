@@ -6,6 +6,7 @@ import main.model.chessPieces.ChessPieceColor;
 import main.model.chessPieces.concretePieces.King;
 import main.model.chessPieces.concretePieces.Pawn;
 import main.model.chessPieces.concretePieces.Piece;
+import main.model.chessPieces.concretePieces.Queen;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -102,51 +103,67 @@ public class BoardRepresentation {
 	}
 
 	private void markAttackedSquares(Piece piece, int[][] attackedSquares) {
-		List<List<Vector2D>> moves = piece.calculateAttackablePositions(piece.getPosition());
+		List<List<Vector2D>> moves = piece.calculateAttackablePositions();
 		moves.forEach(movesInDir -> movesInDir.forEach(m -> attackedSquares[m.getY()][m.getX()]++));
 	}
 
 	public void makeMove(Vector2D oldPos, Vector2D newPos) {
-		lastMove = new Move(oldPos, newPos); // set last move 
-		Piece movedPiece = this.getPiece(oldPos); // get the piece 
 
-		removePiece(newPos); // remove the piece that is on the pos the moving piece want to get
+		// order in which funcs are called is important!
+		Piece movedPiece = this.getPiece(oldPos); // get the piece
+		Piece removedPiece = removeAttackedPiece(newPos); // remove the piece that is on the pos the moving piece want
+															// to get
 		movedPiece.executeMove(oldPos, newPos);
+
+		lastMove = new Move(oldPos, newPos);
+		lastMove.setCapturedPiece(removedPiece);
 		moveHistory.add(lastMove);
 	}
 
 	public void undoLastMove() {
+		// STEPS OF UNDO
+		// 1. if piece captured get it
+		// 2. bring moved piece back to pos
+		// 3. (bring captured piece back to his pos)
+		// 4. refresh lists that manage pieces e.g whitePieces, blackPieces,
+		// capturedPieces
+
 		Vector2D oldPos = lastMove.getOldPos(), newPos = lastMove.getNewPos();
 		Piece capturedPiece = lastMove.getCapturedPiece();
-		makeMove(newPos, oldPos);
+		Piece movedPiece = getPiece(newPos);
 
+		// UNDO the Move
+		board[oldPos.getY()][oldPos.getX()] = movedPiece;
 		board[newPos.getY()][newPos.getX()] = capturedPiece;
-		capturedPieces.remove(capturedPiece);
+
+		movedPiece.setPosition(oldPos); // movedPiece should never be null so no cond. stat.
 
 		if (capturedPiece != null) {
+			capturedPiece.setPosition(newPos);
+			capturedPieces.remove(capturedPiece);
 			if (capturedPiece.getColor().isWhite())
 				whitePieces.add(capturedPiece);
 			else
 				blackPieces.add(capturedPiece);
 		}
 
-		moveHistory.remove(moveHistory.get(moveHistory.size() - 1));
-		lastMove = moveHistory.get(moveHistory.size() - 1);
+		moveHistory.remove(moveHistory.size() - 1);
+
+		if (moveHistory.size() != 0)
+			lastMove = moveHistory.get(moveHistory.size() - 1);
 	}
 
-	public void removePiece(Vector2D pos) {
-
-		if (isPieceOn(pos)) {
-			Piece piece = this.getPiece(pos);
-
+	public Piece removeAttackedPiece(Vector2D pos) {
+		Piece piece = this.getPiece(pos);
+		if (piece != null) {
 			if (piece.getColor().isWhite()) {
 				whitePieces.remove(piece);
 			} else
 				blackPieces.remove(piece);
 
 			capturedPieces.add(piece);
-			lastMove.setCapturedPiece(piece);
 		}
+		return piece;
 	}
 
 	public boolean isEnemyPieceOn(Vector2D pos, ChessPieceColor color) {
@@ -160,6 +177,12 @@ public class BoardRepresentation {
 
 	public boolean isPieceOn(Vector2D pos) {
 		return getPiece(pos) instanceof Piece;
+	}
+
+	public boolean isCheckOn(Piece king, Vector2D pos) {
+		ChessPieceColor enemyPieceColor = king.getColor().getOpponentColor();
+		int[][] attackedSquares = enemyPieceColor.isWhite() ? attackedSquaresByBlack : attackedSquaresByWhite;
+		return attackedSquares[pos.getY()][pos.getX()] > 0;
 	}
 
 //	public void makeSpecialMove(Vector2D oldPos, Vector2D newPos) { // e.g. castling
@@ -186,31 +209,31 @@ public class BoardRepresentation {
 //
 //	}
 
-	public void executeCastling(King king, Vector2D oldPos, Vector2D newPos) { // TODO in Game logic
-		boolean isRightSideCastle = newPos.getX() - king.getPosition().getX() > 0;
-		int xPosRook = isRightSideCastle ? this.board.length - 1 : 0;
-		Vector2D rookPos = new Vector2D(xPosRook, king.getPosition().getY());
-
-		Vector2D rookDirection = new Vector2D(isRightSideCastle ? -2 : 3, 0);
-		Vector2D kingDirection = new Vector2D(isRightSideCastle ? 2 : -2, 0);
-		makeMove(rookPos, Vector2D.add(rookPos, rookDirection));
-		makeMove(king.getPosition(), Vector2D.add(king.getPosition(), kingDirection));
-	}
-
-	public void executeEnPassant(Vector2D oldPos, Vector2D newPos) { // TODO in Game logic
-		boolean whiteOnMove = getPiece(oldPos).getColor().isWhite();
-		Vector2D direction = new Vector2D(0, whiteOnMove ? 1 : -1);
-		Piece attackedPiece = getPiece(Vector2D.add(newPos, direction));
-
-		makeMove(oldPos, newPos);
-		if (whiteOnMove)
-			blackPieces.remove(attackedPiece);
-		else
-			whitePieces.remove(attackedPiece);
-
-		Vector2D attackedPiecePos = attackedPiece.getPosition();
-		board[attackedPiecePos.getY()][attackedPiecePos.getX()] = null; // or NoPiece!
-	}
+//	public void executeCastling(King king, Vector2D oldPos, Vector2D newPos) { // TODO in Game logic
+//		boolean isRightSideCastle = newPos.getX() - king.getPosition().getX() > 0;
+//		int xPosRook = isRightSideCastle ? this.board.length - 1 : 0;
+//		Vector2D rookPos = new Vector2D(xPosRook, king.getPosition().getY());
+//
+//		Vector2D rookDirection = new Vector2D(isRightSideCastle ? -2 : 3, 0);
+//		Vector2D kingDirection = new Vector2D(isRightSideCastle ? 2 : -2, 0);
+//		makeMove(rookPos, Vector2D.add(rookPos, rookDirection));
+//		makeMove(king.getPosition(), Vector2D.add(king.getPosition(), kingDirection));
+//	}
+//
+//	private void executeEnPassant(Vector2D oldPos, Vector2D newPos) { // TODO in Game logic
+//		boolean whiteOnMove = getPiece(oldPos).getColor().isWhite();
+//		Vector2D direction = new Vector2D(0, whiteOnMove ? 1 : -1);
+//		Piece attackedPiece = getPiece(Vector2D.add(newPos, direction));
+//
+//		makeMove(oldPos, newPos);
+//		if (whiteOnMove)
+//			blackPieces.remove(attackedPiece);
+//		else
+//			whitePieces.remove(attackedPiece);
+//
+//		Vector2D attackedPiecePos = attackedPiece.getPosition();
+//		board[attackedPiecePos.getY()][attackedPiecePos.getX()] = null; // or NoPiece!
+//	}
 
 //	public boolean isCheckBetween(Vector2D kingPos, Vector2D rookPos) { // TODO in Game logic
 //		int x = kingPos.getX() - rookPos.getX();
@@ -242,31 +265,6 @@ public class BoardRepresentation {
 //		return false;
 //
 //	}
-
-	public int countFiguresBetween(Vector2D pos1, Vector2D pos2) {
-		int x = pos1.getX() - pos2.getX();
-		int y = pos1.getY() - pos2.getY();
-		int length = Math.max(Math.abs(x), Math.abs(y));
-
-		int countX = pos1.getX();
-		int countY = pos1.getY();
-
-		int incX = (x > 0 ? 1 : -1);
-		int incY = (y > 0 ? 1 : -1);
-		incX = x != 0 ? incX : 0;
-		incY = y != 0 ? incY : 0;
-
-		int count = 0;
-
-		for (int step = 0; step < length - 1; step++) {
-			countX -= incX;
-			countY -= incY;
-			if (this.board[countY][countX] != null) {
-				count++;
-			}
-		}
-		return count;
-	}
 
 	public Piece getPiece(Vector2D position) {
 		return board[position.getY()][position.getX()];
@@ -326,6 +324,14 @@ public class BoardRepresentation {
 		return blackKing;
 	}
 
+	public List<Move> getMoveHistory() {
+		return moveHistory;
+	}
+
+	public Move getLastMove() {
+		return this.lastMove;
+	}
+
 	public String toBoardString() {
 		String result = "";
 		for (int i = 0; i < board.length; i++) {
@@ -346,7 +352,7 @@ public class BoardRepresentation {
 		return result;
 	}
 
-	public Move getLastMove() {
+	public Move getCurrentMove() {
 		return lastMove;
 	}
 
@@ -381,5 +387,18 @@ public class BoardRepresentation {
 
 	public List<Piece> getBlackPieces() {
 		return this.blackPieces;
+	}
+
+	public void replacePawn(Pawn pawn) {
+		ChessPieceColor color = pawn.getColor();
+		int x = pawn.getPosition().getX();
+		int y = pawn.getPosition().getY();
+		Queen queen = new Queen(color, y, x);
+		board[y][x] = queen;
+		queen.setBoard(this);
+		if (color.isWhite())
+			whitePieces.add(queen);
+		else
+			blackPieces.add(queen);
 	}
 }

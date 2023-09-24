@@ -121,7 +121,7 @@ public class Board extends GridPane {
 			}
 		}
 		// TODO TEMP
-		// disablePieceListener(disabledSide);
+		disablePieceListener(disabledSide);
 	}
 
 	private SimplePiece[][] invertBoard(SimplePiece[][] board) {
