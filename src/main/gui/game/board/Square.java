@@ -8,5 +8,7 @@ public class Square extends Rectangle {
 	public Square(double width, double height, Color color) {
 		super(width, height, color);
 	}
+	
+	
 
 }

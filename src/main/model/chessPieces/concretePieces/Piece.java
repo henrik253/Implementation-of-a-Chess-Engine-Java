@@ -1,9 +1,9 @@
 package main.model.chessPieces.concretePieces;
 
-import main.model.Vector2D;
 import main.model.chessPieces.ChessPieceColor;
 import main.model.chessPieces.ChessPieceName;
 import main.model.gameLogic.BoardRepresentation;
+import utils.Vector2D;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -48,10 +48,10 @@ public abstract class Piece {
 	}
 
 	public void executeMove(Vector2D oldPos, Vector2D newPos) {
-
-		if (firstMove)
+		if (firstMove) {
 			firstMove = false;
-
+			board.getCurrentMove().setMovedPieceFirstMove(true);
+		}
 		Piece[][] board = this.board.getBoard();
 		board[oldPos.getY()][oldPos.getX()] = null;
 		board[newPos.getY()][newPos.getX()] = this;
@@ -120,6 +120,14 @@ public abstract class Piece {
 
 	public void setBoard(BoardRepresentation board) {
 		this.board = board;
+	}
+
+	public boolean isFirstMove() {
+		return firstMove;
+	}
+
+	public void setFirstMove(boolean firstMove) {
+		this.firstMove = firstMove;
 	}
 
 }

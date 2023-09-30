@@ -1,5 +1,6 @@
 package main.gui.game.gameOver;
 
+import javafx.animation.PauseTransition;
 import javafx.scene.control.Button;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -8,6 +9,7 @@ import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Text;
+import javafx.util.Duration;
 import main.Settings;
 import main.gui.game.Overlay;
 import main.gui.game.settings.settingsViewComponents.BotRepresentation;
@@ -27,6 +29,10 @@ public class GameOverView extends Pane {
 	private static final String BLACK = "#403f3f";
 
 	private static final String GAME_SENTENCE = "YOU WON";
+
+	private static final Double DELAY = 400.0;
+
+	private PauseTransition pause;
 
 	private GameOverPresenter gameOverPresenter;
 	private Settings settings;
@@ -69,9 +75,23 @@ public class GameOverView extends Pane {
 	}
 
 	private void style() {
-		this.getChildren().add(overlay); // Adding the color fade in the background
+		getChildren().add(overlay); // Adding the color fade in the background
 		this.getChildren().add(contentBox);
 		contentBox.getChildren().addAll(playAgainButton, playerWrapper, textWrapper, botWrapper, gameSentenceWrapper);
+
+		pause = new PauseTransition(Duration.millis(DELAY));
+
+		pause.setOnFinished(e -> {
+			setVisible(true);
+		});
+	}
+
+	public void enable(boolean arg) {
+
+		if (arg) {
+			pause.play();
+		} else
+			this.setVisible(arg);
 	}
 
 	private void initContentBox() {
@@ -164,7 +184,7 @@ public class GameOverView extends Pane {
 
 	private void initGameSentenceWrapper() {
 		gameSentenceWrapper = new BorderPane();
-		gameSentence = new Text(GAME_SENTENCE);
+		gameSentence = new Text(""); // TODO GAME_SENTENCE
 		gameSentence.setId("GameSentence");
 
 		gameSentenceWrapper.setTop(gameSentence);

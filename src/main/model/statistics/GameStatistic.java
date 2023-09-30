@@ -6,9 +6,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
-import main.model.Move;
 import main.model.chessPieces.ChessPieceColor;
 import main.model.gameStates.State;
+import utils.Move;
 
 public class GameStatistic {
 
@@ -62,11 +62,11 @@ public class GameStatistic {
 	}
 
 	public int getBotWins(String bot) {
-		return getPlayedGamesAgainstBot(bot) - getUserWins(bot);
+		return getPlayedGamesAgainstBot(bot) - getUserWins(bot) - getDraws(bot);
 	}
 
 	public int getDraws(String bot) {
-		return userRemis.get(bot);
+		return userRemis.getOrDefault(bot,0);
 	}
 
 	public int getTotalUserWins() {
@@ -84,6 +84,13 @@ public class GameStatistic {
 			totalGames += entry.getValue();
 		}
 		return totalGames - userWins;
+	}
+	
+	public void clear() {
+		userWon.clear();
+		userRemis.clear();
+		playedGames.clear();
+		moveHistory.clear();
 	}
 
 	@Override

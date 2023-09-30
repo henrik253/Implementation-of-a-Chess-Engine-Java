@@ -23,7 +23,7 @@ public class Overlay extends Pane {
 	}
 
 	protected void initColorFade() {
-		Stop[] stops = new Stop[] { new Stop(0, Color.BLACK), new Stop(1, Color.TRANSPARENT) };
+		Stop[] stops = new Stop[] { new Stop(0, Color.web("4f4f4f")), new Stop(1, Color.TRANSPARENT) };
 
 		LinearGradient gradient = new LinearGradient(0, 1, 0, 0, true, CycleMethod.NO_CYCLE, stops);
 		this.setBackground(Background.fill(gradient));

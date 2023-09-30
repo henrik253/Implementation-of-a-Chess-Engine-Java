@@ -9,15 +9,15 @@ import main.gui.game.gameStart.GameStartPresenter;
 import main.gui.game.settings.SettingsPresenter;
 import main.gui.game.settings.settingsViewComponents.BotRepresentation;
 import main.model.Model;
-import main.model.Move;
-import main.model.Vector2D;
 import main.model.chessPieces.SimplePiece;
 import main.model.convertions.BoardConverter;
 import main.model.convertions.FENConverter;
 import main.model.gameStates.GameState;
 import main.model.gameStates.State;
+import utils.Move;
+import utils.Vector2D;
 
-public class MainPresenter  {
+public class MainPresenter {
 
 	private SettingsPresenter settingsPresenter;
 	private Settings settings;
@@ -68,6 +68,12 @@ public class MainPresenter  {
 	private void initGameOver() {
 		gameOverPresenter.gameOver();
 		gameOverPresenter.setEnableView(true);
+		settingsPresenter.setNoGameContent();
+	}
+
+	public void surrenderGame() {
+		model.playerSurrendersGame();
+		initGameOver();
 	}
 
 	public void startGame() {
@@ -91,17 +97,11 @@ public class MainPresenter  {
 
 	public void loadBoard(String fen) {
 		gamePresenter.setBoard(FENConverter.convertSimplePieceBoard(fen));
+		gamePresenter.startGame();
 	}
 
 	private void startModel() {
 		model.startGame();
-	}
-
-	public void surrenderGame() {
-	}
-
-	public void endGame() {
-		gameOverPresenter.setEnableView(false);
 	}
 
 	public MainView getMainView() {
@@ -202,6 +202,22 @@ public class MainPresenter  {
 	public void playAgainButtonPressed() {
 		gameStartPresenter.setEnableView(true);
 		gameOverPresenter.setEnableView(false);
+	}
+
+	public Move getLastBotMove() {
+		return model.getLastBotMove();
+	}
+
+	public boolean inCheck() {
+		return model.inCheck();
+	}
+
+	public Vector2D getKingCheckedPos() {
+		return model.getKingCheckedPos();
+	}
+
+	public boolean gameIsRunning() {
+		return model.gameIsRunning();
 	}
 
 }

@@ -3,10 +3,10 @@ package main.model.chessPieces.concretePieces;
 import java.util.LinkedList;
 import java.util.List;
 
-import main.model.Move;
-import main.model.Vector2D;
 import main.model.chessPieces.ChessPieceColor;
 import main.model.chessPieces.ChessPieceName;
+import utils.Move;
+import utils.Vector2D;
 
 public class Pawn extends Piece {
 
@@ -57,8 +57,8 @@ public class Pawn extends Piece {
 		Vector2D left = new Vector2D(-1, 0);
 
 		// check left/right
-		return Vector2D.add(position, right).equals(enemyPiece.getPosition())
-				|| (Vector2D.add(position, left).equals(enemyPiece.getPosition()));
+		return Vector2D.plus(position, right).equals(enemyPiece.getPosition())
+				|| (Vector2D.plus(position, left).equals(enemyPiece.getPosition()));
 	}
 
 	private boolean isDoublePawnMove(Move move) {
@@ -70,11 +70,11 @@ public class Pawn extends Piece {
 		if (position.getX() != newPosition.getX() || board.isPieceOn(newPosition))
 			return false;
 
-		if (Vector2D.add(position, directions[0]).equals(newPosition))
+		if (Vector2D.plus(position, directions[0]).equals(newPosition))
 			return true;
 
 		if (firstMove) {
-			if (Vector2D.add(Vector2D.add(position, directions[0]), directions[0]).equals(newPosition)) {
+			if (Vector2D.plus(Vector2D.plus(position, directions[0]), directions[0]).equals(newPosition)) {
 				return true;
 			}
 		}
@@ -160,7 +160,7 @@ public class Pawn extends Piece {
 		Vector2D attackedPos = attackedPiece.getPosition();
 		Piece[][] board = this.board.getBoard();
 		board[attackedPos.getY()][attackedPos.getX()] = null;
-		this.board.removeAttackedPiece(attackedPiece.getPosition());
+		this.board.removePiece(attackedPiece.getPosition());
 	}
 
 	private boolean isPawnOnEndline() {
@@ -168,7 +168,7 @@ public class Pawn extends Piece {
 	}
 
 	private void transformPawn() { // auto Queen for the first
-		board.replacePawn(this);
+		board.replacePiece(this, new Queen(this.color, this.position));
 	}
 
 	public boolean isFirstMove() {
@@ -186,9 +186,6 @@ public class Pawn extends Piece {
 			return;
 		}
 		this.position = position;
-
-		if (firstMove)
-			firstMove = false;
 	}
 
 	@Override

@@ -5,17 +5,19 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import main.model.ChessBot;
-import main.model.Move;
-import main.model.Vector2D;
 import main.model.chessPieces.ChessPieceColor;
 import main.model.chessPieces.concretePieces.King;
 import main.model.chessPieces.concretePieces.Piece;
+import utils.Move;
+import utils.Vector2D;
 
 public class ChessBotStub implements ChessBot {
 
 	private Piece[][] board;
 	private ChessPieceColor color = ChessPieceColor.BLACK;
 	private List<Piece> currentPieces = new ArrayList<>();
+
+	private Move move;
 
 	private void init() {
 		currentPieces.clear();
@@ -43,12 +45,12 @@ public class ChessBotStub implements ChessBot {
 
 			if (piece instanceof King)
 				System.out.println("ChessBotStub: " + piece + " " + moves);
-			
+
 			if (moves.size() == 0)
 				continue;
 
 			int moveNr = (int) (Math.random() * (moves.size()));
-			Move move = new Move(piecePos, moves.get(moveNr));
+			move = new Move(piecePos, moves.get(moveNr));
 
 			return move;
 		}
@@ -63,6 +65,11 @@ public class ChessBotStub implements ChessBot {
 	@Override
 	public void setColor(ChessPieceColor color) {
 		this.color = color;
+	}
+
+	@Override
+	public Move getLastMove() {
+		return move;
 	}
 
 }

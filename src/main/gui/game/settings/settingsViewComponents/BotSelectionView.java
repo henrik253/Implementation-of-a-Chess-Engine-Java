@@ -5,10 +5,12 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.layout.Background;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
+import javafx.scene.paint.Color;
 import javafx.scene.text.Text;
 import main.gui.game.settings.SettingsView;
 
@@ -107,6 +109,10 @@ public class BotSelectionView extends BorderPane { // TODO REMOVE BorderPane Wra
 		settingsView.botSelectedPressed(source);
 	}
 
+	public void surrenderPressed() {
+		settingsView.surrenderButtonPressed();
+	}
+
 	public BotRepresentation getSelectedBot() {
 		return selected;
 	}
@@ -117,6 +123,18 @@ public class BotSelectionView extends BorderPane { // TODO REMOVE BorderPane Wra
 
 	public BotRepresentation getSelected() {
 		return selected;
+	}
+
+	public void toggleSelectSurrenderButton(boolean inGame) {
+		if (inGame) {
+			selected.toggleSelectButton();
+		} else {
+			selected.toggleSurrenderButton();
+		}
+	}
+	
+	public void setDisableColorSelect(boolean disable) {
+		selected.disableColorSelect(disable);
 	}
 
 }

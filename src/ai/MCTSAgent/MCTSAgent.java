@@ -6,9 +6,9 @@ import ai.MCTSAgent.NeuralNetsAndEvaluators.*;
 import ai.MCTSAgent.NeuralNetsAndEvaluators.MPolicyNetwork.MPolicyNetwork;
 import ai.MCTSAgent.Validation.Bitboards.BitMaskArr;
 import main.model.ChessBot;
-import main.model.Move;
-import main.model.Vector2D;
 import main.model.chessPieces.concretePieces.Piece;
+import utils.Move;
+import utils.Vector2D;
 
 import java.io.IOException;
 import java.util.Arrays;

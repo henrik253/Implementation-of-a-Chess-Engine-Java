@@ -3,9 +3,9 @@ package main.model.chessPieces.concretePieces;
 import java.util.LinkedList;
 import java.util.List;
 
-import main.model.Vector2D;
 import main.model.chessPieces.ChessPieceColor;
 import main.model.chessPieces.ChessPieceName;
+import utils.Vector2D;
 
 public class King extends Piece {
 
@@ -60,6 +60,41 @@ public class King extends Piece {
 	}
 
 	@Override
+	public List<List<Vector2D>> calculateMoveablePositions() {
+		List<List<Vector2D>> moves = new LinkedList<>();
+		int[][] attackedSquaresEnemy = color.isWhite() ? board.getAttackedSquaresByBlack()
+				: board.getAttackedSquaresByWhite(); // attackedSquares updated?
+
+		if (outOfBounds(position)) // base case
+			return moves;
+
+		for (Vector2D direction : attackDirections) {
+			List<Vector2D> movesInDirection = new LinkedList<>();
+			Vector2D possiblePosition = position.clone();
+
+			possiblePosition.plus(direction); // currentPosition should not be included
+
+			if (!outOfBounds(possiblePosition)) {
+				Piece piece = board.getPiece(possiblePosition);
+
+				// pieces were king would be in check will be shown
+				if ((piece != null && piece.getColor() == color)
+						|| attackedSquaresEnemy[possiblePosition.getY()][possiblePosition.getX()] > 0) // cant step on
+																										// ally piece
+					continue;
+
+				movesInDirection.add(possiblePosition.clone()); // add to linked list
+				possiblePosition.plus(direction); // addition
+
+			}
+			moves.add(movesInDirection);
+		}
+		this.attackableSquares = moves;
+
+		return moves;
+	}
+
+	@Override
 	public void executeMove(Vector2D oldPos, Vector2D newPos) {
 
 		if (isValidCastle(newPos)) {
@@ -80,7 +115,11 @@ public class King extends Piece {
 		boolean isRightSideCastle = pos.getX() - this.position.getX() > 0;
 		int rookCol = isRightSideCastle ? this.board.getBoard().length - 1 : 0;
 		Vector2D rookPos = new Vector2D(rookCol, this.position.getY()); // on the same row
-
+		Piece rook = board.getPiece(rookPos);
+		
+		if(rook == null)
+			return false;
+			
 		boolean inCheck = false;
 		boolean pieceOnSquare = false;
 
@@ -98,7 +137,7 @@ public class King extends Piece {
 			pieceOnSquare = b[y0][x1] != null || b[y0][x2] != null || b[y0][x3] != null; // BETWEEN K & R
 		}
 
-		return ((int) Math.abs((((double) (position.getX() - pos.getX())))) == 2) && board.getPiece(rookPos).firstMove
+		return ((int) Math.abs((((double) (position.getX() - pos.getX())))) == 2) && rook.firstMove
 				&& firstMove && !inCheck && !pieceOnSquare;
 	}
 
@@ -114,7 +153,7 @@ public class King extends Piece {
 		Rook rook = (Rook) this.board.getPiece(rookPos);
 
 		board[rook.getPosition().getY()][rook.getPosition().getX()] = null;
-		rook.setPosition(Vector2D.add(rookPos, rookDirection));
+		rook.setPosition(Vector2D.plus(rookPos, rookDirection));
 		board[rook.getPosition().getY()][rook.getPosition().getX()] = rook;
 	}
 

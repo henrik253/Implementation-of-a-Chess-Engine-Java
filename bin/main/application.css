@@ -123,14 +123,33 @@
     -fx-effect: dropshadow( gaussian , rgba(0.0,0.0,0.0,0.5) , 2.0,0.0,0.0,1.0 );
 }
 
-BotSelectButton:disabled{
- -fx-background-color: #33cc33;
+#BotSelectButton:disabled{
+ -fx-background-color: #63b037;
 }
 
 
 #BotSelectButton:hover{
  -fx-background-color: #63b037;
 }
+
+#BotSurrenderButton{
+		-fx-background-color: #ba3636;
+    -fx-background-radius: 3.0;
+    -fx-border-width: 2.0;
+    -fx-font-family: "Helvetica";
+    -fx-font-size: 20.0px;
+    -fx-text-fill: white;
+    -fx-effect: dropshadow( gaussian , rgba(0.0,0.0,0.0,0.5) , 2.0,0.0,0.0,1.0 );
+}
+
+#BotSurrenderButton:hover{
+	-fx-background-color: #b84b4b;
+}
+
+#BotSurrenderButton:disabled{
+	
+}
+
 
 #BotHeadingText{
 	-fx-font-family: "Helvetica";
@@ -220,10 +239,6 @@ BotSelectButton:disabled{
 }
 
 #SelectWhiteButton:disabled{
-	-fx-opacity: 1.0;
-	-fx-background-color: linear-gradient(to bottom, #f7f7f7, #e3e3e3);
-     -fx-border-width: 1.0;
-    -fx-border-color: #63b037;
     -fx-cursor: hand;
 }
 
@@ -237,10 +252,8 @@ BotSelectButton:disabled{
 
 
 #SelectBlackButton:disabled{
-	-fx-opacity: 1.0;
 	-fx-background-color: linear-gradient(to bottom, #4d4c4c, #333232);
-	 -fx-border-width: 1.0;
-    -fx-border-color: #63b037;
+
 	-fx-cursor: hand;
 }
 
@@ -256,8 +269,5 @@ BotSelectButton:disabled{
 }
 
 #SelectRandButton:disabled{
-	-fx-opacity: 1.0;
-	 -fx-border-width: 1.0;
-    -fx-border-color: #63b037;
-
+  -fx-cursor: hand;
 }

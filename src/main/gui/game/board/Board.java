@@ -16,9 +16,9 @@ import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import main.Settings;
-import main.model.Vector2D;
 import main.model.chessPieces.ChessPieceColor;
 import main.model.chessPieces.SimplePiece;
+import utils.Vector2D;
 
 public class Board extends GridPane {
 
@@ -29,8 +29,9 @@ public class Board extends GridPane {
 	private static final String FILE_FORMAT = ".png";
 
 	private List<Piece> piecesOnBoard = new LinkedList<>();
-	private boolean inverted = false;
+	private Square[][] squares;
 
+	private boolean inverted = false;
 	private ChessPieceColor disabledSide = ChessPieceColor.BLACK;
 
 	public Board() {
@@ -42,7 +43,7 @@ public class Board extends GridPane {
 	}
 
 	public void init() {
-
+		squares = new Square[settings.rows][settings.columns];
 	}
 
 	private void onDragOver(DragEvent event) {
@@ -50,7 +51,7 @@ public class Board extends GridPane {
 	}
 
 	private void onDragDropped(DragEvent event) {
-		Piece draggedPiece = Move.getPiece();
+		Piece draggedPiece = MovedPiece.get();
 
 		int oldX = draggedPiece.getRow();
 		int oldY = draggedPiece.getColumn();
@@ -81,6 +82,9 @@ public class Board extends GridPane {
 
 	public void drawBoard() {
 		this.getChildren().clear();
+		clearSquares();
+		System.out.println("drawed");
+
 		Color color1 = settings.brightColor.get();
 		Color color2 = settings.darkColor.get();
 		if (inverted) {
@@ -91,11 +95,39 @@ public class Board extends GridPane {
 		for (int row = 0; row < settings.rows; row++) {
 			for (int column = 0; column < settings.columns; column++) {
 				Color color = (row + column) % 2 == 0 ? color1 : color2;
-				add(new Square(settings.squareWidth.get(), settings.squareHeight.get(), color), row, column);
+				Square square = new Square(settings.squareWidth.get(), settings.squareHeight.get(), color);
+				squares[row][column] = square;
+				add(square, column, row); // its actually row,column in the whole game!
+				// but for gridPane its swapped!
 			}
 
 		}
 
+	}
+
+	public void markSquare(Vector2D pos, Color color) {
+		Color color1 = settings.brightColor.get();
+		Color color2 = settings.darkColor.get();
+
+		Color c = (pos.getY() + pos.getX()) % 2 == 0 ? color1 : color2;
+		Color finalColor = c.interpolate(color, 0.3);
+		squares[pos.getY()][pos.getX()].setFill(finalColor);
+	}
+
+	public void unmarkSquare(Vector2D pos) { // auto Color
+		Color color1 = settings.brightColor.get();
+		Color color2 = settings.darkColor.get();
+		Color color = (pos.getY() + pos.getX()) % 2 == 0 ? color1 : color2;
+
+		squares[pos.getY()][pos.getX()].setFill(color);
+	}
+
+	private void clearSquares() {
+		for (int i = 0; i < squares.length; i++) {
+			for (int j = 0; j < squares[i].length; j++) {
+				squares[i][j] = null;
+			}
+		}
 	}
 
 	public void drawPiecesOnBoard(SimplePiece[][] board) {
@@ -108,6 +140,7 @@ public class Board extends GridPane {
 		for (int row = 0; row < settings.rows; row++) {
 			for (int column = 0; column < settings.columns; column++) {
 				SimplePiece simplePiece = board[row][column];
+
 				if (simplePiece == null)
 					continue;
 
@@ -121,6 +154,7 @@ public class Board extends GridPane {
 			}
 		}
 		// TODO TEMP
+
 		disablePieceListener(disabledSide);
 	}
 
@@ -199,7 +233,7 @@ public class Board extends GridPane {
 		private void onDragDetected(MouseEvent event) {
 			Dragboard dragboard = this.startDragAndDrop(TransferMode.ANY);
 			ClipboardContent content = new ClipboardContent();
-			Move.getMove(this);
+			MovedPiece.getMove(this);
 			Image image = imageView.getImage();
 			content.putImage(image);
 			dragboard.setContent(content);
@@ -246,29 +280,29 @@ public class Board extends GridPane {
 		}
 	}
 
-	private static class Move {
+	private static class MovedPiece {
 
-		private static volatile Move move;
+		private static volatile MovedPiece move;
 		private Piece figure;
 
-		private Move(Piece figure) {
+		private MovedPiece(Piece figure) {
 			this.figure = figure;
 		}
 
-		public static Move getMove(Piece figure) {
-			Move lastMove = move;
+		public static MovedPiece getMove(Piece figure) {
+			MovedPiece lastMove = move;
 			if (lastMove == null || figure != null) {
-				synchronized (Move.class) {
+				synchronized (MovedPiece.class) {
 					lastMove = move;
 					if (lastMove == null || figure != null) {
-						move = new Move(figure);
+						move = new MovedPiece(figure);
 					}
 				}
 			}
 			return lastMove;
 		}
 
-		public static Piece getPiece() {
+		public static Piece get() {
 			return move.figure;
 		}
 	}

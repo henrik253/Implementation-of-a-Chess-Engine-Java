@@ -34,7 +34,7 @@ public class GameOverPresenter {
 
 	public void setEnableView(boolean enable) {
 		gameOverView.setDisable(!enable);
-		gameOverView.setVisible(enable);
+		gameOverView.enable(enable);
 	}
 
 	public void botSelected(BotRepresentation source) {

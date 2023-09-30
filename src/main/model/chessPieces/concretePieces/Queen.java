@@ -3,9 +3,9 @@ package main.model.chessPieces.concretePieces;
 import java.util.LinkedList;
 import java.util.List;
 
-import main.model.Vector2D;
 import main.model.chessPieces.ChessPieceColor;
 import main.model.chessPieces.ChessPieceName;
+import utils.Vector2D;
 
 public class Queen extends Piece {
 
@@ -15,6 +15,10 @@ public class Queen extends Piece {
 	public Queen(ChessPieceColor color, int row, int column) {
 		super(ChessPieceName.QUEEN, color, row, column);
 
+	}
+	
+	public Queen(ChessPieceColor color,Vector2D position) {
+		this(color, position.getY(), position.getX());
 	}
 
 	@Override

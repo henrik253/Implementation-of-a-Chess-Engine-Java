@@ -1,9 +1,10 @@
 package main.gui.game.board;
 
 import javafx.scene.layout.Pane;
-import main.model.Vector2D;
+import javafx.scene.paint.Color;
 import main.model.chessPieces.ChessPieceColor;
 import main.model.chessPieces.SimplePiece;
+import utils.Vector2D;
 
 public class GameView extends Pane {
 
@@ -62,7 +63,16 @@ public class GameView extends Pane {
 	}
 
 	public void userMoveSucceeded() {
-		gamePresenter.requestBotMove();
+		gamePresenter.userMoveSucceeded();
+	}
+
+	public void markSquare(Vector2D oldPos, Color color) {
+		board.markSquare(oldPos, color);
+	}
+
+	public void unmarkSquare(Vector2D oldPos) {
+		board.unmarkSquare(oldPos);
+
 	}
 
 }

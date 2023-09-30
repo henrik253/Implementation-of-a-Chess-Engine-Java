@@ -1,4 +1,4 @@
-package main.model;
+package utils;
 
 import main.model.chessPieces.concretePieces.Piece;
 
@@ -8,6 +8,10 @@ public final class Move {
 	private final Vector2D newPos;
 
 	private Piece capturedPiece;
+
+	private Piece transformed;
+
+	private boolean movedPieceFirstMove = false;
 
 	public Move(Vector2D oldPos, Vector2D newPos) {
 		this.oldPos = oldPos;
@@ -24,6 +28,26 @@ public final class Move {
 
 	public Piece getCapturedPiece() {
 		return capturedPiece;
+	}
+
+	public void setTransformedPiece(Piece piece) {
+		transformed = piece;
+	}
+
+	public Piece getTransformed() {
+		return transformed;
+	}
+
+	public boolean pieceTransformed() {
+		return transformed != null;
+	}
+
+	public boolean wasFirstMoveOfMovedPiece() {
+		return movedPieceFirstMove;
+	}
+
+	public void setMovedPieceFirstMove(boolean movedPieceFirstMove) {
+		this.movedPieceFirstMove = movedPieceFirstMove;
 	}
 
 	public Vector2D getOldPos() {

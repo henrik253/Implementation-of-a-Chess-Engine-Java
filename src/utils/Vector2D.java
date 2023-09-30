@@ -1,4 +1,4 @@
-package main.model;
+package utils;
 
 public class Vector2D {
 
@@ -26,19 +26,13 @@ public class Vector2D {
 		this.y = y;
 	}
 
-	@Override
-	public boolean equals(Object obj) {
-		Vector2D vec = (Vector2D) obj;
-		return vec.getX() == this.x && vec.getY() == this.y;
-	}
-
-	public Vector2D clone() {
-		return new Vector2D(getX(), getY());
-	}
-
 	public void plus(Vector2D vec) {
 		this.x += vec.x;
 		this.y += vec.y;
+	}
+
+	public static Vector2D plus(Vector2D v1, Vector2D v2) {
+		return new Vector2D(v1.x + v2.x, v1.y + v2.y);
 	}
 
 	public void invertX(int numb) {
@@ -49,8 +43,15 @@ public class Vector2D {
 		y = Math.abs(numb - y);
 	}
 
-	public static Vector2D add(Vector2D v1, Vector2D v2) {
-		return new Vector2D(v1.x + v2.x, v1.y + v2.y);
+	@Override
+	public boolean equals(Object obj) {
+		Vector2D vec = (Vector2D) obj;
+		return vec.getX() == x && vec.getY() == y;
+	}
+
+	@Override
+	public Vector2D clone() {
+		return new Vector2D(getX(), getY());
 	}
 
 	@Override

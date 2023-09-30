@@ -10,11 +10,13 @@ public class SettingsPresenter {
 	private MainPresenter mainPresenter;
 
 	public void setInGameContent() {
-		settingsView.setInGameContent();
+		settingsView.toggleSelectSurrenderButton(true);
+		settingsView.setDisableColorSelect(true);
 	}
 
 	public void setNoGameContent() {
-	
+		settingsView.toggleSelectSurrenderButton(false);
+		settingsView.setDisableColorSelect(false);
 	}
 
 	public Settings getSettings() {
@@ -44,7 +46,7 @@ public class SettingsPresenter {
 	public void pauseGameButtonClicked() {
 		mainPresenter.pauseGame();
 	}
-	
+
 	public void setDisableView(boolean disable) {
 		settingsView.setDisable(disable);
 	}
@@ -52,11 +54,13 @@ public class SettingsPresenter {
 	public void botSelected(BotRepresentation source) {
 		mainPresenter.botSelected(source);
 	}
-	
+
 	public BotRepresentation getSelectedBot() {
 		return settingsView.getSelectedBot();
 	}
-	
-	
+
+	public void surrenderButtonPressed() {
+		mainPresenter.surrenderGame();
+	}
 
 }

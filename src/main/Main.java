@@ -16,7 +16,6 @@ import main.gui.game.gameStart.GameStartView;
 import main.gui.game.settings.SettingsPresenter;
 import main.gui.game.settings.SettingsView;
 import main.model.Model;
-import main.model.gameLogic.GameLogic;
 import main.model.gameLogic.MoveValidation;
 
 public class Main extends Application {
@@ -42,7 +41,6 @@ public class Main extends Application {
 
 	private Model model;
 	private MoveValidation moveValidation;
-	private GameLogic gameLogic;
 
 	@Override
 	public void start(Stage primaryStage) throws Exception {
@@ -87,6 +85,7 @@ public class Main extends Application {
 
 		gamePresenter.setGameView(gameView);
 		gamePresenter.setMainPresenter(mainPresenter);
+		gamePresenter.setSettings(settings);
 
 		settingsPresenter.setSettings(settings);
 		settingsPresenter.setSettingsView(settingsView);
@@ -135,6 +134,7 @@ public class Main extends Application {
 		gameStartView.init();
 		gameOverView.init();
 		settingsView.init();
+		board.init();
 
 		// Execute
 		// Board

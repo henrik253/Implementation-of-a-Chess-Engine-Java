@@ -1,17 +1,16 @@
 package main.model.gameLogic;
 
 import main.model.Model;
-import main.model.Move;
-import main.model.Vector2D;
 import main.model.chessPieces.ChessPieceColor;
 import main.model.chessPieces.concretePieces.*;
 import main.model.gameStates.GameOverReason;
 import main.model.gameStates.GameState;
+import main.model.gameStates.InCheck;
 import main.model.gameStates.State;
+import utils.Vector2D;
 
 import java.util.LinkedList;
 import java.util.List;
-import java.util.stream.Stream;
 
 public class MoveValidation {
 	private Model model;
@@ -40,42 +39,24 @@ public class MoveValidation {
 		board.makeMove(oldPos, newPos);
 		board.calcAttackedSquaresBy(movedPiece.getColor());
 
-		if (enemyInCheck()) {
-			testCheckMate(movedPiece);
-		}
+		boolean inCheck = enemyInCheck();
 
-		if (enemyInRemi()) {
+		if (inCheck) {
+			testCheckMate(movedPiece);
+		} else if (enemyInRemi()) {
 			remis();
 		}
 
-		setNextPlayerOnMove(); // TODO in other class
-
-		return true;
-	}
-
-	private boolean enemyInRemi() { // Fehleranfällig?
-		List<Piece> pieces = onMove.isWhite() ? board.getBlackPieces() : board.getWhitePieces();
-		List<Piece> piecesClone = new LinkedList<>(pieces);
-		// TODO KING CAN WALK ON ATTACKED SQUARES SO IN NEEDS TO BE CHECKED!
-		// java.util.ConcurrentModificationException so we clone pieces
-		// exception is thrown when looping through the list and the list is changed
-		// from another thread
-		for (Piece p : piecesClone) {
-			for (List<Vector2D> moves : p.getMoveablePositions()) {
-				for (Vector2D move : moves) {
-					if (!kingInCheckIfPieceMoves(p.getPosition(), move)) {
-						return false;
-					}
-				}
-			}
+		if (inCheck) {
+			State.inCheck = InCheck.ON;
+			State.lastInCheck = onMove.getOpponentColor();
+		} else {
+			State.inCheck = InCheck.OFF;
 		}
 
-		return true;
-	}
+		setNextPlayerOnMove();
 
-	private void remis() {
-		State.gameState = GameState.GAME_OVER;
-		State.gameOverReason = GameOverReason.DRAW;
+		return true;
 	}
 
 	private boolean isNoValidMove(Vector2D oldPos, Vector2D newPos) {
@@ -120,92 +101,6 @@ public class MoveValidation {
 	private boolean inCheck(int[][] attackedSquares, King king) {// TODO Game Logic???
 		return attackedSquares[king.getPosition().getY()][king.getPosition().getX()] > 0;
 	}
-
-//	public boolean isSpecialMove(Piece piece, Vector2D newPos) {
-//
-//		if (piece instanceof Pawn) {
-//			Pawn pawn = (Pawn) piece;
-//			if (isPawnAttack(pawn, newPos) || isEnPassantMove(pawn, newPos))
-//				return true;
-//		}
-//
-//		if (piece instanceof King) {
-//			King king = (King) piece;
-//			if (isCastleMove(king, newPos)) {
-//				return true;
-//			}
-//		}
-//
-//		return false;
-//	}
-
-//	public boolean isCastleMove(King king, Vector2D newPos) { // Game Logic???
-//		if (!king.isFirstMove())
-//			return false;
-//
-//		if (!king.isValidCastle(newPos))
-//			return false;
-//
-//		// left or right side castle
-//		boolean isRightSideCastle = newPos.getX() - king.getPosition().getX() > 0;
-//
-//		int xPosRook = isRightSideCastle ? this.board.getBoard().length - 1 : 0;
-//		Vector2D rookPos = new Vector2D(xPosRook, king.getPosition().getY());
-//
-//		if (board.countFiguresBetween(king.getPosition(), rookPos) > 0) {
-//			return false;
-//		}
-//
-//		if (board.isCheckBetween(king.getPosition(), rookPos)) {
-//			return false;
-//		}
-//
-//		Piece rook = board.getPiece(rookPos);
-//
-//		if (!(rook instanceof Rook && ((Rook) rook).isFirstMove())) {
-//			return false;
-//		}
-//
-//		return true;
-//	}
-
-//	public boolean tryCastling(Vector2D oldPos, Vector2D newPos) { // Game Logic???
-//		Piece piece = board.getPiece(oldPos);
-//		if (!(piece instanceof King))
-//			return false;
-//
-//		King king = (King) piece;
-//
-//		if (!king.isFirstMove())
-//			return false;
-//
-//		if (!king.isValidCastle(newPos))
-//			return false;
-//
-//		// left or right side castle
-//		boolean isRightSideCastle = newPos.getX() - king.getPosition().getX() > 0;
-//
-//		int xPos = isRightSideCastle ? this.board.getBoard().length - 1 : 0;
-//		Vector2D rookPos = new Vector2D(xPos, king.getPosition().getY());
-//
-//		if (board.countFiguresBetween(king.getPosition(), rookPos) > 0) {
-//			return false;
-//		}
-//
-//		if (board.isCheckBetween(king.getPosition(), rookPos)) {
-//			return false;
-//		}
-//
-//		Piece rook = board.getPiece(rookPos);
-//
-//		if (rook instanceof Rook && ((Rook) rook).isFirstMove()) {
-//			Vector2D direction = new Vector2D(isRightSideCastle ? -2 : 3, 0);
-//			makeMove(rookPos, Vector2D.add(rookPos, direction));
-//			return true;
-//		}
-//
-//		return false;
-//	}
 
 	public boolean isCheckMate(King king, Piece movedPiece) {// TODO Game Logic???
 		return !allyPieceStopsCheck(king, movedPiece) && !kingCanMove(king);
@@ -277,8 +172,31 @@ public class MoveValidation {
 			return enemyPieceMove.equals(movedPiece.getPosition())
 					&& attackedSquares[movedPiece.getPosition().getY()][movedPiece.getPosition().getX()] == 0;
 		}
-
 		return enemyPieceMove.equals(movedPiece.getPosition());
+	}
+
+	private boolean enemyInRemi() { // Fehleranfällig?
+		List<Piece> pieces = onMove.isWhite() ? board.getBlackPieces() : board.getWhitePieces();
+		List<Piece> piecesClone = new LinkedList<>(pieces);
+		// TODO KING CAN WALK ON ATTACKED SQUARES SO IN NEEDS TO BE CHECKED!
+		// java.util.ConcurrentModificationException so we clone pieces
+		// exception is thrown when looping through the list and the list is changed
+		// from another thread
+		for (Piece p : piecesClone) {
+			for (List<Vector2D> moves : p.getMoveablePositions()) {
+				for (Vector2D move : moves) {
+					if (!kingInCheckIfPieceMoves(p.getPosition(), move)) { // if move was found, proof if its
+						return false; // a legal move
+					}
+				}
+			}
+		}
+		return true;
+	}
+
+	private void remis() {
+		State.gameState = GameState.GAME_OVER;
+		State.gameOverReason = GameOverReason.DRAW;
 	}
 
 	private boolean playerOnMove(Piece piece) {
@@ -286,19 +204,7 @@ public class MoveValidation {
 	}
 
 	private void setNextPlayerOnMove() {
-		onMove = onMove.isWhite() ? ChessPieceColor.BLACK : ChessPieceColor.WHITE;
-	}
-
-	private boolean noPieceOn(Vector2D pos) {
-		return board.getPiece(pos) == null;
-	}
-
-	private boolean isPiece(Vector2D pos) {
-		return !noPieceOn(pos);
-	}
-
-	private boolean isEnemyPiece(Piece piece, Vector2D pos) {
-		return board.getPiece(pos).getColor() != piece.getColor();
+		onMove = onMove.getOpponentColor();
 	}
 
 	private boolean isAllyPiece(Piece piece, Vector2D pos) {
@@ -315,7 +221,9 @@ public class MoveValidation {
 				: board.getAttackedSquaresByBlack();
 		Vector2D pos = onMove.isWhite() ? board.getBlackKing().getPosition() : board.getWhiteKing().getPosition();
 
-		return attackedSquares[pos.getY()][pos.getX()] > 0;
+		boolean inCheck = attackedSquares[pos.getY()][pos.getX()] > 0;
+
+		return inCheck;
 	}
 
 	public ChessPieceColor getOnMove() {

@@ -2,6 +2,7 @@ package main.model;
 
 import main.model.chessPieces.ChessPieceColor;
 import main.model.chessPieces.concretePieces.Piece;
+import utils.Move;
 
 public interface ChessBot {
 
@@ -10,4 +11,6 @@ public interface ChessBot {
 	void setColor(ChessPieceColor color);
 
 	Move makeMove(Piece[][] board);
+
+	Move getLastMove();
 }

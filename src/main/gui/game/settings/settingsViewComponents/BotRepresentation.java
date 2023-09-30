@@ -70,24 +70,41 @@ public class BotRepresentation extends Pane {
 		this.setTranslateX(OFFSET + OFFSET / 2);
 		this.setPrefSize(WINDOW_WIDTH, 300);
 
-		imageWrapper.getChildren().add(this.imageView);
+		initImageWrapper();
+		initHeading();
+		initInformationText();
+
+		initSurrenderButton();
+		initSelectButton();
+
+		initColorSelectMenue();
+
+		this.setBackground(Background.fill(Color.web("#E9E9E9")));
+		this.setBorder(Border.stroke(Color.LIGHTGRAY));
+
+		imageWrapper.getChildren().add(imageView);
+		this.getChildren().addAll(selectButton, informationText, heading, imageWrapper);
+	}
+
+	private void initImageWrapper() {
 		this.imageWrapper.setTranslateY(-OFFSET);
 		this.imageWrapper.setTranslateX(-OFFSET);
-		this.getChildren().add(imageWrapper);
 
-		this.getChildren().add(heading);
+	}
+
+	private void initHeading() {
 		this.heading.setTranslateX(IMAGE_WIDTH / 2 + IMAGE_HEADING_OFFSET);
 		this.heading.setTranslateY(IMAGE_HEIGHT / 2);
 		this.heading.setId("BotHeadingText");
+	}
 
-		this.getChildren().add(informationText);
-
+	private void initInformationText() {
 		this.informationText.setTranslateY(IMAGE_HEIGHT + INFO_TEXT_OFFSET);
 		this.informationText.setTranslateX(PADDING);
 		this.informationText.setWrappingWidth(WINDOW_WIDTH - OFFSET);
+	}
 
-		this.getChildren().add(selectButton);
-
+	private void initSelectButton() {
 		this.selectButton.setTranslateY(this.getPrefHeight() - OFFSET * 2);
 		this.selectButton.setMinWidth(WINDOW_WIDTH / 2);
 		this.selectButton.setTranslateX(WINDOW_WIDTH / 4);
@@ -96,11 +113,17 @@ public class BotRepresentation extends Pane {
 		selectButton.setOnAction(event -> {
 			botSelectionView.selectedPressed(this);
 		});
+	}
 
-		initColorSelectMenue();
+	private void initSurrenderButton() {
+		surrenderButton.setTranslateY(getPrefHeight() - OFFSET * 2);
+		surrenderButton.setMinWidth(WINDOW_WIDTH / 2);
+		surrenderButton.setTranslateX(WINDOW_WIDTH / 4);
+		surrenderButton.setId("BotSurrenderButton");
 
-		this.setBackground(Background.fill(Color.web("#E9E9E9")));
-		this.setBorder(Border.stroke(Color.LIGHTGRAY));
+		surrenderButton.setOnAction(event -> {
+			botSelectionView.surrenderPressed();
+		});
 	}
 
 	private void initColorSelectMenue() {
@@ -152,6 +175,16 @@ public class BotRepresentation extends Pane {
 
 	private ChessPieceColor getRandomColor() {
 		return Math.random() < PROBABILLITY ? ChessPieceColor.WHITE : ChessPieceColor.BLACK;
+	}
+
+	public void toggleSelectButton() {
+		getChildren().remove(selectButton);
+		getChildren().add(surrenderButton);
+	}
+
+	public void toggleSurrenderButton() {
+		getChildren().remove(surrenderButton);
+		getChildren().add(selectButton);
 	}
 
 	public ImageView getImage() {
@@ -208,6 +241,12 @@ public class BotRepresentation extends Pane {
 
 	public ChessPieceColor getUserColor() {
 		return userPlaysAs;
+	}
+
+	public void disableColorSelect(boolean disable) {
+		selectWhiteButton.setDisable(disable);
+		selectBlackButton.setDisable(disable);
+		selectRandButton.setDisable(disable);
 	}
 
 }
