@@ -10,9 +10,12 @@ import main.model.chessPieces.ChessPieceName;
 
 public class Pawn extends Piece {
 
+	private static final int WHITE_ENDLINE = 0;
+	private static final int BLACK_ENDLINE = 7;
+
 	private Vector2D[] directions = { new Vector2D(0, -1) };
 	private Vector2D[] attackDirections = { new Vector2D(1, -1), new Vector2D(-1, -1) };
-	private boolean firstMove = true;
+	private int endline = WHITE_ENDLINE;
 
 	public Pawn(ChessPieceColor color, int row, int column) {
 		super(ChessPieceName.PAWN, color, row, column);
@@ -21,6 +24,7 @@ public class Pawn extends Piece {
 			directions[0] = new Vector2D(0, 1);
 			attackDirections[0] = new Vector2D(1, 1);
 			attackDirections[1] = new Vector2D(-1, 1);
+			endline = BLACK_ENDLINE;
 		}
 
 	}
@@ -30,21 +34,12 @@ public class Pawn extends Piece {
 		return validPawnMove(newPosition) || isValidAttack(newPosition) || enPassant(newPosition);
 	}
 
-	private void executeEnPassant(Vector2D oldPos, Vector2D newPos) { // UNSECURE !
-		super.executeMove(oldPos, newPos);
-		Piece attackedPiece = board.getPiece(board.getLastMove().getNewPos());
-		Vector2D attackedPos = attackedPiece.getPosition();
-		Piece[][] board = this.board.getBoard();
-		board[attackedPos.getY()][attackedPos.getX()] = null;
-		this.board.removePiece(attackedPiece.getPosition());
-	}
-
 	private boolean enPassant(Vector2D newPosition) { // TODO how is enPassant executed?
-		Move lastMove = board.getLastMove();
 
-		if (lastMove == null)
+		if (board.getMoveHistory().size() < 2) // At least one Move has been executed and one current move
 			return false;
 
+		Move lastMove = board.getLastMove();
 		if (isDoublePawnMove(lastMove) && isEnemyPawnNextTo(newPosition, lastMove)) { // TODO is this right?
 			return true;
 		}
@@ -55,7 +50,7 @@ public class Pawn extends Piece {
 	private boolean isEnemyPawnNextTo(Vector2D pos, Move lastMove) {
 		Piece enemyPiece = board.getPiece(lastMove.getNewPos());
 
-		if (enemyPiece == null)
+		if (enemyPiece == null || !(enemyPiece instanceof Pawn))
 			return false;
 
 		Vector2D right = new Vector2D(1, 0);
@@ -87,7 +82,7 @@ public class Pawn extends Piece {
 	}
 
 	@Override
-	public List<List<Vector2D>> calculateAttackablePositions(Vector2D position) {
+	public List<List<Vector2D>> calculateAttackablePositions() {
 		List<List<Vector2D>> moves = new LinkedList<>();
 
 		if (outOfBounds(position))
@@ -99,7 +94,8 @@ public class Pawn extends Piece {
 			Vector2D possiblePosition = this.position.clone();
 			possiblePosition.plus(attackDirection);
 
-			if (!outOfBounds(possiblePosition) && board.isEnemyPieceOn(possiblePosition, color)) {
+			if (!outOfBounds(possiblePosition)
+					&& (board.isEnemyPieceOn(possiblePosition, color) || enPassant(possiblePosition))) {
 				movesInDirection.add(possiblePosition.clone());
 			}
 
@@ -110,14 +106,14 @@ public class Pawn extends Piece {
 	}
 
 	@Override
-	public List<List<Vector2D>> calculateMoveablePositions(Vector2D position) {
+	public List<List<Vector2D>> calculateMoveablePositions() {
 		// Pawn is the only piece that has a different attack then move!
 		List<List<Vector2D>> moves = new LinkedList<>();
-		Vector2D attackDirection = directions[0];
+		Vector2D direction = directions[0];
 		List<Vector2D> movesInDirection = new LinkedList<>();
 		Vector2D possiblePosition = this.position.clone();
 		for (int i = 0; i < (firstMove ? 2 : 1); i++) {
-			possiblePosition.plus(attackDirection);
+			possiblePosition.plus(direction);
 
 			if (!outOfBounds(possiblePosition)) {
 				if (board.isNoPieceOn(possiblePosition))
@@ -128,13 +124,14 @@ public class Pawn extends Piece {
 		}
 		moves.add(movesInDirection);
 
-		moves.addAll(calculateAttackablePositions(position));
+		moves.addAll(calculateAttackablePositions());
 
 		return moves;
 	}
 
 	public boolean isValidAttack(Vector2D position) {
-		for (List<Vector2D> movesInDirection : this.calculateAttackablePositions(position)) {
+
+		for (List<Vector2D> movesInDirection : this.calculateAttackablePositions()) {
 			for (Vector2D move : movesInDirection) {
 				if (move.equals(position))
 					return true;
@@ -150,6 +147,28 @@ public class Pawn extends Piece {
 			executeEnPassant(oldPos, newPos);
 		} else
 			super.executeMove(oldPos, newPos); // normal behaviour !
+
+		if (isPawnOnEndline()) {
+			transformPawn();
+		}
+	}
+
+	private void executeEnPassant(Vector2D oldPos, Vector2D newPos) { // UNSECURE !
+		super.executeMove(oldPos, newPos);
+		Piece attackedPiece = board.getPiece(board.getCurrentMove().getNewPos());
+
+		Vector2D attackedPos = attackedPiece.getPosition();
+		Piece[][] board = this.board.getBoard();
+		board[attackedPos.getY()][attackedPos.getX()] = null;
+		this.board.removeAttackedPiece(attackedPiece.getPosition());
+	}
+
+	private boolean isPawnOnEndline() {
+		return position.getY() == endline;
+	}
+
+	private void transformPawn() { // auto Queen for the first
+		board.replacePawn(this);
 	}
 
 	public boolean isFirstMove() {

@@ -1,18 +1,16 @@
 package main.gui.game.gameOver;
 
 import main.gui.MainPresenter;
-import main.gui.Presenter;
 import main.gui.game.board.GamePresenter;
 import main.gui.game.settings.settingsViewComponents.BotRepresentation;
 import main.model.gameStates.State;
+import main.model.statistics.GameStatistic;
 
-public class GameOverPresenter extends Presenter {
+public class GameOverPresenter {
 
 	private GameOverView gameOverView;
 	private MainPresenter mainPresenter;
 	private BotRepresentation selectedBot;
-
-	private GameStatistic gameStatistic = new GameStatistic();
 
 	public GameOverView getGameOverView() {
 		return gameOverView;
@@ -34,9 +32,9 @@ public class GameOverPresenter extends Presenter {
 		mainPresenter.playAgainButtonPressed();
 	}
 
-	public void setDisableView(boolean disable) {
-		gameOverView.setDisable(disable);
-		gameOverView.setVisible(!disable);
+	public void setEnableView(boolean enable) {
+		gameOverView.setDisable(!enable);
+		gameOverView.setVisible(enable);
 	}
 
 	public void botSelected(BotRepresentation source) {
@@ -48,8 +46,7 @@ public class GameOverPresenter extends Presenter {
 	}
 
 	public void gameOver() {
-		gameStatistic.gamePlayed(selectedBot);
-		gameOverView.drawScore(gameStatistic.getUserWins(selectedBot), gameStatistic.getBotWins(selectedBot));
+		gameOverView.drawScore(mainPresenter.getUserWins(), mainPresenter.getBotWins());
 	}
 
 }

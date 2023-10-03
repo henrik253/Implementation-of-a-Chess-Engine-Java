@@ -17,7 +17,7 @@ public class Knight extends Piece {
 	}
 
 	@Override
-	public List<List<Vector2D>> calculateAttackablePositions(Vector2D position) {
+	public List<List<Vector2D>> calculateAttackablePositions() {
 		List<List<Vector2D>> moves = new LinkedList<>();
 
 		if (outOfBounds(position))

@@ -18,7 +18,7 @@ public class Queen extends Piece {
 	}
 
 	@Override
-	public List<List<Vector2D>> calculateAttackablePositions(Vector2D position) { // TODO param position useless
+	public List<List<Vector2D>> calculateAttackablePositions() { // TODO param position useless
 
 		List<List<Vector2D>> moves = new LinkedList<>();
 

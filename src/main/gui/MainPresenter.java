@@ -1,5 +1,7 @@
 package main.gui;
 
+import java.util.List;
+
 import main.Settings;
 import main.gui.game.board.GamePresenter;
 import main.gui.game.gameOver.GameOverPresenter;
@@ -7,6 +9,7 @@ import main.gui.game.gameStart.GameStartPresenter;
 import main.gui.game.settings.SettingsPresenter;
 import main.gui.game.settings.settingsViewComponents.BotRepresentation;
 import main.model.Model;
+import main.model.Move;
 import main.model.Vector2D;
 import main.model.chessPieces.SimplePiece;
 import main.model.convertions.BoardConverter;
@@ -14,7 +17,7 @@ import main.model.convertions.FENConverter;
 import main.model.gameStates.GameState;
 import main.model.gameStates.State;
 
-public class MainPresenter extends Presenter {
+public class MainPresenter  {
 
 	private SettingsPresenter settingsPresenter;
 	private Settings settings;
@@ -36,16 +39,18 @@ public class MainPresenter extends Presenter {
 	public SimplePiece[][] requestBotMove() {
 
 		// TODO TEMP
-		/*while (State.gameState.inGame()) {
+
+		while (State.gameState.inGame()) {
 			if (model.makeBotMove()) {
-				SimplePiece[][] simpleBoard = BoardConverter.convertToSimple(model.getBoard());
-				checkGameStates();
-				return simpleBoard;
+				break;
 			}
-		}*/
-		model.makeBotMove();
-		SimplePiece[][] simpleBoard = BoardConverter.convertToSimple(model.getBoard());
-		return BoardConverter.convertToSimple(model.getBoard()); // no move
+		}
+		checkGameStates();
+		return BoardConverter.convertToSimple(model.getBoard());
+
+//		model.makeBotMove();
+//		SimplePiece[][] simpleBoard = BoardConverter.convertToSimple(model.getBoard());
+//		return BoardConverter.convertToSimple(model.getBoard()); // no move
 		// TODO TEMP
 	}
 
@@ -56,25 +61,23 @@ public class MainPresenter extends Presenter {
 		}
 
 		if (State.gameState.isGameOver()) {
-			checkGameOverStates();
+			initGameOver();
 		}
 	}
 
-	private void checkGameOverStates() {
-		gameOverPresenter.gameOver(); 
-		gameOverPresenter.setDisableView(false);
+	private void initGameOver() {
+		gameOverPresenter.gameOver();
+		gameOverPresenter.setEnableView(true);
 	}
 
 	public void startGame() {
-		State.gameState = GameState.IN_GAME;
-
 		startGameViews();
 		startBoard();
 		startModel();
 	}
 
 	private void startGameViews() {
-		gameStartPresenter.setDisableView(false);
+		gameStartPresenter.setEnableView(false);
 		settingsPresenter.setInGameContent(); // PauseGame Button etc...
 	} // specific gui content for the game
 
@@ -98,7 +101,7 @@ public class MainPresenter extends Presenter {
 	}
 
 	public void endGame() {
-		gameOverPresenter.setDisableView(false);
+		gameOverPresenter.setEnableView(false);
 	}
 
 	public MainView getMainView() {
@@ -158,7 +161,7 @@ public class MainPresenter extends Presenter {
 	}
 
 	public void pauseGame() {
-		gameStartPresenter.setDisableView(true);
+		gameStartPresenter.setEnableView(true);
 		gameStartPresenter.pauseGame();
 	}
 
@@ -170,11 +173,35 @@ public class MainPresenter extends Presenter {
 		gameStartPresenter.botSelected(source);
 		gameOverPresenter.botSelected(source);
 		gamePresenter.userPlaysAs(source.getUserColor());
-		
+	}
+
+	public int getRoundCount() {
+		return model.getRoundCount();
+	}
+
+	public List<Move> getMoveHistory() {
+		return model.getMoveHistory();
+	}
+
+	public int getBotWins() {
+		return model.getBotWins();
+	}
+
+	public int getUserWins() {
+		return model.getUserWins();
+	}
+
+	public int getTotalUserWins() {
+		return model.getTotalUserWins();
+	}
+
+	public int getTotalBotWins() {
+		return model.getTotalBotWins();
 	}
 
 	public void playAgainButtonPressed() {
-
+		gameStartPresenter.setEnableView(true);
+		gameOverPresenter.setEnableView(false);
 	}
 
 }

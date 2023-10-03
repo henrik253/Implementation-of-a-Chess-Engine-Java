@@ -21,6 +21,8 @@ public abstract class Piece {
 
 	protected Vector2D[] attackDirections;
 
+	protected boolean firstMove = true;
+
 	public Piece(ChessPieceName name, ChessPieceColor color, int row, int column) {
 		this.name = name;
 		this.color = color;
@@ -29,7 +31,7 @@ public abstract class Piece {
 	}
 
 	public boolean isValidMove(Vector2D newPosition) {
-		for (List<Vector2D> positionsInDirection : attackableSquares) {
+		for (List<Vector2D> positionsInDirection : this.calculateMoveablePositions()) {
 			for (Vector2D position : positionsInDirection) {
 				if (newPosition.equals(position))
 					return true;
@@ -38,20 +40,25 @@ public abstract class Piece {
 
 		return false;
 	}
-	// an attack is always a move, but a move isnt always a attack. e.g. Pawn movement 
-	public List<List<Vector2D>> calculateMoveablePositions(Vector2D position) {
-		return calculateAttackablePositions(position);
+
+	// an attack is always a move, but a move isnt always a attack. e.g. Pawn
+	// movement
+	public List<List<Vector2D>> calculateMoveablePositions() {
+		return calculateAttackablePositions();
 	}
 
 	public void executeMove(Vector2D oldPos, Vector2D newPos) {
+
+		if (firstMove)
+			firstMove = false;
+
 		Piece[][] board = this.board.getBoard();
 		board[oldPos.getY()][oldPos.getX()] = null;
 		board[newPos.getY()][newPos.getX()] = this;
-
 		this.setPosition(newPos);
 	}
 
-	public abstract List<List<Vector2D>> calculateAttackablePositions(Vector2D position);
+	public abstract List<List<Vector2D>> calculateAttackablePositions();
 
 	protected boolean outOfBounds(Vector2D position) {
 		return position.getX() < 0 || position.getX() >= length || position.getY() < 0 || position.getY() >= length;

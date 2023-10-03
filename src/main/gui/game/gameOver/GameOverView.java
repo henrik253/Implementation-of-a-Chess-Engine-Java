@@ -26,6 +26,8 @@ public class GameOverView extends Pane {
 
 	private static final String BLACK = "#403f3f";
 
+	private static final String GAME_SENTENCE = "YOU WON";
+
 	private GameOverPresenter gameOverPresenter;
 	private Settings settings;
 	private Overlay overlay;
@@ -45,7 +47,10 @@ public class GameOverView extends Pane {
 	private Pane botHeadingWrapper;
 	private Text botHeading;
 
-	private Text heading;
+	private Text vsHeading;
+
+	private BorderPane gameSentenceWrapper;
+	private Text gameSentence;
 
 	private ImageView playerImage = new ImageView(
 			new Image(PATH + FILENAME + DATATYPE, IMAGE_SIZE, IMAGE_SIZE, false, false));
@@ -55,9 +60,10 @@ public class GameOverView extends Pane {
 		initContentBox();
 		initPlayButton();
 
-		initTextWrapper(); // PlayerWrapper & BotWrapper elems need the TextWrapper to be first init.
+		initVsTextWrapper(); // PlayerWrapper & BotWrapper elems need the TextWrapper to be first init.
 		initBotWrapper();
 		initPlayerWrapper();
+		initGameSentenceWrapper();
 
 		style();
 	}
@@ -65,7 +71,7 @@ public class GameOverView extends Pane {
 	private void style() {
 		this.getChildren().add(overlay); // Adding the color fade in the background
 		this.getChildren().add(contentBox);
-		contentBox.getChildren().addAll(playAgainButton, playerWrapper, textWrapper, botWrapper);
+		contentBox.getChildren().addAll(playAgainButton, playerWrapper, textWrapper, botWrapper, gameSentenceWrapper);
 	}
 
 	private void initContentBox() {
@@ -142,19 +148,29 @@ public class GameOverView extends Pane {
 		contentBox.getChildren().add(playerHeadingWrapper);
 	}
 
-	private void initTextWrapper() { // X and Y are Centered
-		heading = new Text(HEADING_TEXT);
-		heading.setId("gameStartHeading");
+	private void initVsTextWrapper() { // X and Y are Centered
+		vsHeading = new Text(HEADING_TEXT);
+		vsHeading.setId("gameStartHeading");
 
 		textWrapper = new BorderPane();
 
 		textWrapper.setId("gameStartTextWrapper");
 
-		double offset = heading.getBoundsInLocal().getWidth() + heading.getBoundsInLocal().getWidth() / 2;
-		textWrapper.setTop(heading);
+		double offset = vsHeading.getBoundsInLocal().getWidth();
+		textWrapper.setTop(vsHeading);
 		textWrapper.setTranslateX(playAgainButton.getPrefWidth() / 2 + offset);
 		textWrapper.setTranslateY((contentBox.getPrefHeight() / 5) * 2);
+	}
 
+	private void initGameSentenceWrapper() {
+		gameSentenceWrapper = new BorderPane();
+		gameSentence = new Text(GAME_SENTENCE);
+		gameSentence.setId("GameSentence");
+
+		gameSentenceWrapper.setTop(gameSentence);
+		double offset = gameSentence.getBoundsInLocal().getWidth() / 2;
+		gameSentenceWrapper.setTranslateX(playAgainButton.getPrefWidth() / 2 + offset);
+		gameSentenceWrapper.setTranslateY((contentBox.getPrefHeight() / 4));
 	}
 
 	public Overlay getOverlay() {
@@ -184,8 +200,7 @@ public class GameOverView extends Pane {
 	public void drawSelectedBot(BotRepresentation source) {
 		this.botImage = new ImageView(source.getImage().getImage());
 		botWrapper.setBackground(Background.fill(source.getUserColor().isWhite() ? Color.web(BLACK) : Color.WHITE));
-		playerWrapper
-				.setBackground(Background.fill(source.getUserColor().isWhite() ? Color.WHITE : Color.web(BLACK)));
+		playerWrapper.setBackground(Background.fill(source.getUserColor().isWhite() ? Color.WHITE : Color.web(BLACK)));
 
 		drawBotRepresentation();
 		drawBotName(source);
@@ -200,9 +215,9 @@ public class GameOverView extends Pane {
 	private void drawBotName(BotRepresentation source) {
 		botHeading.setText(source.getHeading().getText());
 	}
-	
-	public void drawScore(int userWon,int botWon) {
-		heading.setText(userWon + " : " + botWon);
+
+	public void drawScore(int userWon, int botWon) {
+		vsHeading.setText(userWon + " : " + botWon);
 	}
 
 }

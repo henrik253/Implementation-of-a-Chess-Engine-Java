@@ -9,8 +9,6 @@ import main.model.chessPieces.ChessPieceName;
 
 public class King extends Piece {
 
-	private boolean firstMove = true;
-
 	private Vector2D[] attackDirections = { new Vector2D(1, 0), new Vector2D(-1, 0), new Vector2D(0, 1),
 			new Vector2D(0, -1), new Vector2D(1, 1), new Vector2D(-1, -1), new Vector2D(-1, 1), new Vector2D(1, -1) };
 
@@ -26,17 +24,12 @@ public class King extends Piece {
 		return validMovement || isValidCastle(position);
 	}
 
-	public boolean isValidCastle(Vector2D position) {
-		if (!firstMove)
-			return false;
-
-		return (int) Math.abs((((double) (position.getX() - this.position.getX())))) == 2;
-	}
-
-	// calculateAttackablePositions shows squares where king would be in check ,
-	// moveValidation checks that this wont happen
+	// calculateAttackablePositions returns squares where king would be in check ,
+	// moveValidation checks that this wont happen, so we dont have to do this in
+	// this class
+	// TODO calculateAttackablePositions or moveablePos the castling
 	@Override
-	public List<List<Vector2D>> calculateAttackablePositions(Vector2D position) {
+	public List<List<Vector2D>> calculateAttackablePositions() {
 		List<List<Vector2D>> moves = new LinkedList<>();
 
 		if (outOfBounds(position))
@@ -51,6 +44,7 @@ public class King extends Piece {
 			if (!outOfBounds(possiblePosition)) {
 				Piece piece = board.getPiece(possiblePosition);
 
+				// pieces were king would be in check will be shown
 				if (piece != null && piece.getColor() == color) // cant step on ally piece
 					continue;
 
@@ -65,20 +59,63 @@ public class King extends Piece {
 		return moves;
 	}
 
-	public List<Vector2D> calculateMoveablePositions() {
-		List<Vector2D> moves = new LinkedList<>();
+	@Override
+	public void executeMove(Vector2D oldPos, Vector2D newPos) {
 
-		if (outOfBounds(position))
-			return moves;
-
-		for (Vector2D direction : attackDirections) {
-			Vector2D possiblePosition = position.clone();
-			possiblePosition.plus(direction);
-			if (!outOfBounds(possiblePosition)) {
-				moves.add(possiblePosition.clone());
-			}
+		if (isValidCastle(newPos)) {
+			executeCastling(oldPos, newPos);
+		} else {
+			super.executeMove(oldPos, newPos);
 		}
-		return moves;
+	}
+
+	// Valid Castle if 1. Rook & King didnt move 2. no Pieces between 3. no check
+	// between
+	public boolean isValidCastle(Vector2D pos) {
+		if (!firstMove)
+			return false;
+
+		int[][] aS = this.color.isWhite() ? board.getAttackedSquaresByBlack() : board.getAttackedSquaresByWhite();
+		Piece[][] b = board.getBoard();
+		boolean isRightSideCastle = pos.getX() - this.position.getX() > 0;
+		int rookCol = isRightSideCastle ? this.board.getBoard().length - 1 : 0;
+		Vector2D rookPos = new Vector2D(rookCol, this.position.getY()); // on the same row
+
+		boolean inCheck = false;
+		boolean pieceOnSquare = false;
+
+		if (isRightSideCastle) {
+			int x0 = this.position.getX();
+			int x1 = this.position.getX() + 1, x2 = this.position.getX() + 2;
+			int y0 = this.position.getY();
+			inCheck = aS[y0][x0] > 0 || aS[y0][x1] > 0 || aS[y0][x2] > 0;
+			pieceOnSquare = b[y0][x1] != null || b[y0][x2] != null; // BETWEEN K & R
+		} else { // left Side
+			int x0 = this.position.getX();
+			int x1 = this.position.getX() - 1, x2 = this.position.getX() - 2, x3 = this.position.getX() - 3;
+			int y0 = this.position.getY();
+			inCheck = aS[y0][x0] > 0 || aS[y0][x1] > 0 || aS[y0][x2] > 0 || aS[y0][x3] > 0;
+			pieceOnSquare = b[y0][x1] != null || b[y0][x2] != null || b[y0][x3] != null; // BETWEEN K & R
+		}
+
+		return ((int) Math.abs((((double) (position.getX() - pos.getX())))) == 2) && board.getPiece(rookPos).firstMove
+				&& firstMove && !inCheck && !pieceOnSquare;
+	}
+
+	private void executeCastling(Vector2D oldPos, Vector2D newPos) { // TODO test Castling
+		boolean isRightSideCastle = newPos.getX() - this.position.getX() > 0;
+		Vector2D rookDirection = new Vector2D(isRightSideCastle ? -2 : 3, 0);
+		Piece[][] board = this.board.getBoard();
+
+		super.executeMove(oldPos, newPos); // only rook needs to be moved
+
+		int rookCol = isRightSideCastle ? this.board.getBoard().length - 1 : 0;
+		Vector2D rookPos = new Vector2D(rookCol, this.position.getY()); // on the same row
+		Rook rook = (Rook) this.board.getPiece(rookPos);
+
+		board[rook.getPosition().getY()][rook.getPosition().getX()] = null;
+		rook.setPosition(Vector2D.add(rookPos, rookDirection));
+		board[rook.getPosition().getY()][rook.getPosition().getX()] = rook;
 	}
 
 	@Override
