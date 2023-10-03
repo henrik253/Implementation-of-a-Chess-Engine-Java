@@ -8,7 +8,7 @@ import main.model.chessPieces.concretePieces.Piece;
 public class MCTSBot implements ChessBot {
     MCTSAgent agent;
     public MCTSBot(){
-        this.agent = new MCTSAgent(2, 200, -1);
+        this.agent = new MCTSAgent(2, 200, 1);
         this.agent.initRandom();
         this.agent.addMathematicalPolicyNet();
     }

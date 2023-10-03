@@ -100,10 +100,10 @@ public class MCTSAgent implements ChessBot {
         System.out.println("tick");
         int[][] intBoard = getLogic().translateBoard(board);
         this.currentBoard = intBoard;
-        if(player == -1){
+        if(player == 1){
             this.currentBoard = flipBoardHorizontallyAndFLipPlayer(intBoard);
         }
-        float[] monteCarloValues = tree.search(intBoard);
+        float[] monteCarloValues = tree.search(currentBoard);
         int bestMoveIndex = 0;
         float bestMoveValue = monteCarloValues[0];
         for(int i = 0; i < monteCarloValues.length; i++){
@@ -113,7 +113,7 @@ public class MCTSAgent implements ChessBot {
             }
         }
         int[] coordinates;
-        if(player == -1){
+        if(player == 1){
             coordinates = flipCoordinates(getLogic().intToCoordinates(bestMoveIndex));
         }else{
             coordinates = getLogic().intToCoordinates(bestMoveIndex);
