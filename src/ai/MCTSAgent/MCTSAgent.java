@@ -1,13 +1,14 @@
 package ai.MCTSAgent;
 
-import ai.MCTSAgent.Logic.LogicTranslator;
+import ai.Logic.LogicTranslator;
 import ai.MCTSAgent.MonteCarloTree.MonteCarloTree;
-import ai.MCTSAgent.NeuralNetsAndEvaluators.*;
-import ai.MCTSAgent.NeuralNetsAndEvaluators.MPolicyNetwork.MPolicyNetwork;
-import ai.MCTSAgent.Validation.Bitboards.BitMaskArr;
+import ai.NeuralNetsAndEvaluators.*;
+import ai.NeuralNetsAndEvaluators.MPolicyNetwork.MPolicyNetwork;
+import ai.Validation.Bitboards.BitMaskArr;
 import main.model.ChessBot;
 import main.model.Move;
 import main.model.Vector2D;
+import main.model.chessPieces.ChessPieceColor;
 import main.model.chessPieces.concretePieces.Piece;
 
 import java.io.IOException;
@@ -41,7 +42,7 @@ public class MCTSAgent implements ChessBot {
         this.valueNet = new RValueNetWork();
     }
     public void addActualValueNet() throws IOException {
-        this.valueNet = new ValueNetwork("./resources/TrainedValueNetForRunning.zip", false);
+        this.valueNet = new ValueNetwork("./resources/ForRunning.zip", false);
     }
     public void addMathematicalPolicyNet(){
         this.policyNet = new MPolicyNetwork(this.arr, this);
@@ -96,11 +97,21 @@ public class MCTSAgent implements ChessBot {
     }
 
     @Override
+    public ChessPieceColor getColor() {
+        return this.player == 1 ? ChessPieceColor.WHITE : ChessPieceColor.BLACK;
+    }
+
+    @Override
+    public void setColor(ChessPieceColor color) {
+
+    }
+
+    @Override
     public Move makeMove(Piece[][] board) {
         System.out.println("tick");
         int[][] intBoard = getLogic().translateBoard(board);
         this.currentBoard = intBoard;
-        if(player == 1){
+        if(player == -1){
             this.currentBoard = flipBoardHorizontallyAndFLipPlayer(intBoard);
         }
         float[] monteCarloValues = tree.search(currentBoard);
@@ -113,7 +124,7 @@ public class MCTSAgent implements ChessBot {
             }
         }
         int[] coordinates;
-        if(player == 1){
+        if(player == -1){
             coordinates = flipCoordinates(getLogic().intToCoordinates(bestMoveIndex));
         }else{
             coordinates = getLogic().intToCoordinates(bestMoveIndex);

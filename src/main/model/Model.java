@@ -1,10 +1,7 @@
 package main.model;
 
-import java.util.List;
-
 import main.ChessBotStub;
 import main.Settings;
-//import main.model.Chessbots.MCTSBot;
 import main.model.chessPieces.ChessPieceColor;
 import main.model.chessPieces.concretePieces.Piece;
 import main.model.convertions.FENConverter;
@@ -15,6 +12,8 @@ import main.model.gameStates.GameOverReason;
 import main.model.gameStates.GameState;
 import main.model.gameStates.State;
 import main.model.statistics.GameStatistic;
+
+import java.util.List;
 
 public class Model {
 

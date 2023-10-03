@@ -1,7 +1,7 @@
 package ai.MCTSAgent.MonteCarloTree;
 
 import ai.MCTSAgent.MCTSAgent;
-import ai.MCTSAgent.Logic.LogicTranslator;
+import ai.Logic.LogicTranslator;
 
 public class MonteCarloTree {
     int simNum;

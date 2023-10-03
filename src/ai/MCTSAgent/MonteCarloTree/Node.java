@@ -3,7 +3,7 @@ package ai.MCTSAgent.MonteCarloTree;
 import java.util.ArrayList;
 import java.util.List;
 
-import ai.MCTSAgent.Validation.Bitboards.Bitboard;
+import ai.Validation.Bitboards.Bitboard;
 
 public class Node {
     MonteCarloTree tree;
