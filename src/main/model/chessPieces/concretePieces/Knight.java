@@ -37,6 +37,28 @@ public class Knight extends Piece {
 		this.attackableSquares = moves;
 		return moves;
 	}
+	
+	@Override
+	public List<List<Vector2D>> calculateMoveablePositions(){
+		List<List<Vector2D>> moves = new LinkedList<>();
+
+		if (outOfBounds(position))
+			return moves;
+
+		for (Vector2D direction : attackDirections) {
+			List<Vector2D> movesInDirection = new LinkedList<>();
+			Vector2D possiblePosition = this.position.clone();
+
+			possiblePosition.plus(direction);
+
+			if (!outOfBounds(possiblePosition)) { 
+				movesInDirection.add(possiblePosition.clone());
+			}
+			moves.add(movesInDirection);
+		}
+		this.attackableSquares = moves;
+		return moves;
+	}
 
 	@Override
 	public Piece clone() {

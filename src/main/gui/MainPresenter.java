@@ -208,7 +208,7 @@ public class MainPresenter {
 		return model.getLastBotMove();
 	}
 
-	public boolean inCheck() {
+	public boolean kingInCheck() {
 		return model.inCheck();
 	}
 
@@ -218,6 +218,10 @@ public class MainPresenter {
 
 	public boolean gameIsRunning() {
 		return model.gameIsRunning();
+	}
+
+	public List<Vector2D> getMoveablePositions(Vector2D pos) {
+		return model.getMoveablePositions(pos);
 	}
 
 }

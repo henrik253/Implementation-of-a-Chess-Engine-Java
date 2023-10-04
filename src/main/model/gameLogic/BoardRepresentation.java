@@ -154,10 +154,11 @@ public class BoardRepresentation {
 		}
 
 		if (lastMove.pieceTransformed()) {
-			Piece to = lastMove.getTransformed();
-			System.out.println(to.getPosition());
-			System.out.println(this); // getPiece(to.getPosition()); replace with lastMove.pos!?
-			Piece from = getPiece(to.getPosition()); // TODO null ptr exc. bc. from == null
+			Piece to = lastMove.getTransformed(); // e.g. the Pawn
+
+			Piece from = getPiece(lastMove.getOldPos()); // TODO null ptr exc. bc. from == null
+			// e.g. the queen?
+
 			to.setPosition(lastMove.getOldPos().clone());
 			from.setPosition(lastMove.getOldPos().clone()); // important step bc. if a
 			replacePiece(from, to);
@@ -209,7 +210,7 @@ public class BoardRepresentation {
 	}
 
 	// TODO TEST THE BUGS!
-	public void replacePiece(Piece from, Piece to) { // TODO change to replacePiece(Piece p1,Piece p2)
+	public void replacePiece(Piece from, Piece to) {
 		ChessPieceColor color = from.getColor();
 		int x = from.getPosition().getX();
 		int y = from.getPosition().getY();

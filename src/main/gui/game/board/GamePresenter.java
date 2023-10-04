@@ -1,7 +1,8 @@
 package main.gui.game.board;
 
+import java.util.List;
+
 import javafx.application.Platform;
-import javafx.scene.paint.Color;
 import main.Settings;
 import main.gui.MainPresenter;
 import main.model.chessPieces.ChessPieceColor;
@@ -19,6 +20,9 @@ public class GamePresenter {
 
 	private Vector2D lastMarkedKingPos;
 
+	private List<Vector2D> moveablePositions;
+	private Vector2D piecePosition; 
+	
 	public void setBoard(SimplePiece[][] simplePieceBoard) {
 		gameView.initSimplePieceBoard(simplePieceBoard);
 	}
@@ -38,7 +42,7 @@ public class GamePresenter {
 	public void userMoveSucceeded() {
 		new Thread(() -> {
 			try {
-				Thread.sleep(200);
+				Thread.sleep(400);
 			} catch (InterruptedException e) {
 				Thread.currentThread().interrupt();
 			}
@@ -65,9 +69,10 @@ public class GamePresenter {
 	}
 
 	private void markCheckedKing() {
-		if (mainPresenter.inCheck()) {
+		if (mainPresenter.kingInCheck()) {
 			lastMarkedKingPos = mainPresenter.getKingCheckedPos();
 			gameView.markSquare(lastMarkedKingPos, settings.kingCheckMarked.get());
+			System.out.println("mainPresenter.kingInCheck() ");
 		} else if (lastMarkedKingPos != null) {
 			gameView.unmarkSquare(lastMarkedKingPos);
 		}
@@ -116,6 +121,20 @@ public class GamePresenter {
 
 	public void setSettings(Settings settings) {
 		this.settings = settings;
+	}
+
+	public void markMoveableSquares(Vector2D pos) {
+		piecePosition = pos;
+		moveablePositions = mainPresenter.getMoveablePositions(pos);
+		gameView.markSquare(pos,settings.markedColorBright.get());
+		moveablePositions.forEach(position -> gameView.markSquare(position, settings.moveablePosMarked.get()));
+	}
+
+	public void unMarkMoveableSquares() {
+		if (moveablePositions == null)
+			return;
+		gameView.unmarkSquare(piecePosition);
+		moveablePositions.forEach(position -> gameView.unmarkSquare(position));
 	}
 
 }

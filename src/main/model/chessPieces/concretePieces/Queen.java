@@ -16,8 +16,8 @@ public class Queen extends Piece {
 		super(ChessPieceName.QUEEN, color, row, column);
 
 	}
-	
-	public Queen(ChessPieceColor color,Vector2D position) {
+
+	public Queen(ChessPieceColor color, Vector2D position) {
 		this(color, position.getY(), position.getX());
 	}
 
@@ -42,6 +42,38 @@ public class Queen extends Piece {
 					possiblePosition.plus(direction); // addition
 				} else {
 					movesInDirection.add(possiblePosition.clone());
+					break;
+				}
+			}
+			moves.add(movesInDirection);
+		}
+		this.attackableSquares = moves;
+		return moves;
+	}
+
+	@Override
+	public List<List<Vector2D>> calculateMoveablePositions() {
+
+		List<List<Vector2D>> moves = new LinkedList<>();
+
+		if (outOfBounds(position))
+			return moves;
+
+		for (Vector2D direction : attackDirections) {
+			List<Vector2D> movesInDirection = new LinkedList<>();
+			Vector2D possiblePosition = this.position.clone();
+
+			possiblePosition.plus(direction); // currentPosition should not be included
+
+			while (!outOfBounds(possiblePosition)) {
+				Piece piece = board.getPiece(possiblePosition);
+				if (piece == null) {
+					movesInDirection.add(possiblePosition.clone()); // add to linked list
+					possiblePosition.plus(direction); // addition
+				} else if (piece.getColor() != color) {
+					movesInDirection.add(possiblePosition.clone());
+					break;
+				} else {
 					break;
 				}
 			}

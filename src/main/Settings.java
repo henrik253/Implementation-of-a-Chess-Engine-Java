@@ -21,8 +21,10 @@ public class Settings { // Settings is not static, to make different saveable se
 	public ObjectProperty<Color> darkColor = new SimpleObjectProperty<>(Color.web("#4f4f4f"));
 	public ObjectProperty<Color> markedColorBright = new SimpleObjectProperty<>(Color.web("#fceaac"));
 	public ObjectProperty<Color> markedColorDark = new SimpleObjectProperty<>(Color.web("#ebd173"));
-	public ObjectProperty<Color> kingCheckMarked = new SimpleObjectProperty<>(Color.web("#f79188"));
-
+	public ObjectProperty<Color> kingCheckMarked = new SimpleObjectProperty<>(Color.web("#bf291f"));
+	public ObjectProperty<Color> moveablePosMarked = new SimpleObjectProperty<>(Color.web("#ebcb59"));
+	
+	
 	public StringProperty playButtonTextStart = new SimpleStringProperty("Start Game");
 	public StringProperty playButtonTextContinue = new SimpleStringProperty("Continue");
 

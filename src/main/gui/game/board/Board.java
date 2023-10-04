@@ -55,11 +55,10 @@ public class Board extends GridPane {
 
 		int oldX = draggedPiece.getRow();
 		int oldY = draggedPiece.getColumn();
-
 		int newX = (int) (event.getSceneX() / settings.squareWidth.get());
 		int newY = (int) (event.getSceneY() / settings.squareHeight.get());
 
-		boolean validMove = false;
+		gameView.unmarkLastMovebleSquares();
 
 		if (oldX != newX || oldY != newY) {
 			Vector2D oldPos = new Vector2D(oldX, oldY);
@@ -72,18 +71,16 @@ public class Board extends GridPane {
 				newPos.invertY(settings.rows - 1);
 			}
 
-			validMove = gameView.moveRequest(oldPos, newPos);
+			if (gameView.moveRequest(oldPos, newPos)) {
+				gameView.userMoveSucceeded();
+			}
 		}
 
-		if (validMove) {
-			gameView.userMoveSucceeded();
-		}
 	}
 
 	public void drawBoard() {
 		this.getChildren().clear();
 		clearSquares();
-		System.out.println("drawed");
 
 		Color color1 = settings.brightColor.get();
 		Color color2 = settings.darkColor.get();
@@ -100,9 +97,7 @@ public class Board extends GridPane {
 				add(square, column, row); // its actually row,column in the whole game!
 				// but for gridPane its swapped!
 			}
-
 		}
-
 	}
 
 	public void markSquare(Vector2D pos, Color color) {
@@ -132,7 +127,6 @@ public class Board extends GridPane {
 
 	public void drawPiecesOnBoard(SimplePiece[][] board) {
 		clearPiecesOnBoard();
-
 		if (inverted) {
 			board = invertBoard(board);
 		}
@@ -238,6 +232,12 @@ public class Board extends GridPane {
 			content.putImage(image);
 			dragboard.setContent(content);
 			this.setVisible(false);
+			showMoveableSquares();
+		}
+
+		private void showMoveableSquares() {
+			Vector2D currentPos = new Vector2D(row.get(), column.get());
+			gameView.showMoveablePositions(currentPos);
 		}
 
 		private void onDisabled(MouseEvent event) {

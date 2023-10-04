@@ -12,6 +12,8 @@ public class King extends Piece {
 	private Vector2D[] attackDirections = { new Vector2D(1, 0), new Vector2D(-1, 0), new Vector2D(0, 1),
 			new Vector2D(0, -1), new Vector2D(1, 1), new Vector2D(-1, -1), new Vector2D(-1, 1), new Vector2D(1, -1) };
 
+	private Vector2D[] castlingDirections = { new Vector2D(2, 0), new Vector2D(-2, 0) };
+
 	public King(ChessPieceColor color, int row, int column) {
 		super(ChessPieceName.KING, color, row, column);
 
@@ -89,7 +91,22 @@ public class King extends Piece {
 			}
 			moves.add(movesInDirection);
 		}
-		this.attackableSquares = moves;
+
+		List<Vector2D> castlingMoves = new LinkedList<>();
+		Vector2D castlingPos1 = Vector2D.plus(position, castlingDirections[0]);
+		Vector2D castlingPos2 = Vector2D.plus(position, castlingDirections[1]);
+
+		if (!outOfBounds(castlingPos1) && isValidCastle(castlingPos1)) {
+			castlingMoves.add(castlingPos1);
+		}
+
+		if (!outOfBounds(castlingPos1) && isValidCastle(castlingPos2)) {
+			castlingMoves.add(castlingPos2);
+		}
+		
+		moves.add(castlingMoves);
+		
+		this.attackableSquares = moves; // TODO correct?
 
 		return moves;
 	}
@@ -116,10 +133,10 @@ public class King extends Piece {
 		int rookCol = isRightSideCastle ? this.board.getBoard().length - 1 : 0;
 		Vector2D rookPos = new Vector2D(rookCol, this.position.getY()); // on the same row
 		Piece rook = board.getPiece(rookPos);
-		
-		if(rook == null)
+
+		if (rook == null)
 			return false;
-			
+
 		boolean inCheck = false;
 		boolean pieceOnSquare = false;
 
@@ -137,8 +154,8 @@ public class King extends Piece {
 			pieceOnSquare = b[y0][x1] != null || b[y0][x2] != null || b[y0][x3] != null; // BETWEEN K & R
 		}
 
-		return ((int) Math.abs((((double) (position.getX() - pos.getX())))) == 2) && rook.firstMove
-				&& firstMove && !inCheck && !pieceOnSquare;
+		return ((int) Math.abs((((double) (position.getX() - pos.getX())))) == 2) && rook.firstMove && firstMove
+				&& !inCheck && !pieceOnSquare;
 	}
 
 	private void executeCastling(Vector2D oldPos, Vector2D newPos) { // TODO test Castling

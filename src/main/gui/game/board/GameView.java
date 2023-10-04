@@ -1,5 +1,7 @@
 package main.gui.game.board;
 
+import java.util.List;
+
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import main.model.chessPieces.ChessPieceColor;
@@ -73,6 +75,14 @@ public class GameView extends Pane {
 	public void unmarkSquare(Vector2D oldPos) {
 		board.unmarkSquare(oldPos);
 
+	}
+
+	public void showMoveablePositions(Vector2D currentPos) {
+		gamePresenter.markMoveableSquares(currentPos);
+	}
+
+	public void unmarkLastMovebleSquares() {
+		gamePresenter.unMarkMoveableSquares();	
 	}
 
 }
