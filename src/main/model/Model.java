@@ -1,7 +1,11 @@
 package main.model;
 
-import main.ChessBotStub;
+import java.util.List;
+
 import main.Settings;
+import main.model.bots.ChessBot;
+import main.model.bots.RandomChessBot;
+//import main.model.Chessbots.MCTSBot;
 import main.model.chessPieces.ChessPieceColor;
 import main.model.chessPieces.concretePieces.Piece;
 import main.model.convertions.FENConverter;
@@ -16,20 +20,18 @@ import main.model.statistics.GameStatistic;
 import utils.Move;
 import utils.Vector2D;
 
-import java.util.List;
-
 public class Model {
 
 	private Settings settings;
 	private BoardRepresentation boardRepresentation;
 	private MoveValidation moveValidation;
 
-	private ChessBot selectedChessBot = new ChessBotStub(); // TODO 
+	private ChessBot selectedChessBot = new RandomChessBot(); // TODO 
 	
 	private GameStatistic gameStatistic;
 
 	public Model() {
-		selectedChessBot = new ChessBotStub();
+		selectedChessBot = new RandomChessBot();
 		selectedChessBot.setColor(ChessPieceColor.BLACK);
 		gameStatistic = new GameStatistic();
 	}
@@ -52,6 +54,7 @@ public class Model {
 	public boolean movePiece(Vector2D oldPos, Vector2D newPos) { // <----
 		boolean success = moveValidation.makeMove(oldPos, newPos);
 		updateState(success, new Move(oldPos, newPos));
+		enterGameResult();
 		return success;
 	}
 
@@ -157,6 +160,11 @@ public class Model {
 		State.gameOverReason = moveValidation.getOnMove().isWhite() ? GameOverReason.BLACK_WON
 				: GameOverReason.WHITE_WON;
 		enterGameResult();
+	}
+
+	public List<Vector2D> getMoveablePositions(Vector2D pos) {
+		return boardRepresentation.getPiece(pos).calculateMoveablePositions().stream()
+				.flatMap( s -> s.stream()).toList();
 	}
 
 }
