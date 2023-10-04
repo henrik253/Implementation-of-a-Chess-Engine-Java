@@ -3,6 +3,8 @@
 .idea
 .idea/.*
 !.gitignore
+!resources/
+!resources/**
 !src/
 !src/**
 !pom.xml
