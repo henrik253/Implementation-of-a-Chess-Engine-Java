@@ -1,4 +1,4 @@
-package main.model.bots;
+package main.model.chessBots;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -58,12 +58,16 @@ public class RandomChessBot implements ChessBot {
 			allMoves1.add(movesFromPiece);
 		}
 
-		int movesPiece = (int) (Math.random() * (allMoves1.size()) - 1) + 1;
-		
+		int movesPiece = (int) (Math.random() * (allMoves1.size())) ;
+	
 		List<Vector2D> movesFromPiece = allMoves1.get(movesPiece);
 		int moveIndex = (int) ((Math.random() * (movesFromPiece.size()) - 1) + 1);
 		move = new Move(movesFromPiece.get(0),movesFromPiece.get(moveIndex));
-
+		
+		System.out.println("all Moves");
+		System.out.println(allMoves1);
+		System.out.println(movesFromPiece);
+		
 		return move;
 
 	}

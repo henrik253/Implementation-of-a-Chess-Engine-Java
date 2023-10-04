@@ -1,4 +1,4 @@
-package main.model.bots;
+package main.model.chessBots;
 
 import main.model.chessPieces.ChessPieceColor;
 import main.model.chessPieces.concretePieces.Piece;
