@@ -1,4 +1,4 @@
-package main.model.chessBots;
+package main.model.Chessbots;
 
 import ai.DeeperBlue.DeeperBlueAgent;
 import ai.DeeperBlue.DeeperBlueException;

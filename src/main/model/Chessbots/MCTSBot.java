@@ -1,4 +1,4 @@
-package main.model.chessBots;
+package main.model.Chessbots;
 
 import ai.MCTSAgent.MCTSAgent;
 import main.model.ChessBot;

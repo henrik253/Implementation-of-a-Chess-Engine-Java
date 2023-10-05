@@ -3,8 +3,8 @@ package main.model;
 import java.util.List;
 
 import main.Settings;
-import main.model.chessBots.ChessBot;
-import main.model.chessBots.RandomChessBot;
+import main.model.bots.ChessBot;
+import main.model.bots.RandomChessBot;
 //import main.model.Chessbots.MCTSBot;
 import main.model.chessPieces.ChessPieceColor;
 import main.model.chessPieces.concretePieces.Piece;

@@ -65,7 +65,7 @@ public class King extends Piece {
 	public List<List<Vector2D>> calculateMoveablePositions() {
 		List<List<Vector2D>> moves = new LinkedList<>();
 		int[][] attackedSquaresEnemy = color.isWhite() ? board.getAttackedSquaresByBlack()
-				: board.getAttackedSquaresByWhite(); // TODO attackedSquares updated?
+				: board.getAttackedSquaresByWhite(); // attackedSquares updated?
 
 		if (outOfBounds(position)) // base case
 			return moves;
@@ -79,15 +79,16 @@ public class King extends Piece {
 			if (!outOfBounds(possiblePosition)) {
 				Piece piece = board.getPiece(possiblePosition);
 
+				// pieces were king would be in check will be shown
 				if ((piece != null && piece.getColor() == color)
-						|| attackedSquaresEnemy[possiblePosition.getY()][possiblePosition.getX()] > 0) 																		// ally piece
+						|| attackedSquaresEnemy[possiblePosition.getY()][possiblePosition.getX()] > 0) // cant step on
+																										// ally piece
 					continue;
-				
-				movesInDirection.add(possiblePosition.clone()); 
-				possiblePosition.plus(direction); 
+
+				movesInDirection.add(possiblePosition.clone()); // add to linked list
+				possiblePosition.plus(direction); // addition
 
 			}
-			
 			moves.add(movesInDirection);
 		}
 
@@ -106,8 +107,7 @@ public class King extends Piece {
 		moves.add(castlingMoves);
 		
 		this.attackableSquares = moves; // TODO correct?
-		
-		System.out.println("King : " + moves);
+
 		return moves;
 	}
 

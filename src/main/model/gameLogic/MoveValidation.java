@@ -107,17 +107,19 @@ public class MoveValidation {
 	}
 
 	private boolean kingCanMove(King king) {
+		King k = onMove.isWhite() ? board.getBlackKing() : board.getWhiteKing();
 		int[][] attackedSquares = onMove.isWhite() ? board.getAttackedSquaresByWhite()
 				: board.getAttackedSquaresByBlack();
 
-		List<List<Vector2D>> moveablePositions = king.getMoveablePositions();
+		List<List<Vector2D>> moveablePositions = k.getAttackableSquares();
 
 		// 1. Moving your king to a non-attacked square
 		for (List<Vector2D> movesInDirection : moveablePositions) {
 			for (Vector2D move : movesInDirection) {
 				Piece piece = board.getPiece(move);
 				if (attackedSquares[move.getY()][move.getX()] == 0 && !isAllyPiece(piece, move)) {
-					if (!kingInCheckIfPieceMoves(king.getPosition(), move)) { // King can move on that square
+					if (!kingInCheckIfPieceMoves(k.getPosition(), move)) { // King can move on that square
+						System.out.println("kingCanMove");
 						return true;
 					}
 				}
