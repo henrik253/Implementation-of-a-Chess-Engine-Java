@@ -83,4 +83,17 @@ public class ULong {
         }
 
     }
+    public int[][] to2DArray(){
+        int[][] result = new int[8][8];
+        for(int row = 0; row < 8; row++){
+            for (int col = 0; col < 8; col++) {
+                if(this.at(row,col)){
+                    result[row][col] = 1;
+                }else{
+                    result[row][col] = 0;
+                }
+            }
+        }
+        return result;
+    }
 }

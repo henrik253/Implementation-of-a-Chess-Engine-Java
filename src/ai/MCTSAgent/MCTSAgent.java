@@ -5,7 +5,8 @@ import ai.MCTSAgent.MonteCarloTree.MonteCarloTree;
 import ai.NeuralNetsAndEvaluators.*;
 import ai.NeuralNetsAndEvaluators.MPolicyNetwork.MPolicyNetwork;
 import ai.Validation.Bitboards.BitMaskArr;
-import main.model.ChessBot;
+import main.model.bots.ChessBot;
+import main.model.chessPieces.ChessPieceColor;
 import main.model.chessPieces.concretePieces.Piece;
 import utils.Move;
 import utils.Vector2D;
@@ -102,8 +103,13 @@ public class MCTSAgent implements ChessBot {
 
     @Override
     public void setColor(ChessPieceColor color) {
-
+        if(color == ChessPieceColor.WHITE){
+            this.player = 1;
+        }else{
+            this.player = -1;
+        }
     }
+
 
     @Override
     public Move makeMove(Piece[][] board) {
@@ -131,5 +137,10 @@ public class MCTSAgent implements ChessBot {
         System.out.println(coordinates[0] +" "+ coordinates[1] + " " + coordinates[2] +" "+ coordinates[3]);
         return new Move(new Vector2D(coordinates[0], coordinates[1]), new Vector2D(coordinates[2],coordinates[3]));
 
+    }
+
+    @Override
+    public Move getLastMove() {
+        return null;
     }
 }

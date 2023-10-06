@@ -1,7 +1,7 @@
 package ai.MCTSAgent.MonteCarloTree;
 
-import ai.MCTSAgent.MCTSAgent;
 import ai.Logic.LogicTranslator;
+import ai.MCTSAgent.MCTSAgent;
 
 public class MonteCarloTree {
     int simNum;
@@ -28,8 +28,20 @@ public class MonteCarloTree {
         runSimulation(root);
         return childVisitCountsToProbabilities(root);
     }
+    public float[] searchWithTimeConstraint(int[][] board, int milliSeconds){
+        Node root = new Node(this, board, this.c, this.simulations, 1);
+        long start = System.currentTimeMillis();
+        long end = 0;
+        while(end-start < milliSeconds){
+            runSimulation(root);
+            end = System.currentTimeMillis();
+        }
+        lastSimulation = true;
+        //System.out.println("ValueNet output for Player " + this.ai.player + ": " + root.valueSum);
+        return childVisitCountsToProbabilities(root);
+    }
 
-    private float[] childVisitCountsToProbabilities(Node root) {
+    public float[] childVisitCountsToProbabilities(Node root) {
         float[] probabilities = new float[this.getLogic().moveSize];
         float sum = 0.f;
         for(Node child : root.children){

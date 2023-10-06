@@ -1,9 +1,9 @@
 package ai.MCTSAgent.MonteCarloTree;
 
+import ai.Validation.Bitboards.Bitboard;
+
 import java.util.ArrayList;
 import java.util.List;
-
-import ai.Validation.Bitboards.Bitboard;
 
 public class Node {
     MonteCarloTree tree;

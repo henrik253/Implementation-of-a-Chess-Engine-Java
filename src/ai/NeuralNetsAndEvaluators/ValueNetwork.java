@@ -1,14 +1,15 @@
 package ai.NeuralNetsAndEvaluators;
 
+/*
 import org.deeplearning4j.nn.multilayer.MultiLayerNetwork;
 import org.deeplearning4j.util.ModelSerializer;
 import org.nd4j.linalg.api.ndarray.INDArray;
 import org.nd4j.linalg.factory.Nd4j;
-
+*/
 import java.io.IOException;
 
 public class ValueNetwork implements IValueNetWork{
-    MultiLayerNetwork network;
+    //MultiLayerNetwork network;
     public ValueNetwork(String path, boolean forFurtherTraining) throws IOException {
         if(forFurtherTraining){
             setModelForFurtherTraining(path);
@@ -18,8 +19,8 @@ public class ValueNetwork implements IValueNetWork{
     }
 
     private void setModelForPlaying(String path) throws IOException {
-        this.network = ModelSerializer.restoreMultiLayerNetwork(path, false);
-        this.network.init();
+        //this.network = ModelSerializer.restoreMultiLayerNetwork(path, false);
+        //this.network.init();
     }
 
     private void setModelForFurtherTraining(String path) {
@@ -28,7 +29,8 @@ public class ValueNetwork implements IValueNetWork{
 
     @Override
     public float getValue(int[][] board) {
-        INDArray converted = Nd4j.create(2,board.length * board[0].length);
+
+        /*INDArray converted = Nd4j.create(2,board.length * board[0].length);
         int index = 0;
         for (int[] ints : board) {
             for (int anInt : ints) {
@@ -37,6 +39,7 @@ public class ValueNetwork implements IValueNetWork{
             }
         }
         INDArray tempResult = this.network.output(converted, false);
-        return tempResult.getFloat(0, 1);
+        return tempResult.getFloat(0, 1);*/
+        return 0.0f;
     }
 }

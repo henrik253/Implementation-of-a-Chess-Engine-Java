@@ -169,4 +169,15 @@ public class Bitboard {
         moveStruct.applyMove(copy);
         return copy;
     }
+
+    public long getSimpleHash() {
+        long result = 0;
+        for(ULong i : this.playerPieces.pieces){
+            result += i.content;
+        }
+        for(ULong i : this.enemyPieces.pieces){
+            result += i.content;
+        }
+        return result;
+    }
 }

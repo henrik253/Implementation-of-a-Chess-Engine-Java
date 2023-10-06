@@ -3,9 +3,10 @@ package main.model;
 import java.util.List;
 
 import main.Settings;
+import main.model.bots.DeeperBlueBot;
 import main.model.bots.ChessBot;
 import main.model.bots.RandomChessBot;
-//import main.model.Chessbots.MCTSBot;
+//import main.model.bots.MCTSBot;
 import main.model.chessPieces.ChessPieceColor;
 import main.model.chessPieces.concretePieces.Piece;
 import main.model.convertions.FENConverter;
@@ -31,7 +32,7 @@ public class Model {
 	private GameStatistic gameStatistic;
 
 	public Model() {
-		selectedChessBot = new RandomChessBot();
+		selectedChessBot = new DeeperBlueBot();
 		selectedChessBot.setColor(ChessPieceColor.BLACK);
 		gameStatistic = new GameStatistic();
 	}

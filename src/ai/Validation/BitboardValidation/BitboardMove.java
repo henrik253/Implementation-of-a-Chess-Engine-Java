@@ -32,6 +32,18 @@ public class BitboardMove {
             case 6 -> this.applyPawnMove(bitboard);
         }
     }
+    public void applyMoveToFlippedBoard(Bitboard bitboard){
+        bitboard.flipPlayer();
+        switch (this.pieceType) {
+            case 1 -> this.applyKingMove(bitboard);
+            case 2 -> this.applyRookMove(bitboard);
+            case 3 -> this.applyBishopMove(bitboard);
+            case 4 -> this.applyQueenMove(bitboard);
+            case 5 -> this.applyKnightMove(bitboard);
+            case 6 -> this.applyPawnMove(bitboard);
+        }
+        bitboard.flipPlayer();
+    }
     public Bitboard applyMoveAndGetCopy(Bitboard bitboard){
         Bitboard copy = new Bitboard(bitboard);
         switch (this.pieceType) {

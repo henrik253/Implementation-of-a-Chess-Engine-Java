@@ -1,15 +1,16 @@
-package main.model.Chessbots;
+package main.model.bots;
 
 import ai.MCTSAgent.MCTSAgent;
-import main.model.ChessBot;
-import main.model.Move;
+import main.model.bots.ChessBot;
 import main.model.chessPieces.ChessPieceColor;
 import main.model.chessPieces.concretePieces.Piece;
+import utils.Move;
 
 import java.io.IOException;
 
 public class MCTSBot implements ChessBot {
     MCTSAgent agent;
+    Move lastMove;
     public MCTSBot(){
         this.agent = new MCTSAgent(2, 200, -1);
         this.agent.initRandom();
@@ -37,7 +38,12 @@ public class MCTSBot implements ChessBot {
 
     @Override
     public Move makeMove(Piece[][] board) {
-
+        this.lastMove = this.agent.makeMove(board);
         return this.agent.makeMove(board);
+    }
+
+    @Override
+    public Move getLastMove() {
+        return this.lastMove;
     }
 }
