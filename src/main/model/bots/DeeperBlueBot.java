@@ -51,6 +51,8 @@ public class DeeperBlueBot implements ChessBot {
 
     @Override
     public Move getLastMove() {
-        return null;
+
+        return this.lastMove;
+
     }
 }
