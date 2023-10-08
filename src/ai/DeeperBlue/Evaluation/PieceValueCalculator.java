@@ -124,7 +124,7 @@ public class PieceValueCalculator {//gets unflipped board
         return switch (pieceType) {
             case 1 -> getKingValue(newRow , col);
             case 2 -> getRookValue(newRow , col, numOfPlayerPieces, numOfEnemyPieces, newBoard);
-            case 3 -> getBishopValue(newRow , col);
+            case 3 -> getBishopValue(newRow , col, numOfPlayerPieces, numOfEnemyPieces, newBoard);
             case 4 -> getQueenValue(newRow , col);
             case 5 -> getKnightValue(newRow , col,numOfPlayerPieces, numOfEnemyPieces, newBoard);
             case 6 -> getPawnValue(newRow , col);
@@ -151,6 +151,30 @@ public class PieceValueCalculator {//gets unflipped board
 
     }
 
+    private int getBishopValue(int row, int col, int numOfPLayerPieces, int numOfEnemyPieces, int[][] board) {
+        ArrayList<int[]> validMoves = this.validation.getValidMovesForPiece(board, 1, row * 8 + col);
+        if(numOfEnemyPieces + numOfEnemyPieces <= ENDGAME_NUM_OF_PIECES){// if it is an actual endgame push king
+            return bishopPushKing(row, col, board, validMoves);
+        }else{// try to control the middle territory by pushing pieces in the middle more
+            return (int) (PIECE_VALUES[KNIGHT] * PIECE_BONUS_WEIGHT[KNIGHT] * MIDGAME_BONUSES[KNIGHT][row][col]);
+        }
+
+    }
+    private int bishopPushKing(int row, int col, int[][] board, ArrayList<int[]> validMoves) {
+        int result = (int) PIECE_VALUES[ROOK];
+        int[] kingPosition = enemyKingPosition(board);
+        for(int[] move : validMoves){
+            if(move[1] == kingPosition[0] * 8 + kingPosition[1]){//checking enemyKing
+                result*= 2.0f;
+                break;
+            }
+            if(restrictingKingsMovement(move[1], kingPosition)){
+                result*= 1.5f;
+                break;
+            }
+        }
+        return result;
+    }
 
 
 
@@ -169,9 +193,7 @@ public class PieceValueCalculator {//gets unflipped board
         return (int) (PIECE_VALUES[QUEEN] * MIDGAME_BONUSES[QUEEN][row][col]);
     }
 
-    private int getBishopValue(int row, int col) {
-        return (int) (PIECE_VALUES[BISHOP] * MIDGAME_BONUSES[QUEEN][row][col]);
-    }
+
 
     private int getRookValue(int row, int col, int numOfPlayerPieces, int numOfEnemyPieces, int[][] board) {
         ArrayList<int[]> validMoves = this.validation.getValidMovesForPiece(board, 1, row * 8 + col);
@@ -206,9 +228,9 @@ public class PieceValueCalculator {//gets unflipped board
         return Math.abs(sRow) - Math.abs(dRow) + Math.abs(sCol) - Math.abs(dCol);
     }
     private int knightPushKing(int row, int col, int[][] board) {
-        float[] distanceToKingEndGameBonus = new float[]{1.0f, 1.0f, 1.0f, 1.5f, 1.5f, 1.5f, 1.5f, 1.5f, 1.5f};
+        float[] distanceToKingEndGameBonus = new float[]{1.4f, 1.4f, 1.3f, 1.3f, 1.2f, 1.2f, 1.1f, 1.1f, 1.0f};
         int result = PIECE_VALUES[KNIGHT];
-        result *= (int) distanceToKingEndGameBonus[manhattanDistance(row, col, enemyKingPosition(board)[0], enemyKingPosition(board)[1])];
+        result *= (int) distanceToKingEndGameBonus[manhattanDistance(row, col, enemyKingPosition(board)[0], enemyKingPosition(board)[1]) - 1];
         return result;
     }
     private int rookPushKing(int row, int col, int[][] board, ArrayList<int[]> validMoves) {

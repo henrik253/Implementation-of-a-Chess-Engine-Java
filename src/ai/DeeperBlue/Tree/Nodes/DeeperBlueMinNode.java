@@ -15,14 +15,14 @@ public class DeeperBlueMinNode extends DeeperBlueNode{
 
 
 
-    public DeeperBlueMinNode(int[][] board, int currentDepth, DeeperBlueNode parent, DeeperBlueTree tree, int[] moveLeadingTo) {
-        super(board, currentDepth, parent, tree, moveLeadingTo);
+    public DeeperBlueMinNode(int[][] board, int currentDepth, DeeperBlueNode parent, DeeperBlueTree tree, int[] moveLeadingTo, boolean addLeavesToBuffer) {
+        super(board, currentDepth, parent, tree, moveLeadingTo, addLeavesToBuffer);
         this.bitBoard.flipPlayer();
         this.value = Integer.MAX_VALUE;
         this.beta = Integer.MAX_VALUE;
     }
     @Override
-    void expand() throws DeeperBlueException {
+    public void expand() throws DeeperBlueException {
         if(this.tree.agent.maxDepthAlphaBeta - currentDepth >= 0) {
             this.fillChildrenWithMaxNodes();
             Collections.sort(this.children);// sorts with the sorting nodes, not the values!!!!!!!!!!!
@@ -68,11 +68,10 @@ public class DeeperBlueMinNode extends DeeperBlueNode{
                             flipBoardHorizontallyAndFLipPlayer(newIntBoard),  currentDepth + 1, this, this.tree,new int[]{
                             currentMoveCoordinates[1] * 8 + currentMoveCoordinates[0],
                             currentMoveCoordinates[3] * 8 + currentMoveCoordinates[2]
-                        }
+                        }, addLeavesToBuffer
                     )
             );
         }
-
     }
 
     @Override

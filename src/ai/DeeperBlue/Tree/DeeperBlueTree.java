@@ -13,7 +13,7 @@ public class DeeperBlueTree {
     }
 
     public void search(int[][] board, int currentDepth) throws DeeperBlueException {
-        this.root = new DeeperBlueMaxNode(board, 0, this);
+        this.root = new DeeperBlueMaxNode(board, 0, this, true);
         this.root.expand();
     }
 

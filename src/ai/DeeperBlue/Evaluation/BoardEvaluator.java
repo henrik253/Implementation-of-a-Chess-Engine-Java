@@ -10,8 +10,11 @@ public class BoardEvaluator {
     static final int[] PIECE_VALUES = new int[]{0, 5000, 450, 350, 900, 250, 100};
     static final float PIECE_ATTACKED_WEIGHT = 0.5f;
     static final int ENDGAME_PIECE_NUM = 5;
+    static final int ENDGAME_ENEMY_PIECES_NUM = 4;
     static final int ENDGAME_KINGDST_WEIGHT = 10;
     static final int ENEMY_CHECK_BONUS_VALUE = 400;
+    static final float ATTACKED_KING_SQUARES_WEIGHT = 2.0f;
+    private static final int PAWN_ROW_BONUS = 10;
 
     static BitboardMoveValidation validation = new BitboardMoveValidation(new BitMaskArr(),0);
     static PieceValueCalculator pieceValueCalculator = new PieceValueCalculator();
@@ -20,12 +23,30 @@ public class BoardEvaluator {
         int result = 0;
         ArrayList<int[]> validMoves = validation.getValidMoves(board, 1);
         ArrayList<int[]> validMovesEnemy = validation.getValidMoves(board, -1);
-        result += countWhitePieces(board);
-        result -= countBlackPieces(board);
-        result += attackedKingSquares(board, validMoves);
-        result -= attackedKingSquares(flipBoardHorizontallyAndFLipPlayer(board), validMovesEnemy);
+        result += evaluateSimple(board);
+        if(inEndGame(board)){
+            result += ATTACKED_KING_SQUARES_WEIGHT * attackedKingSquares(board, validMoves);
+            result -= ATTACKED_KING_SQUARES_WEIGHT * attackedKingSquares(flipBoardHorizontallyAndFLipPlayer(board), validMovesEnemy);
+        }
         return result;
     }
+
+    private static boolean inEndGame(int[][] board) {
+        int pieces = 0;
+        int enemyPieces = 0;
+        for(int[] row : board){
+            for(int square : row){
+                if(square != 0){
+                    pieces++;
+                    if(square < 0){
+                        enemyPieces++;
+                    }
+                }
+            }
+        }
+        return pieces <= ENDGAME_PIECE_NUM || enemyPieces <= ENDGAME_ENEMY_PIECES_NUM;
+    }
+
     private static int attackedKingSquares(int[][] board, ArrayList<int[]> validMoves) {
         int result = 0;
 
@@ -70,7 +91,7 @@ public class BoardEvaluator {
     }
 
     public static float countPieces(int[][] board) {
-        return countWhitePieces(board) - countBlackPieces(board);
+        return countPieceValues(board) - countBlackPieces(board);
     }
 
     public static int evaluateSimple(int[][] board) {
@@ -78,7 +99,12 @@ public class BoardEvaluator {
         for (int row = 0; row < 8; row++) {
             for (int col = 0; col < 8; col++) {
                 if(board[row][col] > 0){
-                    result += PIECE_VALUES[board[row][col]];
+                    if(board[row][col] == 6 && inEndGame(board)){
+                        result += PIECE_VALUES[board[row][col]] * (8 - PAWN_ROW_BONUS) * row;
+                    }else{
+                        result += PIECE_VALUES[board[row][col]];
+                    }
+
                 }else if(board[row][col] < 0){
                     result -= PIECE_VALUES[Math.abs(board[row][col])];
                 }
@@ -144,7 +170,7 @@ public class BoardEvaluator {
         return Math.abs(sRow) - Math.abs(dRow) + Math.abs(sCol) - Math.abs(dCol);
     }
 
-    private static int countWhitePieces(int[][] board) {
+    private static int countPieceValues(int[][] board) {
         int result = 0;
         for(int row = 0; row < 8; row++){
             for (int col = 0; col < 8; col++) {

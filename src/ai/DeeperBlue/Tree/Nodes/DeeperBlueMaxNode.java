@@ -5,22 +5,23 @@ import ai.DeeperBlue.Tree.DeeperBlueTree;
 import ai.Validation.BitboardValidation.BitboardMove;
 import ai.Validation.Bitboards.Bitboard;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
 public class DeeperBlueMaxNode extends DeeperBlueNode{
 
 
-    public DeeperBlueMaxNode(int[][] board, int currentDepth, DeeperBlueNode parent, DeeperBlueTree tree, int[] moveLeadingTo) {
-        super(board, currentDepth, parent, tree, moveLeadingTo);
+    public DeeperBlueMaxNode(int[][] board, int currentDepth, DeeperBlueNode parent, DeeperBlueTree tree, int[] moveLeadingTo, boolean addLeavesToBuffer) {
+        super(board, currentDepth, parent, tree, moveLeadingTo, addLeavesToBuffer);
         this.isRoot = false;
         this.value = Integer.MIN_VALUE;
         this.alpha = Integer.MIN_VALUE;
         this.maxNode = true;
 
     }
-    public DeeperBlueMaxNode(int[][] board, int currentDepth, DeeperBlueTree tree) {
-        super(board, currentDepth, tree);
+    public DeeperBlueMaxNode(int[][] board, int currentDepth, DeeperBlueTree tree, boolean addLeavesToBuffer) {
+        super(board, currentDepth, tree, addLeavesToBuffer);
         this.isRoot = true;
         this.value = Integer.MIN_VALUE;
         this.alpha = Integer.MIN_VALUE;
@@ -33,21 +34,38 @@ public class DeeperBlueMaxNode extends DeeperBlueNode{
         if(this.tree.agent.maxDepthAlphaBeta - currentDepth >= 0) {
             this.fillChildrenWithMinNodes();
             Collections.sort(this.children);// sorts with the sorting nodes, not the values!!!!!!!!!!!
+            ArrayList<DeeperBlueNode> childrenToRemove = new ArrayList<>();
+            ArrayList<DeeperBlueNode> childrenToAdd = new ArrayList<>();
             for(DeeperBlueNode child : this.children){
                 this.tree.agent.nodesSearched++;
                 child.beta = this.beta;
                 child.expand();
-                child.expanded = true;
-                this.value = Math.max(this.value, child.value);
-                this.alpha = Math.max(this.alpha, child.value);
-                if(!this.isRoot){
-                    //System.out.println("Depth: " + this.currentDepth  +" alpha: " + this.alpha + ", parent Beta: " + parent.beta );
+                if(!child.children.isEmpty()){
+                    child.expanded = true;
+                    this.value = Math.max(this.value, child.value);
+                    this.alpha = Math.max(this.alpha, child.value);
+                    if(!this.isRoot){
+                        //System.out.println("Depth: " + this.currentDepth  +" alpha: " + this.alpha + ", parent Beta: " + parent.beta );
+                    }
+                    if(!this.isRoot && this.alpha >= parent.beta){
+                        //System.out.println("Alpha pruning!");
+                        break;
+                    }
+                }else{//Human player is checkmated
+
+                    childrenToAdd.add(
+                            new DeeperBlueExtensionNode(
+                                    flipBoardHorizontallyAndFLipPlayer(child.intBoard) ,  currentDepth + 1, this, this.tree, child.moveLeadingTo, this.addLeavesToBuffer
+                            )
+                    );
+                    childrenToRemove.add(child);
                 }
-                if(!this.isRoot && this.alpha >= parent.beta){
-                    //System.out.println("Alpha pruning!");
-                    break;
-                }
+
             }
+            for(DeeperBlueNode child : childrenToRemove){
+                this.children.remove(child);
+           }
+            this.children.addAll(childrenToAdd);
         }else{
             this.fillChildrenWithExtensionNodes();
             for(DeeperBlueNode child : children){
@@ -55,7 +73,9 @@ public class DeeperBlueMaxNode extends DeeperBlueNode{
                 this.alpha = Math.max(this.alpha, child.value);
             }
         }
-
+        if(this.children.isEmpty()){//this bot is checkmated
+            this.value = -100000;
+        }
     }
 
     private void fillChildrenWithMinNodes() {
@@ -78,7 +98,7 @@ public class DeeperBlueMaxNode extends DeeperBlueNode{
                             flipBoardHorizontallyAndFLipPlayer(newIntBoard) ,  currentDepth + 1, this, this.tree, new int[]{
                             currentMoveCoordinates[1] * 8 + currentMoveCoordinates[0],
                             currentMoveCoordinates[3] * 8 + currentMoveCoordinates[2]
-                    }
+                    }, this.addLeavesToBuffer
                     )
             );
         }
@@ -105,7 +125,7 @@ public class DeeperBlueMaxNode extends DeeperBlueNode{
                             flipBoardHorizontallyAndFLipPlayer(newIntBoard) , currentDepth + 1,this, this.tree,new int[]{
                             currentMoveCoordinates[1] * 8 + currentMoveCoordinates[0],
                             currentMoveCoordinates[3] * 8 + currentMoveCoordinates[2]
-                    }
+                    }, this.addLeavesToBuffer
                     )
             );
         }

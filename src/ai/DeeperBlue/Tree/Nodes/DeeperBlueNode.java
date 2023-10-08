@@ -8,22 +8,27 @@ import ai.Validation.Bitboards.Bitboard;
 import java.util.ArrayList;
 
 public abstract class DeeperBlueNode implements Comparable<DeeperBlueNode>{
-    protected boolean expanded;
-    Bitboard bitBoard;
+
+    public float currentHighestInterestValue;
+    public int currentHighestExtensionId;
+    public final boolean addLeavesToBuffer;
+    public boolean expanded;
+    public Bitboard bitBoard;
     public int[][] intBoard;
     public ArrayList<DeeperBlueNode> children;
-    DeeperBlueNode parent;
-    DeeperBlueTree tree;
+    public DeeperBlueNode parent;
+    public DeeperBlueTree tree;
     int currentDepth;
-    boolean isRoot;
+    public boolean isRoot;
     float sortingValue;
     public float value;
-    float alpha;
-    float beta;
+    public float alpha;
+    public float beta;
     public int[] moveLeadingTo;
     public boolean maxNode = false;
     protected static final int NEGATIVE_INFINITY = Integer.MIN_VALUE;
-    public DeeperBlueNode(int[][] board, int currentDepth, DeeperBlueNode parent, DeeperBlueTree tree, int[] moveLeadingTo) {
+    public DeeperBlueNode(int[][] board, int currentDepth, DeeperBlueNode parent, DeeperBlueTree tree, int[] moveLeadingTo, boolean addLeavesToBuffer) {
+        this.addLeavesToBuffer = addLeavesToBuffer;
         this.bitBoard = new Bitboard(board, tree.agent.bitMaskArr);
         this.intBoard = board;
         this.children = new ArrayList<>();
@@ -40,7 +45,8 @@ public abstract class DeeperBlueNode implements Comparable<DeeperBlueNode>{
         //this.tree.agent.nodesSearched++;
     }
 
-    public DeeperBlueNode(int[][] board, int currentDepth, DeeperBlueTree tree) {
+    public DeeperBlueNode(int[][] board, int currentDepth, DeeperBlueTree tree, boolean addLeavesToBuffer) {
+        this.addLeavesToBuffer = addLeavesToBuffer;
         this.bitBoard = new Bitboard(board, tree.agent.bitMaskArr);
         this.intBoard = board;
         this.children = new ArrayList<>();
@@ -96,7 +102,7 @@ public abstract class DeeperBlueNode implements Comparable<DeeperBlueNode>{
         }
     }
 
-    static int[][] flipBoardHorizontallyAndFLipPlayer(int[][] board) {
+    public static int[][] flipBoardHorizontallyAndFLipPlayer(int[][] board) {
         int[][] result = new int[8][8];
         for(int row = 0; row < 8; row++){
             for (int col = 0; col < 8; col++) {
@@ -106,5 +112,5 @@ public abstract class DeeperBlueNode implements Comparable<DeeperBlueNode>{
         return result;
     }
 
-    abstract void expand() throws DeeperBlueException;
+    public abstract void expand() throws DeeperBlueException;
 }
