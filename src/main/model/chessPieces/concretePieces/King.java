@@ -3,11 +3,13 @@ package main.model.chessPieces.concretePieces;
 import java.util.LinkedList;
 import java.util.List;
 
-import main.model.chessPieces.ChessPieceColor;
-import main.model.chessPieces.ChessPieceName;
+import utils.ChessPieceColor;
+import utils.ChessPieceName;
 import utils.Vector2D;
 
 public class King extends Piece {
+
+	public final int value = 300;
 
 	private Vector2D[] attackDirections = { new Vector2D(1, 0), new Vector2D(-1, 0), new Vector2D(0, 1),
 			new Vector2D(0, -1), new Vector2D(1, 1), new Vector2D(-1, -1), new Vector2D(-1, 1), new Vector2D(1, -1) };
@@ -103,9 +105,9 @@ public class King extends Piece {
 		if (!outOfBounds(castlingPos1) && isValidCastle(castlingPos2)) {
 			castlingMoves.add(castlingPos2);
 		}
-		
+
 		moves.add(castlingMoves);
-		
+
 		this.attackableSquares = moves; // TODO correct?
 
 		return moves;

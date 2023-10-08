@@ -1,0 +1,349 @@
+{
+  "backprop" : true,
+  "backpropType" : "Standard",
+  "cacheMode" : "NONE",
+  "confs" : [ {
+    "cacheMode" : "NONE",
+    "epochCount" : 0,
+    "iterationCount" : 0,
+    "layer" : {
+      "@class" : "org.deeplearning4j.nn.conf.layers.DenseLayer",
+      "activationFn" : {
+        "@class" : "org.nd4j.linalg.activations.impl.ActivationTanH"
+      },
+      "biasInit" : 0.0,
+      "biasUpdater" : null,
+      "constraints" : null,
+      "dist" : null,
+      "gradientNormalization" : "None",
+      "gradientNormalizationThreshold" : 1.0,
+      "hasBias" : true,
+      "idropout" : null,
+      "iupdater" : {
+        "@class" : "org.nd4j.linalg.learning.config.Nesterovs",
+        "learningRate" : 0.4,
+        "momentum" : 0.9
+      },
+      "l1" : 0.0,
+      "l1Bias" : 0.0,
+      "l2" : 1.0E-4,
+      "l2Bias" : 0.0,
+      "layerName" : "layer0",
+      "nin" : 64,
+      "nout" : 64,
+      "pretrain" : false,
+      "weightInit" : "XAVIER",
+      "weightNoise" : null
+    },
+    "maxNumLineSearchIterations" : 5,
+    "miniBatch" : true,
+    "minimize" : true,
+    "optimizationAlgo" : "STOCHASTIC_GRADIENT_DESCENT",
+    "pretrain" : false,
+    "seed" : 1695043628318,
+    "stepFunction" : null,
+    "variables" : [ "W", "b" ]
+  }, {
+    "cacheMode" : "NONE",
+    "epochCount" : 0,
+    "iterationCount" : 0,
+    "layer" : {
+      "@class" : "org.deeplearning4j.nn.conf.layers.DenseLayer",
+      "activationFn" : {
+        "@class" : "org.nd4j.linalg.activations.impl.ActivationTanH"
+      },
+      "biasInit" : 0.0,
+      "biasUpdater" : null,
+      "constraints" : null,
+      "dist" : null,
+      "gradientNormalization" : "None",
+      "gradientNormalizationThreshold" : 1.0,
+      "hasBias" : true,
+      "idropout" : null,
+      "iupdater" : {
+        "@class" : "org.nd4j.linalg.learning.config.Nesterovs",
+        "learningRate" : 0.4,
+        "momentum" : 0.9
+      },
+      "l1" : 0.0,
+      "l1Bias" : 0.0,
+      "l2" : 1.0E-4,
+      "l2Bias" : 0.0,
+      "layerName" : "layer1",
+      "nin" : 64,
+      "nout" : 64,
+      "pretrain" : false,
+      "weightInit" : "XAVIER",
+      "weightNoise" : null
+    },
+    "maxNumLineSearchIterations" : 5,
+    "miniBatch" : true,
+    "minimize" : true,
+    "optimizationAlgo" : "STOCHASTIC_GRADIENT_DESCENT",
+    "pretrain" : false,
+    "seed" : 1695043628318,
+    "stepFunction" : null,
+    "variables" : [ "W", "b" ]
+  }, {
+    "cacheMode" : "NONE",
+    "epochCount" : 0,
+    "iterationCount" : 0,
+    "layer" : {
+      "@class" : "org.deeplearning4j.nn.conf.layers.DenseLayer",
+      "activationFn" : {
+        "@class" : "org.nd4j.linalg.activations.impl.ActivationTanH"
+      },
+      "biasInit" : 0.0,
+      "biasUpdater" : null,
+      "constraints" : null,
+      "dist" : null,
+      "gradientNormalization" : "None",
+      "gradientNormalizationThreshold" : 1.0,
+      "hasBias" : true,
+      "idropout" : null,
+      "iupdater" : {
+        "@class" : "org.nd4j.linalg.learning.config.Nesterovs",
+        "learningRate" : 0.4,
+        "momentum" : 0.9
+      },
+      "l1" : 0.0,
+      "l1Bias" : 0.0,
+      "l2" : 1.0E-4,
+      "l2Bias" : 0.0,
+      "layerName" : "layer2",
+      "nin" : 64,
+      "nout" : 64,
+      "pretrain" : false,
+      "weightInit" : "XAVIER",
+      "weightNoise" : null
+    },
+    "maxNumLineSearchIterations" : 5,
+    "miniBatch" : true,
+    "minimize" : true,
+    "optimizationAlgo" : "STOCHASTIC_GRADIENT_DESCENT",
+    "pretrain" : false,
+    "seed" : 1695043628318,
+    "stepFunction" : null,
+    "variables" : [ "W", "b" ]
+  }, {
+    "cacheMode" : "NONE",
+    "epochCount" : 0,
+    "iterationCount" : 0,
+    "layer" : {
+      "@class" : "org.deeplearning4j.nn.conf.layers.DenseLayer",
+      "activationFn" : {
+        "@class" : "org.nd4j.linalg.activations.impl.ActivationTanH"
+      },
+      "biasInit" : 0.0,
+      "biasUpdater" : null,
+      "constraints" : null,
+      "dist" : null,
+      "gradientNormalization" : "None",
+      "gradientNormalizationThreshold" : 1.0,
+      "hasBias" : true,
+      "idropout" : null,
+      "iupdater" : {
+        "@class" : "org.nd4j.linalg.learning.config.Nesterovs",
+        "learningRate" : 0.4,
+        "momentum" : 0.9
+      },
+      "l1" : 0.0,
+      "l1Bias" : 0.0,
+      "l2" : 1.0E-4,
+      "l2Bias" : 0.0,
+      "layerName" : "layer3",
+      "nin" : 64,
+      "nout" : 64,
+      "pretrain" : false,
+      "weightInit" : "XAVIER",
+      "weightNoise" : null
+    },
+    "maxNumLineSearchIterations" : 5,
+    "miniBatch" : true,
+    "minimize" : true,
+    "optimizationAlgo" : "STOCHASTIC_GRADIENT_DESCENT",
+    "pretrain" : false,
+    "seed" : 1695043628318,
+    "stepFunction" : null,
+    "variables" : [ "W", "b" ]
+  }, {
+    "cacheMode" : "NONE",
+    "epochCount" : 0,
+    "iterationCount" : 0,
+    "layer" : {
+      "@class" : "org.deeplearning4j.nn.conf.layers.DenseLayer",
+      "activationFn" : {
+        "@class" : "org.nd4j.linalg.activations.impl.ActivationTanH"
+      },
+      "biasInit" : 0.0,
+      "biasUpdater" : null,
+      "constraints" : null,
+      "dist" : null,
+      "gradientNormalization" : "None",
+      "gradientNormalizationThreshold" : 1.0,
+      "hasBias" : true,
+      "idropout" : null,
+      "iupdater" : {
+        "@class" : "org.nd4j.linalg.learning.config.Nesterovs",
+        "learningRate" : 0.4,
+        "momentum" : 0.9
+      },
+      "l1" : 0.0,
+      "l1Bias" : 0.0,
+      "l2" : 1.0E-4,
+      "l2Bias" : 0.0,
+      "layerName" : "layer4",
+      "nin" : 64,
+      "nout" : 64,
+      "pretrain" : false,
+      "weightInit" : "XAVIER",
+      "weightNoise" : null
+    },
+    "maxNumLineSearchIterations" : 5,
+    "miniBatch" : true,
+    "minimize" : true,
+    "optimizationAlgo" : "STOCHASTIC_GRADIENT_DESCENT",
+    "pretrain" : false,
+    "seed" : 1695043628318,
+    "stepFunction" : null,
+    "variables" : [ "W", "b" ]
+  }, {
+    "cacheMode" : "NONE",
+    "epochCount" : 0,
+    "iterationCount" : 0,
+    "layer" : {
+      "@class" : "org.deeplearning4j.nn.conf.layers.DenseLayer",
+      "activationFn" : {
+        "@class" : "org.nd4j.linalg.activations.impl.ActivationTanH"
+      },
+      "biasInit" : 0.0,
+      "biasUpdater" : null,
+      "constraints" : null,
+      "dist" : null,
+      "gradientNormalization" : "None",
+      "gradientNormalizationThreshold" : 1.0,
+      "hasBias" : true,
+      "idropout" : null,
+      "iupdater" : {
+        "@class" : "org.nd4j.linalg.learning.config.Nesterovs",
+        "learningRate" : 0.4,
+        "momentum" : 0.9
+      },
+      "l1" : 0.0,
+      "l1Bias" : 0.0,
+      "l2" : 1.0E-4,
+      "l2Bias" : 0.0,
+      "layerName" : "layer5",
+      "nin" : 64,
+      "nout" : 64,
+      "pretrain" : false,
+      "weightInit" : "XAVIER",
+      "weightNoise" : null
+    },
+    "maxNumLineSearchIterations" : 5,
+    "miniBatch" : true,
+    "minimize" : true,
+    "optimizationAlgo" : "STOCHASTIC_GRADIENT_DESCENT",
+    "pretrain" : false,
+    "seed" : 1695043628318,
+    "stepFunction" : null,
+    "variables" : [ "W", "b" ]
+  }, {
+    "cacheMode" : "NONE",
+    "epochCount" : 0,
+    "iterationCount" : 0,
+    "layer" : {
+      "@class" : "org.deeplearning4j.nn.conf.layers.DenseLayer",
+      "activationFn" : {
+        "@class" : "org.nd4j.linalg.activations.impl.ActivationTanH"
+      },
+      "biasInit" : 0.0,
+      "biasUpdater" : null,
+      "constraints" : null,
+      "dist" : null,
+      "gradientNormalization" : "None",
+      "gradientNormalizationThreshold" : 1.0,
+      "hasBias" : true,
+      "idropout" : null,
+      "iupdater" : {
+        "@class" : "org.nd4j.linalg.learning.config.Nesterovs",
+        "learningRate" : 0.4,
+        "momentum" : 0.9
+      },
+      "l1" : 0.0,
+      "l1Bias" : 0.0,
+      "l2" : 1.0E-4,
+      "l2Bias" : 0.0,
+      "layerName" : "layer6",
+      "nin" : 64,
+      "nout" : 64,
+      "pretrain" : false,
+      "weightInit" : "XAVIER",
+      "weightNoise" : null
+    },
+    "maxNumLineSearchIterations" : 5,
+    "miniBatch" : true,
+    "minimize" : true,
+    "optimizationAlgo" : "STOCHASTIC_GRADIENT_DESCENT",
+    "pretrain" : false,
+    "seed" : 1695043628318,
+    "stepFunction" : null,
+    "variables" : [ "W", "b" ]
+  }, {
+    "cacheMode" : "NONE",
+    "epochCount" : 0,
+    "iterationCount" : 0,
+    "layer" : {
+      "@class" : "org.deeplearning4j.nn.conf.layers.OutputLayer",
+      "activationFn" : {
+        "@class" : "org.nd4j.linalg.activations.impl.ActivationSoftmax"
+      },
+      "biasInit" : 0.0,
+      "biasUpdater" : null,
+      "constraints" : null,
+      "dist" : null,
+      "gradientNormalization" : "None",
+      "gradientNormalizationThreshold" : 1.0,
+      "hasBias" : true,
+      "idropout" : null,
+      "iupdater" : {
+        "@class" : "org.nd4j.linalg.learning.config.Nesterovs",
+        "learningRate" : 0.4,
+        "momentum" : 0.9
+      },
+      "l1" : 0.0,
+      "l1Bias" : 0.0,
+      "l2" : 1.0E-4,
+      "l2Bias" : 0.0,
+      "layerName" : "layer7",
+      "legacyBatchScaledL2" : false,
+      "lossFn" : {
+        "@class" : "org.nd4j.linalg.lossfunctions.impl.LossMSLE",
+        "configProperties" : false,
+        "numOutputs" : -1
+      },
+      "nin" : 64,
+      "nout" : 2,
+      "pretrain" : false,
+      "weightInit" : "XAVIER",
+      "weightNoise" : null
+    },
+    "maxNumLineSearchIterations" : 5,
+    "miniBatch" : true,
+    "minimize" : true,
+    "optimizationAlgo" : "STOCHASTIC_GRADIENT_DESCENT",
+    "pretrain" : false,
+    "seed" : 1695043628318,
+    "stepFunction" : null,
+    "variables" : [ "W", "b" ]
+  } ],
+  "epochCount" : 0,
+  "inferenceWorkspaceMode" : "ENABLED",
+  "inputPreProcessors" : { },
+  "iterationCount" : 1000,
+  "legacyBatchScaledL2" : false,
+  "pretrain" : false,
+  "tbpttBackLength" : 20,
+  "tbpttFwdLength" : 20,
+  "trainingWorkspaceMode" : "ENABLED"
+}

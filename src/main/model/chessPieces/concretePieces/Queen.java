@@ -3,11 +3,13 @@ package main.model.chessPieces.concretePieces;
 import java.util.LinkedList;
 import java.util.List;
 
-import main.model.chessPieces.ChessPieceColor;
-import main.model.chessPieces.ChessPieceName;
+import utils.ChessPieceColor;
+import utils.ChessPieceName;
 import utils.Vector2D;
 
 public class Queen extends Piece {
+
+	public final int value = 80;
 
 	private Vector2D[] attackDirections = { new Vector2D(1, 0), new Vector2D(-1, 0), new Vector2D(0, 1),
 			new Vector2D(0, -1), new Vector2D(1, 1), new Vector2D(-1, -1), new Vector2D(-1, 1), new Vector2D(1, -1) };

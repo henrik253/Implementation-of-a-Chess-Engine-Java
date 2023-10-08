@@ -3,12 +3,14 @@ package main.model.chessPieces.concretePieces;
 import java.util.LinkedList;
 import java.util.List;
 
-import main.model.chessPieces.ChessPieceColor;
-import main.model.chessPieces.ChessPieceName;
+import utils.ChessPieceColor;
+import utils.ChessPieceName;
 import utils.Move;
 import utils.Vector2D;
 
 public class Pawn extends Piece {
+
+	public final int value = 10;
 
 	private static final int WHITE_ENDLINE = 0;
 	private static final int BLACK_ENDLINE = 7;

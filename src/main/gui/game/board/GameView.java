@@ -4,8 +4,8 @@ import java.util.List;
 
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
-import main.model.chessPieces.ChessPieceColor;
-import main.model.chessPieces.SimplePiece;
+import utils.ChessPieceColor;
+import utils.SimplePiece;
 import utils.Vector2D;
 
 public class GameView extends Pane {

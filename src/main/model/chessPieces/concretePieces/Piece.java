@@ -1,8 +1,8 @@
 package main.model.chessPieces.concretePieces;
 
-import main.model.chessPieces.ChessPieceColor;
-import main.model.chessPieces.ChessPieceName;
 import main.model.gameLogic.BoardRepresentation;
+import utils.ChessPieceColor;
+import utils.ChessPieceName;
 import utils.Vector2D;
 
 import java.util.LinkedList;
@@ -22,6 +22,8 @@ public abstract class Piece {
 	protected Vector2D[] attackDirections;
 
 	protected boolean firstMove = true;
+
+	public final int value = 0;
 
 	public Piece(ChessPieceName name, ChessPieceColor color, int row, int column) {
 		this.name = name;

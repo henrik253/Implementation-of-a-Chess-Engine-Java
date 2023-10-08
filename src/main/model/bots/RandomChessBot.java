@@ -6,9 +6,9 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import main.model.chessPieces.ChessPieceColor;
 import main.model.chessPieces.concretePieces.King;
 import main.model.chessPieces.concretePieces.Piece;
+import utils.ChessPieceColor;
 import utils.Move;
 import utils.Vector2D;
 

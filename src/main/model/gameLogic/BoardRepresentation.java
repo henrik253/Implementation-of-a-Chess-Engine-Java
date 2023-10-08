@@ -1,10 +1,10 @@
 package main.model.gameLogic;
 
-import main.model.chessPieces.ChessPieceColor;
 import main.model.chessPieces.concretePieces.King;
 import main.model.chessPieces.concretePieces.Pawn;
 import main.model.chessPieces.concretePieces.Piece;
 import main.model.chessPieces.concretePieces.Queen;
+import utils.ChessPieceColor;
 import utils.Move;
 import utils.Vector2D;
 
@@ -138,6 +138,11 @@ public class BoardRepresentation {
 		board[oldPos.getY()][oldPos.getX()] = movedPiece;
 		board[newPos.getY()][newPos.getX()] = capturedPiece;
 		System.out.println(lastMove);
+		System.out.println("-".repeat(30));
+		System.out.println(this);
+		System.out.println(lastMove);
+
+		System.out.println("-".repeat(30));
 		movedPiece.setPosition(oldPos); // TODO null ptr exc. because movedPiece is null!
 
 		if (lastMove.pieceGotCaptured()) {
@@ -333,6 +338,10 @@ public class BoardRepresentation {
 		}
 		return "WHITE: \n" + resultWhite + " \n" + "#".repeat(50) + "\n \n" + "BLACK: \n" + resultBlack + " \n"
 				+ toBoardString();
+	}
+
+	public King getKing(ChessPieceColor color) {
+		return color.isWhite() ? whiteKing : blackKing;
 	}
 
 }

@@ -3,11 +3,13 @@ package main.model.chessPieces.concretePieces;
 import java.util.LinkedList;
 import java.util.List;
 
-import main.model.chessPieces.ChessPieceColor;
-import main.model.chessPieces.ChessPieceName;
+import utils.ChessPieceColor;
+import utils.ChessPieceName;
 import utils.Vector2D;
 
 public class Knight extends Piece {
+
+	public final int value = 30;
 
 	protected Vector2D[] attackDirections = { new Vector2D(2, 1), new Vector2D(1, 2), new Vector2D(-2, 1),
 			new Vector2D(-1, 2), new Vector2D(-2, -1), new Vector2D(-1, -2), new Vector2D(1, -2), new Vector2D(2, -1) };
@@ -37,9 +39,9 @@ public class Knight extends Piece {
 		this.attackableSquares = moves;
 		return moves;
 	}
-	
+
 	@Override
-	public List<List<Vector2D>> calculateMoveablePositions(){
+	public List<List<Vector2D>> calculateMoveablePositions() {
 		List<List<Vector2D>> moves = new LinkedList<>();
 
 		if (outOfBounds(position))
@@ -51,7 +53,7 @@ public class Knight extends Piece {
 
 			possiblePosition.plus(direction);
 
-			if (!outOfBounds(possiblePosition)) { 
+			if (!outOfBounds(possiblePosition)) {
 				movesInDirection.add(possiblePosition.clone());
 			}
 			moves.add(movesInDirection);

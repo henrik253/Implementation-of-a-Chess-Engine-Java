@@ -13,7 +13,7 @@ import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Text;
-import main.model.chessPieces.ChessPieceColor;
+import utils.ChessPieceColor;
 
 public class BotRepresentation extends Pane {
 

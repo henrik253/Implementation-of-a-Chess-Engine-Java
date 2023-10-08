@@ -1,7 +1,5 @@
 package main.model.convertions;
 
-import main.model.chessPieces.ChessPieceName;
-import main.model.chessPieces.SimplePiece;
 import main.model.chessPieces.concretePieces.Bishop;
 import main.model.chessPieces.concretePieces.King;
 import main.model.chessPieces.concretePieces.Knight;
@@ -9,6 +7,8 @@ import main.model.chessPieces.concretePieces.Pawn;
 import main.model.chessPieces.concretePieces.Piece;
 import main.model.chessPieces.concretePieces.Queen;
 import main.model.chessPieces.concretePieces.Rook;
+import utils.ChessPieceName;
+import utils.SimplePiece;
 
 public class BoardConverter {
 

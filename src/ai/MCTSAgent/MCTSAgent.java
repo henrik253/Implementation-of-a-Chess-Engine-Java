@@ -6,8 +6,8 @@ import ai.NeuralNetsAndEvaluators.*;
 import ai.NeuralNetsAndEvaluators.MPolicyNetwork.MPolicyNetwork;
 import ai.Validation.Bitboards.BitMaskArr;
 import main.model.bots.ChessBot;
-import main.model.chessPieces.ChessPieceColor;
 import main.model.chessPieces.concretePieces.Piece;
+import utils.ChessPieceColor;
 import utils.Move;
 import utils.Vector2D;
 

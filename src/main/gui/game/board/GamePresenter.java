@@ -5,9 +5,9 @@ import java.util.List;
 import javafx.application.Platform;
 import main.Settings;
 import main.gui.MainPresenter;
-import main.model.chessPieces.ChessPieceColor;
-import main.model.chessPieces.SimplePiece;
+import utils.ChessPieceColor;
 import utils.Move;
+import utils.SimplePiece;
 import utils.Vector2D;
 
 public class GamePresenter {

@@ -6,8 +6,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
-import main.model.chessPieces.ChessPieceColor;
 import main.model.gameStates.State;
+import utils.ChessPieceColor;
 import utils.Move;
 
 public class GameStatistic {

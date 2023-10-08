@@ -1,12 +1,12 @@
 package main.model.gameLogic;
 
 import main.model.Model;
-import main.model.chessPieces.ChessPieceColor;
 import main.model.chessPieces.concretePieces.*;
 import main.model.gameStates.GameOverReason;
 import main.model.gameStates.GameState;
 import main.model.gameStates.InCheck;
 import main.model.gameStates.State;
+import utils.ChessPieceColor;
 import utils.Vector2D;
 
 import java.util.LinkedList;
@@ -79,7 +79,7 @@ public class MoveValidation {
 		System.out.println("CHECK MATE ! ");
 	}
 
-	private boolean kingInCheckIfPieceMoves(Vector2D oldPos, Vector2D newPos) {
+	public boolean kingInCheckIfPieceMoves(Vector2D oldPos, Vector2D newPos) {
 		ChessPieceColor pieceColor = board.getPiece(oldPos).getColor();
 
 		board.makeMove(oldPos, newPos);
@@ -119,7 +119,6 @@ public class MoveValidation {
 				Piece piece = board.getPiece(move);
 				if (attackedSquares[move.getY()][move.getX()] == 0 && !isAllyPiece(piece, move)) {
 					if (!kingInCheckIfPieceMoves(k.getPosition(), move)) { // King can move on that square
-						System.out.println("kingCanMove");
 						return true;
 					}
 				}
@@ -145,7 +144,6 @@ public class MoveValidation {
 						if ((canBeBlocked(movesInDirection, enemyPieceMove, enemyPiece, king)
 								|| canBeCaptured(enemyPieceMove, enemyPiece, movedPiece))
 								&& !kingInCheckIfPieceMoves(enemyPiece.getPosition(), enemyPieceMove)) {
-							System.out.println("allyPieceStopsCheck");
 							return true;
 						}
 					}
@@ -178,7 +176,6 @@ public class MoveValidation {
 	private boolean enemyInRemi() { // Fehleranfällig?
 		List<Piece> pieces = onMove.isWhite() ? board.getBlackPieces() : board.getWhitePieces();
 		List<Piece> piecesClone = new LinkedList<>(pieces);
-		// TODO KING CAN WALK ON ATTACKED SQUARES SO IN NEEDS TO BE CHECKED!
 		// java.util.ConcurrentModificationException so we clone pieces
 		// exception is thrown when looping through the list and the list is changed
 		// from another thread
@@ -188,6 +185,7 @@ public class MoveValidation {
 					if (!kingInCheckIfPieceMoves(p.getPosition(), move)) { // if move was found, proof if its
 						return false; // a legal move
 					}
+
 				}
 			}
 		}

@@ -9,12 +9,12 @@ import main.gui.game.gameStart.GameStartPresenter;
 import main.gui.game.settings.SettingsPresenter;
 import main.gui.game.settings.settingsViewComponents.BotRepresentation;
 import main.model.Model;
-import main.model.chessPieces.SimplePiece;
 import main.model.convertions.BoardConverter;
 import main.model.convertions.FENConverter;
 import main.model.gameStates.GameState;
 import main.model.gameStates.State;
 import utils.Move;
+import utils.SimplePiece;
 import utils.Vector2D;
 
 public class MainPresenter {

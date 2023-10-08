@@ -1,6 +1,6 @@
 package main.model.gameStates;
 
-import main.model.chessPieces.ChessPieceColor;
+import utils.ChessPieceColor;
 
 public class State {
 

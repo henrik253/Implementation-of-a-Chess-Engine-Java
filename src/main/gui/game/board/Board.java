@@ -16,8 +16,8 @@ import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import main.Settings;
-import main.model.chessPieces.ChessPieceColor;
-import main.model.chessPieces.SimplePiece;
+import utils.ChessPieceColor;
+import utils.SimplePiece;
 import utils.Vector2D;
 
 public class Board extends GridPane {
@@ -127,6 +127,7 @@ public class Board extends GridPane {
 
 	public void drawPiecesOnBoard(SimplePiece[][] board) {
 		clearPiecesOnBoard();
+		
 		if (inverted) {
 			board = invertBoard(board);
 		}

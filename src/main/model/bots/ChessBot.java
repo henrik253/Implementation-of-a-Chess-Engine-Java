@@ -1,7 +1,7 @@
 package main.model.bots;
 
-import main.model.chessPieces.ChessPieceColor;
 import main.model.chessPieces.concretePieces.Piece;
+import utils.ChessPieceColor;
 import utils.Move;
 
 public interface ChessBot {

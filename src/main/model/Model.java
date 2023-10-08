@@ -5,9 +5,8 @@ import java.util.List;
 import main.Settings;
 import main.model.bots.DeeperBlueBot;
 import main.model.bots.ChessBot;
+import main.model.bots.ClassicBot;
 import main.model.bots.RandomChessBot;
-//import main.model.bots.MCTSBot;
-import main.model.chessPieces.ChessPieceColor;
 import main.model.chessPieces.concretePieces.Piece;
 import main.model.convertions.FENConverter;
 import main.model.gameLogic.BoardRepresentation;
@@ -18,6 +17,7 @@ import main.model.gameStates.GameState;
 import main.model.gameStates.InCheck;
 import main.model.gameStates.State;
 import main.model.statistics.GameStatistic;
+import utils.ChessPieceColor;
 import utils.Move;
 import utils.Vector2D;
 
@@ -27,15 +27,19 @@ public class Model {
 	private BoardRepresentation boardRepresentation;
 	private MoveValidation moveValidation;
 
-	private ChessBot selectedChessBot = new RandomChessBot(); // TODO 
-	
+	private ChessBot selectedChessBot; // TODO
+
 	private GameStatistic gameStatistic;
 
+	private ChessBot bot1 = new DeeperBlueBot();
+	private ChessBot bot2 = new ClassicBot();
+
 	public Model() {
-		selectedChessBot = new DeeperBlueBot();
+		selectedChessBot = new ClassicBot();
 		selectedChessBot.setColor(ChessPieceColor.BLACK);
 		gameStatistic = new GameStatistic();
 	}
+	
 
 	// GAME START
 	public void startGame() {
@@ -164,8 +168,8 @@ public class Model {
 	}
 
 	public List<Vector2D> getMoveablePositions(Vector2D pos) {
-		return boardRepresentation.getPiece(pos).calculateMoveablePositions().stream()
-				.flatMap( s -> s.stream()).toList();
+		return boardRepresentation.getPiece(pos).calculateMoveablePositions().stream().flatMap(s -> s.stream())
+				.toList();
 	}
 
 }
