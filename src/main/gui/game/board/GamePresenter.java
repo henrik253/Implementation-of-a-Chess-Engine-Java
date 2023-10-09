@@ -21,8 +21,8 @@ public class GamePresenter {
 	private Vector2D lastMarkedKingPos;
 
 	private List<Vector2D> moveablePositions;
-	private Vector2D piecePosition; 
-	
+	private Vector2D piecePosition;
+
 	public void setBoard(SimplePiece[][] simplePieceBoard) {
 		gameView.initSimplePieceBoard(simplePieceBoard);
 	}
@@ -40,21 +40,12 @@ public class GamePresenter {
 	}
 
 	public void userMoveSucceeded() {
-		new Thread(() -> {
-			try {
-				Thread.sleep(400);
-			} catch (InterruptedException e) {
-				Thread.currentThread().interrupt();
-			}
-			Platform.runLater(() -> {
-				if (mainPresenter.gameIsRunning()) {
-					gameView.loadSimpleBoard(mainPresenter.requestBotMove());
-					Move botMove = mainPresenter.getLastBotMove();
-					markCheckedKing();
-					markSquaresPieceMoved(botMove.getOldPos(), botMove.getNewPos());
-				}
-			});
-		}).start();
+		if (mainPresenter.gameIsRunning()) {
+			gameView.loadSimpleBoard(mainPresenter.requestBotMove());
+			Move botMove = mainPresenter.getLastBotMove();
+			markCheckedKing();
+			markSquaresPieceMoved(botMove.getOldPos(), botMove.getNewPos());
+		}
 	}
 
 	public void startGame() {
@@ -125,7 +116,7 @@ public class GamePresenter {
 	public void markMoveableSquares(Vector2D pos) {
 		piecePosition = pos;
 		moveablePositions = mainPresenter.getMoveablePositions(pos);
-		gameView.markSquare(pos,settings.markedColorBright.get());
+		gameView.markSquare(pos, settings.markedColorBright.get());
 		moveablePositions.forEach(position -> gameView.markSquare(position, settings.moveablePosMarked.get()));
 	}
 

@@ -35,7 +35,7 @@ public class Model {
 	private ChessBot bot2 = new ClassicBot();
 
 	public Model() {
-		selectedChessBot = new ClassicBot();
+		selectedChessBot = bot2;//new ClassicBot();
 		selectedChessBot.setColor(ChessPieceColor.BLACK);
 		gameStatistic = new GameStatistic();
 	}

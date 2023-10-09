@@ -33,9 +33,10 @@ public class MoveGeneration {
 					for (List<Vector2D> moves : movesInDirections) {
 						for (Vector2D move : moves) {
 
-//							if (validation.kingInCheckIfPieceMoves(p.getPosition(), move)) {
-//								continue;
-//							}
+							if (validation.kingInCheckIfPieceMoves(p.getPosition(), move)) {
+								continue;
+							}
+							
 							tempResult.add(move);
 						}
 					}
