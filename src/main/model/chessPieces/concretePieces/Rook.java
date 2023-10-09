@@ -91,6 +91,11 @@ public class Rook extends Piece {
 	}
 
 	@Override
+	public int getValue() {
+		return value;
+	}
+
+	@Override
 	public Piece clone() {
 		Rook rook = new Rook(color, position.getY(), position.getX());
 		rook.setFirstMove(firstMove);

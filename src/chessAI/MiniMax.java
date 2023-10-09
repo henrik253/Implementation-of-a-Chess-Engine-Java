@@ -39,7 +39,7 @@ public class MiniMax {
 				maxValue = Math.max(maxValue, value);
 				alpha = Math.max(maxValue, beta);
 
-				if (beta <= alpha)
+				if (maxValue >= beta)
 					break;
 			}
 		}
@@ -57,7 +57,7 @@ public class MiniMax {
 
 		for (Entry<Piece, Vector2D[]> move : moves.entrySet()) {
 			for (Vector2D newPos : move.getValue()) {
-			
+
 				boardR.makeMove(move.getKey().getPosition(), newPos);
 				int value = max(boardR, depth - 1, alpha, beta);
 				boardR.undoLastMove();
@@ -66,17 +66,17 @@ public class MiniMax {
 
 				beta = Math.min(minValue, beta);
 
-				if (beta <= alpha)
+				if (minValue <= alpha)
 					break;
 
 			}
 		}
-
+	
 		return minValue;
 	}
 
 	private static int evaluate(BoardRepresentation boardR, ChessPieceColor color) {
-		return Evaluate.calc(boardR, color);
+		return Evaluate.calc(boardR, color) * 4;
 	}
 
 	private static boolean gameOver(BoardRepresentation boardR, ChessPieceColor color) {

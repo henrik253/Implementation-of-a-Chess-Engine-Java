@@ -28,14 +28,15 @@ public class MoveGeneration {
 
 				if (p != null && p.getColor() == color) {
 					List<List<Vector2D>> movesInDirections = p.calculateMoveablePositions();
-					List<Vector2D> tempResult = new ArrayList<>(); 
+					List<Vector2D> tempResult = new ArrayList<>();
 
 					for (List<Vector2D> moves : movesInDirections) {
 						for (Vector2D move : moves) {
-							if (validation.kingInCheckIfPieceMoves(p.getPosition(), move)) {
-								continue;
-							}
-							tempResult.add(move); 
+
+//							if (validation.kingInCheckIfPieceMoves(p.getPosition(), move)) {
+//								continue;
+//							}
+							tempResult.add(move);
 						}
 					}
 					// TODO CHECK IF KING WOULD BE IN CHECK IF PIECE MOVES ! NO PSEUDO LEGAL MOVES ?

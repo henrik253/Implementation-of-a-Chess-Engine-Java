@@ -72,7 +72,6 @@ public class GamePresenter {
 		if (mainPresenter.kingInCheck()) {
 			lastMarkedKingPos = mainPresenter.getKingCheckedPos();
 			gameView.markSquare(lastMarkedKingPos, settings.kingCheckMarked.get());
-			System.out.println("mainPresenter.kingInCheck() ");
 		} else if (lastMarkedKingPos != null) {
 			gameView.unmarkSquare(lastMarkedKingPos);
 		}

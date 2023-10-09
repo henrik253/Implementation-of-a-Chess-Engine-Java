@@ -18,9 +18,9 @@ public class Evaluate {
 		for (Piece[] row : board) {
 			for (Piece p : row) {
 				if (p != null && p.getColor().isWhite()) {
-					sumWhite += p.value;
+					sumWhite += p.getValue();
 				} else if (p != null && p.getColor().isBlack()) {
-					sumBlack += p.value;
+					sumBlack += p.getValue();
 				}
 			}
 		}

@@ -191,6 +191,11 @@ public class Pawn extends Piece {
 	}
 
 	@Override
+	public int getValue() {
+		return value;
+	}
+
+	@Override
 	public Piece clone() {
 		Pawn pawn = new Pawn(color, position.getY(), position.getX());
 		pawn.setFirstMove(firstMove);

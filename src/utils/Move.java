@@ -7,6 +7,8 @@ public final class Move {
 	private final Vector2D oldPos;
 	private final Vector2D newPos;
 
+	private Piece movedPiece;
+
 	private Piece capturedPiece;
 
 	private Piece transformed;
@@ -40,6 +42,14 @@ public final class Move {
 
 	public boolean pieceTransformed() {
 		return transformed != null;
+	}
+
+	public Piece getMovedPiece() {
+		return movedPiece;
+	}
+
+	public void setMovedPiece(Piece p) {
+		movedPiece = p;
 	}
 
 	public boolean wasFirstMoveOfMovedPiece() {

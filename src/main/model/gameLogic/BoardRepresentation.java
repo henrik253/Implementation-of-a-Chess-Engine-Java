@@ -111,6 +111,7 @@ public class BoardRepresentation {
 		currentMove = new Move(oldPos, newPos);
 		// order in which funcs are called is important!
 		Piece movedPiece = this.getPiece(oldPos); // get the piece
+		currentMove.setMovedPiece(movedPiece);
 		Piece removedPiece = removePiece(newPos); // remove the piece that is on the pos the moving piece want
 													// to get
 		movedPiece.executeMove(oldPos, newPos);
@@ -132,18 +133,23 @@ public class BoardRepresentation {
 
 		Vector2D oldPos = lastMove.getOldPos(), newPos = lastMove.getNewPos();
 		Piece capturedPiece = lastMove.getCapturedPiece();
-		Piece movedPiece = getPiece(newPos);
+		Piece movedPiece =  lastMove.getMovedPiece(); // getPiece(newPos); throws Error ! 
 
 		// UNDO the Move
 		board[oldPos.getY()][oldPos.getX()] = movedPiece;
 		board[newPos.getY()][newPos.getX()] = capturedPiece;
-		System.out.println(lastMove);
-		System.out.println("-".repeat(30));
-		System.out.println(this);
-		System.out.println(lastMove);
 
-		System.out.println("-".repeat(30));
-		movedPiece.setPosition(oldPos); // TODO null ptr exc. because movedPiece is null!
+		try {
+			movedPiece.setPosition(oldPos); // TODO null ptr exc. because movedPiece is null!
+		} catch (Exception e) {
+			System.out.print(" UNDO LAST MOVE: ");
+			System.out.println(lastMove);
+			System.out.println(this);
+			System.out.println(" - ");
+			System.out.println(lastMove.getMovedPiece());
+			System.out.println(" - ");
+			throw new IllegalArgumentException();
+		}
 
 		if (lastMove.pieceGotCaptured()) {
 			capturedPiece.setPosition(newPos);
@@ -165,7 +171,7 @@ public class BoardRepresentation {
 			// e.g. the queen?
 
 			to.setPosition(lastMove.getOldPos().clone());
-			from.setPosition(lastMove.getOldPos().clone()); // important step bc. if a
+			from.setPosition(lastMove.getOldPos().clone()); // important step
 			replacePiece(from, to);
 		}
 
@@ -317,27 +323,28 @@ public class BoardRepresentation {
 	}
 
 	public String toString() {
-		String resultWhite = "";
-		String resultBlack = "";
-		for (int i = 0; i < board.length; i++) {
-			for (int j = 0; j < board[i].length; j++) {
-				resultWhite += attackedSquaresByWhite[i][j];
-
-				resultBlack += attackedSquaresByBlack[i][j];
-
-				resultWhite += " | ";
-				resultBlack += " | ";
-			}
-			resultWhite += "\n";
-			resultWhite += "_".repeat(40);
-			resultWhite += "\n";
-
-			resultBlack += "\n";
-			resultBlack += "_".repeat(40);
-			resultBlack += "\n";
-		}
-		return "WHITE: \n" + resultWhite + " \n" + "#".repeat(50) + "\n \n" + "BLACK: \n" + resultBlack + " \n"
-				+ toBoardString();
+//		String resultWhite = "";
+//		String resultBlack = "";
+//		for (int i = 0; i < board.length; i++) {
+//			for (int j = 0; j < board[i].length; j++) {
+//				resultWhite += attackedSquaresByWhite[i][j];
+//
+//				resultBlack += attackedSquaresByBlack[i][j];
+//
+//				resultWhite += " | ";
+//				resultBlack += " | ";
+//			}
+//			resultWhite += "\n";
+//			resultWhite += "_".repeat(40);
+//			resultWhite += "\n";
+//
+//			resultBlack += "\n";
+//			resultBlack += "_".repeat(40);
+//			resultBlack += "\n";
+//		}
+//		return "WHITE: \n" + resultWhite + " \n" + "#".repeat(50) + "\n \n" + "BLACK: \n" + resultBlack + " \n"
+//				+ toBoardString();
+		return toBoardString();
 	}
 
 	public King getKing(ChessPieceColor color) {

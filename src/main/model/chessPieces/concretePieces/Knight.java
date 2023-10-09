@@ -54,7 +54,10 @@ public class Knight extends Piece {
 			possiblePosition.plus(direction);
 
 			if (!outOfBounds(possiblePosition)) {
-				movesInDirection.add(possiblePosition.clone());
+				Piece p = board.getPiece(possiblePosition);
+				if (p == null || p.getColor() != color) {
+					movesInDirection.add(possiblePosition.clone());
+				}
 			}
 			moves.add(movesInDirection);
 		}
@@ -65,6 +68,11 @@ public class Knight extends Piece {
 	@Override
 	public Piece clone() {
 		return new Knight(color, position.getY(), position.getX());
+	}
+
+	@Override
+	public int getValue() {
+		return value;
 	}
 
 }

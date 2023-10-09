@@ -4,8 +4,8 @@ import ai.DeeperBlue.DeeperBlueAgent;
 import ai.DeeperBlue.DeeperBlueException;
 
 import main.model.bots.ChessBot;
-import main.model.chessPieces.ChessPieceColor;
 import main.model.chessPieces.concretePieces.Piece;
+import utils.ChessPieceColor;
 import utils.Move;
 import utils.Vector2D;
 

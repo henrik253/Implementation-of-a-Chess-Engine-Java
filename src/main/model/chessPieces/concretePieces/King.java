@@ -195,6 +195,11 @@ public class King extends Piece {
 		return king;
 	}
 
+	@Override
+	public int getValue() {
+		return value;
+	}
+
 	public boolean isFirstMove() {
 		return firstMove;
 	}

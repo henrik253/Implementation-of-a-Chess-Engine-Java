@@ -17,7 +17,7 @@ public class ClassicChessBot implements ChessBot {
 	private Move move;
 
 	public ClassicChessBot() {
-		depth = 8;
+		depth = 4;
 		color = ChessPieceColor.BLACK; // by default Black
 	}
 
@@ -28,15 +28,14 @@ public class ClassicChessBot implements ChessBot {
 		Map<Piece, Vector2D[]> moves = MoveGeneration.getMoves(boardR, color);
 
 		Vector2D oldPos = null, newPos = null;
-		Move bestMove = new Move(oldPos, newPos);
 
 		for (Entry<Piece, Vector2D[]> pMoves : moves.entrySet()) {
 			for (Vector2D move : pMoves.getValue()) {
 
-				int bestValue = 0;
+			
 				if (color.isWhite()) {
+					int bestValue = Integer.MIN_VALUE;
 					int val = MiniMax.max(boardR, depth, Integer.MIN_VALUE, Integer.MAX_VALUE);
-
 					if (val > bestValue) {
 						bestValue = val;
 						oldPos = pMoves.getKey().getPosition().clone();
@@ -44,8 +43,9 @@ public class ClassicChessBot implements ChessBot {
 					}
 
 				} else {
-
+					int bestValue = Integer.MAX_VALUE;
 					int val = MiniMax.min(boardR, depth, Integer.MIN_VALUE, Integer.MAX_VALUE);
+					
 					if (val < bestValue) {
 						bestValue = val;
 						oldPos = pMoves.getKey().getPosition().clone();
@@ -55,14 +55,13 @@ public class ClassicChessBot implements ChessBot {
 				}
 			}
 		}
-
-		return bestMove;
+		move = new Move(oldPos, newPos);
+		return move;
 	}
 
 	@Override
 	public Move getLastMove() {
-
-		return null;
+		return move;
 	}
 
 	@Override
