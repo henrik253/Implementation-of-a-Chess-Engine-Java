@@ -1,55 +1,66 @@
 package ai.DeeperBlue.OpeningBook;
 
-import ai.Validation.Bitboards.BitMaskArr;
-import ai.Validation.Bitboards.Bitboard;
-
+import java.io.BufferedReader;
+import java.io.FileReader;
 import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Paths;
-import java.util.Hashtable;
-import java.util.List;
+import java.util.Arrays;
+import java.util.HashMap;
 
-public class OpeningBook {
-    Hashtable<Long, int[]> content;
-    BitMaskArr arr;
+public class OpeningBook{
+
+    HashMap<Integer, int[]> content;
+
     public OpeningBook(){
-        this.arr = new BitMaskArr();
-        this.content = new Hashtable<>();
-        this.fillContent();
-
+        this.initContent();
     }
 
-    private void fillContent() {
-        //readlines
-        String[] currentLine;
-        int[][] currentIntBoard;
-        try {
-            List<String> lines = Files.readAllLines(Paths.get("./resources/openingBook.csv"));
-            for(String line : lines){
-                //convert to move/hash
-                line = line.replace(" ", "");
-                currentLine = line.split(",");
-                currentIntBoard = new int[8][8];
-                for (int row = 0; row < 8; row++) {
-                    for (int col = 0; col < 8; col++) {
-                        currentIntBoard[row][col] = Integer.parseInt(currentLine[row * 8 + col + 2]);
-                    }
+    private void initContent(){
+        this.content = new HashMap<>();
+        try(BufferedReader input = new BufferedReader(new FileReader("./resources/openingBook.csv"))){
+            String buffer;
+            while(true){
+                buffer = input.readLine();
+                if(buffer == null){
+                    break;
                 }
-                this.content.put(
-                        new Bitboard(currentIntBoard, this.arr).getSimpleHash(),
-                        new int[]{Integer.parseInt(currentLine[0]), Integer.parseInt(currentLine[1])}
-                );
+                this.addConvertedLineToContent(buffer);
             }
-
-
-
-        } catch (IOException e) {
-            System.out.println("ticktack");
-            throw new RuntimeException(e);
+        }catch(IOException e){
+            System.out.println(e.getMessage());
         }
 
     }
-    public boolean contains(int[][] board){
-        return this.content.contains(new Bitboard(board, this.arr).getSimpleHash());
+
+    private void addConvertedLineToContent(String buffer) {
+        int[] intArr = this.convertToIntArray(buffer);
+        int[] move = new int[2];
+        int[] board = new int[64];
+        System.arraycopy(intArr, 0, move, 0, 2);
+        System.arraycopy(intArr, 2, board, 0, 64);
+        this.content.put(Arrays.hashCode(board), move);
+    }
+
+    private int[] convertToIntArray(String buffer) {
+        String[] stringRepresentation = buffer.split(",");
+        int[] intRepresentation = new int[stringRepresentation.length];
+        for(int i = 0; i < stringRepresentation.length; i++){
+            intRepresentation[i] = Integer.parseInt(stringRepresentation[i].replace(" ", ""));
+        }
+        return intRepresentation;
+    }
+
+    public int[] getMove(int[][] board){
+        int[] flattenedBoard = this.flatten(board);
+        return this.content.get(Arrays.hashCode(flattenedBoard));
+    }
+
+    private int[] flatten(int[][] board) {
+        int[] result = new int[64];
+        for (int row = 0; row < board.length; row++) {
+            for (int col = 0; col < board[0].length; col++) {
+                result[col + row * 8] = board[row][col];
+            }
+        }
+        return result;
     }
 }

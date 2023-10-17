@@ -5,6 +5,7 @@ import ai.DeeperBlue.Evaluation.DeeperBlueValueNet;
 import ai.DeeperBlue.Extensions.Extension;
 import ai.DeeperBlue.Extensions.Implementations.PossibleCheckMateExtension;
 import ai.DeeperBlue.Extensions.Implementations.PossiblePawnPromotionExtension;
+import ai.DeeperBlue.OpeningBook.OpeningBook;
 import ai.DeeperBlue.Tree.DeeperBlueTree;
 import ai.DeeperBlue.Tree.Nodes.DeeperBlueExtensionNode;
 import ai.DeeperBlue.Tree.Nodes.DeeperBlueNode;
@@ -34,6 +35,8 @@ public class DeeperBlueAgent{
     public Extension[] extensions;
     public int numOfExtensionWorkers;
     boolean multiThreaded;
+    private OpeningBook openingBook;
+    boolean usingOpeningBook;
     public DeeperBlueAgent(int player, int numOfExtensionWorkers, int maxDepthAlphaBeta, int maxDepthExtension){
         this.bitMaskArr = new BitMaskArr();
         this.player = player;
@@ -52,7 +55,8 @@ public class DeeperBlueAgent{
         this.maxDepthExtension = maxDepthExtension;
         this.moveMemory = new int[10][2];
         useMoreComplexEvaluation = false;
-
+        this.openingBook = new OpeningBook();
+        usingOpeningBook = true;
     }
     public DeeperBlueAgent(int player, int maxDepthAlphaBeta, int maxDepthExtension){
         this.bitMaskArr = new BitMaskArr();
@@ -73,9 +77,32 @@ public class DeeperBlueAgent{
         this.maxDepthAlphaBeta = maxDepthAlphaBeta;
         this.moveMemory = new int[10][2];
         useMoreComplexEvaluation = false;
+        this.openingBook = new OpeningBook();
+        usingOpeningBook = true;
     }
 
     public int[] makeMove(int[][] intBoard, int player) throws DeeperBlueException {
+        if(usingOpeningBook){
+            int[][] correctedBoard;
+            if(this.player == 1){
+                correctedBoard = translator.flipBoardHorizontallyAndFLipPlayer(intBoard);
+            }else{
+                correctedBoard = intBoard;
+            }
+            int[] move = this.openingBook.getMove(correctedBoard);
+            if(move == null){
+                this.usingOpeningBook = false;
+                return getMoveWithSearch(intBoard, player);
+            }else{
+                System.out.println("Hit OpeningBook");
+                return returnCorrectedMove(-player, move);
+            }
+        }else{
+            return getMoveWithSearch(intBoard, player);
+        }
+    }
+
+    private int[] getMoveWithSearch(int[][] intBoard, int player) throws DeeperBlueException {
         nodesSearched = 0;
         int[][] correctedBoard;
         if(this.player == 1){
@@ -83,7 +110,6 @@ public class DeeperBlueAgent{
         }else{
             correctedBoard = intBoard;
         }
-
 
         this.tree.search(correctedBoard, 0);
         int[] bestMove = this.tree.getMoveWithBestValue();
@@ -96,8 +122,6 @@ public class DeeperBlueAgent{
         }
 
         return returnCorrectedMove(player, bestMove);
-
-
     }
 
     private void useExtensionsSingleThread() throws DeeperBlueException {
