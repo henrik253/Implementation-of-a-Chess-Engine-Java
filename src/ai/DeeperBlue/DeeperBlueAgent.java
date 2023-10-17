@@ -28,8 +28,8 @@ public class DeeperBlueAgent{
     public BitMaskArr bitMaskArr;
     public DeeperBlueValueNet valueNet;
     public int player;
-    public int maxDepthAlphaBeta; // must be a multiple by 2
-    public int maxDepthExtension;// must be a multiple by 2
+    public int maxDepthAlphaBeta; // must not be a multiple by 2
+    public int maxDepthExtension;// must not be a multiple by 2
     public boolean useExtensions;
     public int nodesSearched = 0;
     public Extension[] extensions;
@@ -42,7 +42,7 @@ public class DeeperBlueAgent{
         this.player = player;
         this.translator = new LogicTranslator();
         this.tree = new DeeperBlueTree(this);
-        this.pool = new Workerpool(numOfExtensionWorkers);
+        this.pool = new Workerpool(numOfExtensionWorkers, this);
         this.leafNodes = new ArrayList<>();
         this.useExtensions = true;
         this.numOfExtensionWorkers = numOfExtensionWorkers;
@@ -81,20 +81,15 @@ public class DeeperBlueAgent{
         usingOpeningBook = true;
     }
 
-    public int[] makeMove(int[][] intBoard, int player) throws DeeperBlueException {
+    public int[] makeMove(int[][] intBoard, int player) throws DeeperBlueException, InterruptedException {
         if(usingOpeningBook){
             int[][] correctedBoard;
-            if(this.player == 1){
-                correctedBoard = translator.flipBoardHorizontallyAndFLipPlayer(intBoard);
-            }else{
-                correctedBoard = intBoard;
-            }
+            correctedBoard = getCorrectedBoard(intBoard);
             int[] move = this.openingBook.getMove(correctedBoard);
             if(move == null){
                 this.usingOpeningBook = false;
                 return getMoveWithSearch(intBoard, player);
             }else{
-                System.out.println("Hit OpeningBook");
                 return returnCorrectedMove(-player, move);
             }
         }else{
@@ -102,25 +97,33 @@ public class DeeperBlueAgent{
         }
     }
 
-    private int[] getMoveWithSearch(int[][] intBoard, int player) throws DeeperBlueException {
-        nodesSearched = 0;
+    private int[][] getCorrectedBoard(int[][] intBoard) {
         int[][] correctedBoard;
-        if(this.player == 1){
+        if (this.player == 1) {
             correctedBoard = translator.flipBoardHorizontallyAndFLipPlayer(intBoard);
-        }else{
+        } else {
             correctedBoard = intBoard;
         }
+        return correctedBoard;
+    }
+
+    private int[] getMoveWithSearch(int[][] intBoard, int player) throws DeeperBlueException, InterruptedException {
+        nodesSearched = 0;
+        int[][] correctedBoard;
+        correctedBoard = getCorrectedBoard(intBoard);
 
         this.tree.search(correctedBoard, 0);
-        int[] bestMove = this.tree.getMoveWithBestValue();
-        bestMove = changeMoveIfMoveMemoryHit(bestMove);
+
         if(useExtensions){
             if(!multiThreaded){
                 this.runExtensionsInterestSingleThread();
                 this.useExtensionsSingleThread();
+            }else{
+                this.pool.run(this.leafNodes);
             }
         }
-
+        int[] bestMove = this.tree.getMoveWithBestValue();
+        bestMove = changeMoveIfMoveMemoryHit(bestMove);
         return returnCorrectedMove(player, bestMove);
     }
 
@@ -140,6 +143,7 @@ public class DeeperBlueAgent{
                         mostInterestingIndex = j;
                     }
                 }
+
                 //run the most interesting extension
                 this.extensions[mostInterestingIndex].expand(currentLeafNode);
                 this.backPropagate(currentLeafNode);
@@ -148,7 +152,7 @@ public class DeeperBlueAgent{
         }
     }
 
-    private void backPropagate(DeeperBlueExtensionNode currentLeafNode) {
+    public void backPropagate(DeeperBlueExtensionNode currentLeafNode) {
         DeeperBlueNode currentNode = currentLeafNode;
         while(!currentNode.isRoot){
             if(currentNode.parent.maxNode && currentNode.value > currentNode.parent.value){
