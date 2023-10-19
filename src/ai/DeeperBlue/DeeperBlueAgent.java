@@ -5,10 +5,11 @@ import ai.DeeperBlue.Evaluation.DeeperBlueValueNet;
 import ai.DeeperBlue.Extensions.Extension;
 import ai.DeeperBlue.Extensions.Implementations.PossibleCheckMateExtension;
 import ai.DeeperBlue.Extensions.Implementations.PossiblePawnPromotionExtension;
+import ai.DeeperBlue.ForcedCheckMateTree.ForcedCheckMateTree;
 import ai.DeeperBlue.OpeningBook.OpeningBook;
-import ai.DeeperBlue.Tree.DeeperBlueTree;
-import ai.DeeperBlue.Tree.Nodes.DeeperBlueExtensionNode;
-import ai.DeeperBlue.Tree.Nodes.DeeperBlueNode;
+import ai.DeeperBlue.NormalSearchTree.DeeperBlueTree;
+import ai.DeeperBlue.NormalSearchTree.Nodes.DeeperBlueExtensionNode;
+import ai.DeeperBlue.NormalSearchTree.Nodes.DeeperBlueNode;
 import ai.DeeperBlue.Workers.Workerpool;
 import ai.Logic.LogicTranslator;
 import ai.Validation.Bitboards.BitMaskArr;
@@ -37,6 +38,8 @@ public class DeeperBlueAgent{
     boolean multiThreaded;
     private OpeningBook openingBook;
     boolean usingOpeningBook;
+    DeeperBlueState mode;
+    ForcedCheckMateTree forcedCheckMateTree;
     public DeeperBlueAgent(int player, int numOfExtensionWorkers, int maxDepthAlphaBeta, int maxDepthExtension){
         this.bitMaskArr = new BitMaskArr();
         this.player = player;
@@ -57,6 +60,8 @@ public class DeeperBlueAgent{
         useMoreComplexEvaluation = false;
         this.openingBook = new OpeningBook();
         usingOpeningBook = true;
+        this.mode = DeeperBlueState.OPENING_BOOK;
+        this.forcedCheckMateTree = new ForcedCheckMateTree(this);
     }
     public DeeperBlueAgent(int player, int maxDepthAlphaBeta, int maxDepthExtension){
         this.bitMaskArr = new BitMaskArr();
@@ -79,22 +84,57 @@ public class DeeperBlueAgent{
         useMoreComplexEvaluation = false;
         this.openingBook = new OpeningBook();
         usingOpeningBook = true;
+        this.mode = DeeperBlueState.OPENING_BOOK;
+        this.forcedCheckMateTree = new ForcedCheckMateTree(this);
     }
 
     public int[] makeMove(int[][] intBoard, int player) throws DeeperBlueException, InterruptedException {
-        if(usingOpeningBook){
-            int[][] correctedBoard;
-            correctedBoard = getCorrectedBoard(intBoard);
-            int[] move = this.openingBook.getMove(correctedBoard);
-            if(move == null){
-                this.usingOpeningBook = false;
-                return getMoveWithSearch(intBoard, player);
-            }else{
-                return returnCorrectedMove(-player, move);
+        int[][] correctedBoard;
+        correctedBoard = getCorrectedBoard(intBoard);
+        switch (mode){
+            case OPENING_BOOK -> {
+                int[] move = this.openingBook.getMove(correctedBoard);
+                if(move == null){
+                    this.mode = DeeperBlueState.NORMAL_SEARCH;
+                    System.out.println("Normal_search");
+                    return getMoveWithNormalSearch(intBoard, player);
+                }else{
+                    System.out.println("Opening_book");
+                    return returnCorrectedMove(-player, move);
+                }
             }
-        }else{
-            return getMoveWithSearch(intBoard, player);
+            case NORMAL_SEARCH -> {
+                if(foundForcedCheckMate(correctedBoard)){
+                    this.mode = DeeperBlueState.FORCED_CHECKMATE;
+                    System.out.println("Forced_CheckMate");
+                    return getMoveWithForcedCheckMateSearch(intBoard, player);
+                }
+                System.out.println("Normal_search");
+                return getMoveWithNormalSearch(intBoard, player);
+            }
+            case FORCED_CHECKMATE -> {
+                System.out.println("Forced_CheckMate");
+                return getMoveWithForcedCheckMateSearch(intBoard, player);
+            }
+            default ->{
+                return new int[]{-1, -1};
+            }
         }
+    }
+
+    private boolean foundForcedCheckMate(int[][] correctedBoard) {
+        this.forcedCheckMateTree.search(correctedBoard);
+        return this.forcedCheckMateTree.foundForcedCheckMate();
+    }
+
+    private int[] getMoveWithForcedCheckMateSearch(int[][] intBoard, int player) {
+        nodesSearched = 0;
+        int[][] correctedBoard;
+        correctedBoard = getCorrectedBoard(intBoard);
+
+        this.forcedCheckMateTree.search(correctedBoard);
+        int[] bestMove = this.forcedCheckMateTree.getMove();
+        return returnCorrectedMove(player, bestMove);
     }
 
     private int[][] getCorrectedBoard(int[][] intBoard) {
@@ -107,7 +147,7 @@ public class DeeperBlueAgent{
         return correctedBoard;
     }
 
-    private int[] getMoveWithSearch(int[][] intBoard, int player) throws DeeperBlueException, InterruptedException {
+    private int[] getMoveWithNormalSearch(int[][] intBoard, int player) throws DeeperBlueException, InterruptedException {
         nodesSearched = 0;
         int[][] correctedBoard;
         correctedBoard = getCorrectedBoard(intBoard);

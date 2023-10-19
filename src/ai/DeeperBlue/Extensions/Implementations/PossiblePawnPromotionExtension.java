@@ -2,8 +2,8 @@ package ai.DeeperBlue.Extensions.Implementations;
 
 import ai.DeeperBlue.DeeperBlueException;
 import ai.DeeperBlue.Extensions.Extension;
-import ai.DeeperBlue.Tree.Nodes.DeeperBlueExtensionNode;
-import ai.DeeperBlue.Tree.Nodes.DeeperBlueNode;
+import ai.DeeperBlue.NormalSearchTree.Nodes.DeeperBlueExtensionNode;
+import ai.DeeperBlue.NormalSearchTree.Nodes.DeeperBlueNode;
 
 import java.util.ArrayList;
 

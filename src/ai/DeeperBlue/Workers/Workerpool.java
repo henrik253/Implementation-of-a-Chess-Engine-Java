@@ -1,10 +1,9 @@
 package ai.DeeperBlue.Workers;
 
 import ai.DeeperBlue.DeeperBlueAgent;
-import ai.DeeperBlue.Tree.Nodes.DeeperBlueExtensionNode;
+import ai.DeeperBlue.NormalSearchTree.Nodes.DeeperBlueExtensionNode;
 
 import java.util.ArrayList;
-import java.util.concurrent.locks.ReentrantLock;
 
 public class Workerpool {
     DeeperBlueAgent agent;

@@ -1,9 +1,9 @@
-package ai.DeeperBlue.Tree;
+package ai.DeeperBlue.NormalSearchTree;
 
 import ai.DeeperBlue.DeeperBlueAgent;
 import ai.DeeperBlue.DeeperBlueException;
-import ai.DeeperBlue.Tree.Nodes.DeeperBlueMaxNode;
-import ai.DeeperBlue.Tree.Nodes.DeeperBlueNode;
+import ai.DeeperBlue.NormalSearchTree.Nodes.DeeperBlueMaxNode;
+import ai.DeeperBlue.NormalSearchTree.Nodes.DeeperBlueNode;
 
 public class DeeperBlueTree {
     public DeeperBlueMaxNode root;

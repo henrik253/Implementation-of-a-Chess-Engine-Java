@@ -1,9 +1,9 @@
 package ai.DeeperBlue.Extensions;
 
 import ai.DeeperBlue.DeeperBlueException;
-import ai.DeeperBlue.Tree.Nodes.DeeperBlueExtensionNode;
-import ai.DeeperBlue.Tree.Nodes.DeeperBlueMaxNode;
-import ai.DeeperBlue.Tree.Nodes.DeeperBlueNode;
+import ai.DeeperBlue.NormalSearchTree.Nodes.DeeperBlueExtensionNode;
+import ai.DeeperBlue.NormalSearchTree.Nodes.DeeperBlueMaxNode;
+import ai.DeeperBlue.NormalSearchTree.Nodes.DeeperBlueNode;
 import ai.Validation.BitboardValidation.BitboardMove;
 import ai.Validation.BitboardValidation.BitboardMoveValidation;
 import ai.Validation.Bitboards.BitMaskArr;
@@ -12,7 +12,7 @@ import ai.Validation.Bitboards.Bitboard;
 import java.util.Collections;
 import java.util.List;
 
-import static ai.DeeperBlue.Tree.Nodes.DeeperBlueNode.flipBoardHorizontallyAndFLipPlayer;
+import static ai.DeeperBlue.NormalSearchTree.Nodes.DeeperBlueNode.flipBoardHorizontallyAndFLipPlayer;
 
 public abstract class Extension {
     public static int POSSIBLE_CHECKMATE = 1;

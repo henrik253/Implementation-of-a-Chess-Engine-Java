@@ -1,7 +1,7 @@
-package ai.DeeperBlue.Tree.Nodes;
+package ai.DeeperBlue.NormalSearchTree.Nodes;
 
 import ai.DeeperBlue.DeeperBlueException;
-import ai.DeeperBlue.Tree.DeeperBlueTree;
+import ai.DeeperBlue.NormalSearchTree.DeeperBlueTree;
 import ai.Validation.BitboardValidation.BitboardMove;
 import ai.Validation.Bitboards.Bitboard;
 

@@ -1,7 +1,7 @@
 package ai.DeeperBlue.Workers;
 
 import ai.DeeperBlue.DeeperBlueException;
-import ai.DeeperBlue.Tree.Nodes.DeeperBlueExtensionNode;
+import ai.DeeperBlue.NormalSearchTree.Nodes.DeeperBlueExtensionNode;
 
 public class Worker extends Thread{
     private final Workerpool pool;

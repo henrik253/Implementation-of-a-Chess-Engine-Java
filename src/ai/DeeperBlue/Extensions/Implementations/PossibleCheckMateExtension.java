@@ -2,7 +2,7 @@ package ai.DeeperBlue.Extensions.Implementations;
 
 import ai.DeeperBlue.DeeperBlueException;
 import ai.DeeperBlue.Extensions.Extension;
-import ai.DeeperBlue.Tree.Nodes.DeeperBlueExtensionNode;
+import ai.DeeperBlue.NormalSearchTree.Nodes.DeeperBlueExtensionNode;
 
 //This extension runs a search of maxDepth 2 to and looks if there are checkmates
 public class PossibleCheckMateExtension extends Extension {
