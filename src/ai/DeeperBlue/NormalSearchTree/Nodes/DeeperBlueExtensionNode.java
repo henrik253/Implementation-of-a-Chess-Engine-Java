@@ -11,8 +11,6 @@ public class DeeperBlueExtensionNode extends DeeperBlueNode{
     public final boolean checkMated;
 
     public boolean interesting;
-    static final float WEIGHT_BOARD_VALUE = 1.0f;
-    static final float WEIGHT_MOVE_VALUE = 8.0f;
     static final BitboardMoveValidation validation = new BitboardMoveValidation(new BitMaskArr(),0);
     public final ArrayList<int[]> maybeValidMovesPlayer;
     public final ArrayList<int[]> maybeValidMovesEnemy;
@@ -26,11 +24,9 @@ public class DeeperBlueExtensionNode extends DeeperBlueNode{
 
         currentHighestInterestValue = 0;
         this.value = 0;
-        if(this.tree.agent.useMoreComplexEvaluation){
-            this.value += WEIGHT_BOARD_VALUE * BoardEvaluator.evaluate(intBoard, bitBoard);
-        }else{
-            this.value += WEIGHT_BOARD_VALUE * BoardEvaluator.evaluateSimple(intBoard);
-        }
+
+        this.value += BoardEvaluator.evaluateSimplePlusBonus(intBoard);
+
 
         if(this.checkMated){
             this.value = 10000;

@@ -16,7 +16,7 @@ public class DeeperBlueBot implements ChessBot {
     Move lastMove;
     public DeeperBlueBot(){
         lastMove = new Move(new Vector2D(0, 0), new Vector2D(0,0));
-        this.agent = new DeeperBlueAgent(-1,  5, 0);
+        this.agent = new DeeperBlueAgent(-1,  3, 0);
         try {
             agent.addNeuralNetForSorting();
         } catch (IOException e) {
