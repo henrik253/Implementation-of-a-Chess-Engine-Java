@@ -45,7 +45,7 @@ public class Workerpool {
 
     private ArrayList<DeeperBlueExtensionNode> getBestLeaves(ArrayList<DeeperBlueExtensionNode> input) {
         ArrayList<DeeperBlueExtensionNode> result = new ArrayList<>();
-        for (int i = 0; i < agent.MAX_EXTENSIONS_MULTI_THREADED; i++) {
+        for (int i = 0; i < Math.min(agent.MAX_EXTENSIONS_MULTI_THREADED, input.size()); i++) {
             result.add(input.get(i));
         }
         return result;

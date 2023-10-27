@@ -21,7 +21,7 @@ import java.util.Collections;
 
 public class DeeperBlueAgent{
     static final int MAX_EXTENSIONS_SINGLE_THREADED = 10;
-    public int MAX_EXTENSIONS_MULTI_THREADED = 100;
+    public int MAX_EXTENSIONS_MULTI_THREADED = 1000;
 
     private final int[][] moveMemory;
     public ArrayList<DeeperBlueExtensionNode> leafNodes;
