@@ -18,10 +18,11 @@ import ai.Validation.Bitboards.BitMaskArr;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
 
 public class DeeperBlueAgent{
     static final int MAX_EXTENSIONS_SINGLE_THREADED = 10;
-    public int MAX_EXTENSIONS_MULTI_THREADED = 1000;
+    public int MAX_EXTENSIONS_MULTI_THREADED = 800;
 
     private final int[][] moveMemory;
     public ArrayList<DeeperBlueExtensionNode> leafNodes;
@@ -43,6 +44,7 @@ public class DeeperBlueAgent{
     boolean usingOpeningBook;
     DeeperBlueState mode;
     ForcedCheckMateTree forcedCheckMateTree;
+    public HashMap<Integer, Float> valueBuffer;
     public DeeperBlueAgent(int player, int numOfExtensionWorkers, int maxDepthAlphaBeta, int maxDepthExtension){
         this.bitMaskArr = new BitMaskArr();
         this.player = player;
@@ -65,6 +67,7 @@ public class DeeperBlueAgent{
         usingOpeningBook = true;
         this.mode = DeeperBlueState.OPENING_BOOK;
         this.forcedCheckMateTree = new ForcedCheckMateTree(this);
+        this.valueBuffer = new HashMap<>();
     }
     public DeeperBlueAgent(int player, int maxDepthAlphaBeta, int maxDepthExtension){
         this.bitMaskArr = new BitMaskArr();
@@ -89,6 +92,7 @@ public class DeeperBlueAgent{
         usingOpeningBook = true;
         this.mode = DeeperBlueState.OPENING_BOOK;
         this.forcedCheckMateTree = new ForcedCheckMateTree(this);
+        this.valueBuffer = new HashMap<>();
     }
 
     public int[] makeMove(int[][] intBoard, int player) throws DeeperBlueException, InterruptedException {
@@ -100,20 +104,21 @@ public class DeeperBlueAgent{
                 if(move == null){
                     this.mode = DeeperBlueState.NORMAL_SEARCH;
                     System.out.println("Normal_search");
-                    return getMoveWithNormalSearch(intBoard, player);
+                    return getMoveWithIterativeDeepening(intBoard, player, 3000);
                 }else{
                     System.out.println("Opening_book");
                     return returnCorrectedMove(-player, move);
                 }
             }
             case NORMAL_SEARCH -> {
+                valueBuffer.clear();
                 if(foundForcedCheckMate(correctedBoard)){
                     this.mode = DeeperBlueState.FORCED_CHECKMATE;
                     System.out.println("Forced_CheckMate");
                     return getMoveWithForcedCheckMateSearch(intBoard, player);
                 }
                 System.out.println("Normal_search");
-                return getMoveWithNormalSearch(intBoard, player);
+                return getMoveWithIterativeDeepening(intBoard, player, 3000);
             }
             case FORCED_CHECKMATE -> {
                 System.out.println("Forced_CheckMate");
@@ -156,6 +161,29 @@ public class DeeperBlueAgent{
         correctedBoard = getCorrectedBoard(intBoard);
 
         this.tree.search(correctedBoard, 0);
+
+        if(useExtensions){
+            if(!multiThreaded){
+                this.runExtensionsInterestSingleThread();
+                this.useExtensionsSingleThread();
+            }else{
+                this.pool.run(this.leafNodes);
+            }
+        }
+        int[] bestMove = this.tree.getMoveWithBestValue();
+        bestMove = changeMoveIfMoveMemoryHit(bestMove);
+        return returnCorrectedMove(player, bestMove);
+    }
+    private int[] getMoveWithIterativeDeepening(int[][] intBoard, int player, int milliseconds) throws DeeperBlueException, InterruptedException {
+        int[][] correctedBoard;
+        correctedBoard = getCorrectedBoard(intBoard);
+        long start = System.currentTimeMillis();
+        this.maxDepthAlphaBeta = 3;
+        while(System.currentTimeMillis() - start < milliseconds){
+            this.leafNodes.clear();
+            this.tree.search(correctedBoard, 0);
+            this.maxDepthAlphaBeta += 2;
+        }
 
         if(useExtensions){
             if(!multiThreaded){

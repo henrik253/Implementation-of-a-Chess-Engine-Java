@@ -6,6 +6,7 @@ import ai.DeeperBlue.NormalSearchTree.DeeperBlueTree;
 import ai.Validation.Bitboards.Bitboard;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 
 public abstract class DeeperBlueNode implements Comparable<DeeperBlueNode>{
 
@@ -38,6 +39,12 @@ public abstract class DeeperBlueNode implements Comparable<DeeperBlueNode>{
         this.isRoot = false;
         //this.sortingValue = this.tree.agent.valueNet.getValue(board, this.bitBoard);
         this.sortingValue = BoardEvaluator.evaluateSimple(board);
+        float boardHash = Arrays.deepHashCode(board);
+        if(this.tree.agent.valueBuffer.containsKey(boardHash)){
+            this.sortingValue = this.tree.agent.valueBuffer.get(boardHash);
+        } else {
+            this.sortingValue = BoardEvaluator.evaluateSimplePlusBonus(board);
+        }
         //this.sortingValue = 0.5f;
         this.expanded = false;
         this.moveLeadingTo = moveLeadingTo;

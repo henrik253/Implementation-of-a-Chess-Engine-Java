@@ -5,6 +5,7 @@ import ai.DeeperBlue.NormalSearchTree.DeeperBlueTree;
 import ai.Validation.BitboardValidation.BitboardMove;
 import ai.Validation.Bitboards.Bitboard;
 
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
@@ -39,7 +40,8 @@ public class DeeperBlueMinNode extends DeeperBlueNode{
                     break;
                 }
             }
-
+            int boardHash = Arrays.deepHashCode(intBoard);
+            this.tree.agent.valueBuffer.put(boardHash, value);
 
         }else{
             throw new DeeperBlueException("Depth must not be divisible by 2: " + currentDepth);

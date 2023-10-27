@@ -6,6 +6,7 @@ import ai.Validation.BitboardValidation.BitboardMove;
 import ai.Validation.Bitboards.Bitboard;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
@@ -33,7 +34,7 @@ public class DeeperBlueMaxNode extends DeeperBlueNode{
 
         if(this.tree.agent.maxDepthAlphaBeta - currentDepth >= 0) {
             this.fillChildrenWithMinNodes();
-            Collections.sort(this.children);// sorts with the sorting nodes, not the values!!!!!!!!!!!
+            Collections.sort(this.children);// sorts with the sorting values, not the board values!!!!!!!!!!!
             ArrayList<DeeperBlueNode> childrenToRemove = new ArrayList<>();
             ArrayList<DeeperBlueNode> childrenToAdd = new ArrayList<>();
             for(DeeperBlueNode child : this.children){
@@ -44,9 +45,6 @@ public class DeeperBlueMaxNode extends DeeperBlueNode{
                     child.expanded = true;
                     this.value = Math.max(this.value, child.value);
                     this.alpha = Math.max(this.alpha, child.value);
-                    if(!this.isRoot){
-                        //System.out.println("Depth: " + this.currentDepth  +" alpha: " + this.alpha + ", parent Beta: " + parent.beta );
-                    }
                     if(!this.isRoot && this.alpha >= parent.beta){
                         //System.out.println("Alpha pruning!");
                         break;
@@ -62,6 +60,8 @@ public class DeeperBlueMaxNode extends DeeperBlueNode{
                 }
 
             }
+            int boardHash = Arrays.deepHashCode(intBoard);
+            this.tree.agent.valueBuffer.put(boardHash, value);
             for(DeeperBlueNode child : childrenToRemove){
                 this.children.remove(child);
            }
@@ -130,11 +130,6 @@ public class DeeperBlueMaxNode extends DeeperBlueNode{
             );
         }
 
-    }
-
-    // TODO
-    public int[] getMoveWithBestValue() {
-        return new int[10];
     }
 
     @Override
