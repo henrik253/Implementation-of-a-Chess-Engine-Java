@@ -24,7 +24,8 @@ public class Workerpool {
     }
 
     public void run(ArrayList<DeeperBlueExtensionNode> input) throws InterruptedException {
-        leaves = input;
+        long start = System.currentTimeMillis();
+        leaves = getBestLeaves(input);
         alreadyChosen = new boolean[leaves.size()];
         runWorkers();
         leaves = getInterestingLeaves(input);
@@ -38,6 +39,16 @@ public class Workerpool {
             workers[i] = new Worker(this);
             workers[i].changeToInterestMode();
         }
+        long end = System.currentTimeMillis();
+        System.out.println("ExtensionTime: " + (end - start));
+    }
+
+    private ArrayList<DeeperBlueExtensionNode> getBestLeaves(ArrayList<DeeperBlueExtensionNode> input) {
+        ArrayList<DeeperBlueExtensionNode> result = new ArrayList<>();
+        for (int i = 0; i < agent.MAX_EXTENSIONS_MULTI_THREADED; i++) {
+            result.add(input.get(i));
+        }
+        return result;
     }
 
     private static ArrayList<DeeperBlueExtensionNode> getInterestingLeaves(ArrayList<DeeperBlueExtensionNode> input) {

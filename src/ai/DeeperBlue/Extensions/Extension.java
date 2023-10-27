@@ -9,6 +9,7 @@ import ai.Validation.BitboardValidation.BitboardMoveValidation;
 import ai.Validation.Bitboards.BitMaskArr;
 import ai.Validation.Bitboards.Bitboard;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
@@ -17,6 +18,7 @@ import static ai.DeeperBlue.NormalSearchTree.Nodes.DeeperBlueNode.flipBoardHoriz
 public abstract class Extension {
     public static int POSSIBLE_CHECKMATE = 1;
     public static int POSSIBLE_PAWN_PROMOTION = 2;
+    public static int QUIESCENCE_SEARCH = 3;
     public static BitboardMoveValidation validation = new BitboardMoveValidation(new BitMaskArr(), 0);
     protected int id = -1;
     public abstract void expand(DeeperBlueExtensionNode e) throws DeeperBlueException;
@@ -60,5 +62,13 @@ public abstract class Extension {
                 break;
             }
         }
+    }
+    protected ArrayList<int[][]> getChildBoards(int[][] intBoard, ArrayList<int[]> validMoves) {
+        ArrayList<int[][]> result = new ArrayList<>();
+        Bitboard before = new Bitboard(intBoard, validation.arr);
+        for(int[] move : validMoves){
+            result.add(before.simulateMove(move).toIntBoard());
+        }
+        return result;
     }
 }

@@ -12,7 +12,6 @@ public class PossibleCheckMateExtension extends Extension {
     @Override
     public void expand(DeeperBlueExtensionNode leafNode) throws DeeperBlueException {
         expandChildren(leafNode);
-
     }
 
     @Override

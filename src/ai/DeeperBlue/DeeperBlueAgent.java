@@ -5,6 +5,7 @@ import ai.DeeperBlue.Evaluation.DeeperBlueValueNet;
 import ai.DeeperBlue.Extensions.Extension;
 import ai.DeeperBlue.Extensions.Implementations.PossibleCheckMateExtension;
 import ai.DeeperBlue.Extensions.Implementations.PossiblePawnPromotionExtension;
+import ai.DeeperBlue.Extensions.Implementations.QuiescenceExtension;
 import ai.DeeperBlue.ForcedCheckMateTree.ForcedCheckMateTree;
 import ai.DeeperBlue.OpeningBook.OpeningBook;
 import ai.DeeperBlue.NormalSearchTree.DeeperBlueTree;
@@ -20,6 +21,8 @@ import java.util.Collections;
 
 public class DeeperBlueAgent{
     static final int MAX_EXTENSIONS_SINGLE_THREADED = 10;
+    public int MAX_EXTENSIONS_MULTI_THREADED = 100;
+
     private final int[][] moveMemory;
     public ArrayList<DeeperBlueExtensionNode> leafNodes;
     public LogicTranslator translator;
@@ -52,7 +55,7 @@ public class DeeperBlueAgent{
         this.multiThreaded = true;
         this.extensions = new Extension[]{
                 new PossibleCheckMateExtension(),
-                new PossiblePawnPromotionExtension()
+                new QuiescenceExtension()
         };
         this.maxDepthAlphaBeta = maxDepthAlphaBeta;
         this.maxDepthExtension = maxDepthExtension;
@@ -75,7 +78,7 @@ public class DeeperBlueAgent{
             this.useExtensions = true;
             this.extensions = new Extension[]{
                     new PossibleCheckMateExtension(),
-                    new PossiblePawnPromotionExtension()
+                    new QuiescenceExtension()
             };
         }
         this.multiThreaded = false;
