@@ -1,6 +1,4 @@
 package ai.DeeperBlue.ForcedCheckMateTree;
-
-import ai.DeeperBlue.DeeperBlueAgent;
 import ai.Validation.BitboardValidation.BitboardMoveValidation;
 import ai.Validation.Bitboards.BitMaskArr;
 import ai.Validation.Bitboards.Bitboard;
@@ -10,12 +8,10 @@ import java.util.ArrayList;
 public class ForcedCheckMateTree {
     ArrayList<Boolean> moveValues;
     ArrayList<int[]> moveSquares;
-    DeeperBlueAgent agent;
-    BitboardMoveValidation validation;
+    final BitboardMoveValidation validation;
     boolean checkMateNow;
     int[] mateInOne;
-    public ForcedCheckMateTree(DeeperBlueAgent agent){
-        this.agent = agent;
+    public ForcedCheckMateTree(){
         this.validation = new BitboardMoveValidation(new BitMaskArr(), 1);
         checkMateNow = false;
     }
@@ -31,7 +27,7 @@ public class ForcedCheckMateTree {
             beforeMove.flipPlayer();
             moveValues.add(
                 min(
-                        flipBoardHorizontallyAndFLipPlayer(beforeMove.simulateMove(intMove).toIntBoard())
+                        ai.Util.Util.flipBoardHorizontallyAndFLipPlayer(beforeMove.simulateMove(intMove).toIntBoard())
                 )
             );
             beforeMove.flipPlayer();
@@ -71,7 +67,7 @@ public class ForcedCheckMateTree {
         beforeMove.flipPlayer();
         for(int[] intMove : validMoves){
             if(
-                    !max(flipBoardHorizontallyAndFLipPlayer(beforeMove.simulateMove(intMove).toIntBoard()))
+                    !max( ai.Util.Util.flipBoardHorizontallyAndFLipPlayer(beforeMove.simulateMove(intMove).toIntBoard()))
             ){
                 return false;
             }
@@ -103,21 +99,5 @@ public class ForcedCheckMateTree {
             }
         }
         return false;
-    }
-    public static int[][] flipBoardHorizontallyAndFLipPlayer(int[][] board) {
-        int[][] result = new int[8][8];
-        for(int row = 0; row < 8; row++){
-            for (int col = 0; col < 8; col++) {
-                result[7-row][col] = board[row][col] * -1;
-            }
-        }
-        return result;
-    }
-    public ArrayList<Boolean> getMoveValues(){
-        return this.moveValues;
-    };
-
-    public ArrayList<int[]> getMoveSquares() {
-        return this.moveSquares;
     }
 }

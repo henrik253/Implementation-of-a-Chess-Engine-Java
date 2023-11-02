@@ -1,6 +1,6 @@
 package ai.MCTSAgent;
 
-import ai.Logic.LogicTranslator;
+import ai.Util.Util;
 import ai.MCTSAgent.MonteCarloTree.MonteCarloTree;
 import ai.NeuralNetsAndEvaluators.*;
 import ai.NeuralNetsAndEvaluators.MPolicyNetwork.MPolicyNetwork;
@@ -16,26 +16,21 @@ import java.util.Arrays;
 
 public class MCTSAgent implements ChessBot {
     //logic specific data
-    int[] moveMemory;
+    final int[] moveMemory;
     private IPolicyNetWork policyNet;
     private IValueNetWork valueNet;
-    MonteCarloTree tree;
+    final MonteCarloTree tree;
     public int player;
-    public BitMaskArr arr;
+    public final BitMaskArr arr;
     public int[][] currentBoard;
     public MCTSAgent(float c, int simulations, int player) {
         moveMemory = new int[4];// used to stop repetition
         Arrays.fill(moveMemory, -1);
-        this.tree = new MonteCarloTree(this, new LogicTranslator(), c, simulations);
+        this.tree = new MonteCarloTree(this, new Util(), c, simulations);
         this.player = player;
         this.arr = new BitMaskArr();
     }
-    public static MCTSAgent getTestBot(int player){
-        MCTSAgent testBot = new MCTSAgent(2, 200, player);
-        testBot.initRandom();
-        testBot.addMathematicalPolicyNet();
-        return testBot;
-    }
+
 
     public void initRandom() {
         this.policyNet = new RPolicyNetwork();
@@ -48,7 +43,7 @@ public class MCTSAgent implements ChessBot {
         this.policyNet = new MPolicyNetwork(this.arr, this);
     }
     public int[] getNextMove(int[][] board){
-        float[] monteCarloValues = tree.search(board);
+        float[] monteCarloValues = tree.searchWithTimeConstraint(board, 4000);
         int bestMoveIndex = 0;
         float bestMoveValue= monteCarloValues[0];
         for(int i = 0; i < monteCarloValues.length; i++){
@@ -57,10 +52,7 @@ public class MCTSAgent implements ChessBot {
                 bestMoveIndex = i;
             }
         }
-        return getLogic().intToCoordinates(bestMoveIndex);
-    }
-    public LogicTranslator getLogic(){
-        return this.tree.getLogic();
+        return Util.intToCoordinates(bestMoveIndex);
     }
 
     public IPolicyNetWork getPolicyNet() {
@@ -83,15 +75,7 @@ public class MCTSAgent implements ChessBot {
         }
         return true;
     }
-    private int[][] flipBoardHorizontallyAndFLipPlayer(int[][] board) {
-        int[][] result = new int[8][8];
-        for(int row = 0; row < 8; row++){
-            for (int col = 0; col < 8; col++) {
-                result[7-row][col] = board[row][col] * -1;
-            }
-        }
-        return result;
-    }
+
     private int[] flipCoordinates(int[] ints) {
         return new int[]{ints[0], 7 - ints[1], ints[2], 7 - ints[3]};
     }
@@ -114,12 +98,12 @@ public class MCTSAgent implements ChessBot {
     @Override
     public Move makeMove(Piece[][] board) {
         System.out.println("tick");
-        int[][] intBoard = getLogic().translateBoard(board);
+        int[][] intBoard = Util.translateBoard(board);
         this.currentBoard = intBoard;
         if(player == -1){
-            this.currentBoard = flipBoardHorizontallyAndFLipPlayer(intBoard);
+            this.currentBoard = Util.flipBoardHorizontallyAndFLipPlayer(intBoard);
         }
-        float[] monteCarloValues = tree.search(currentBoard);
+        float[] monteCarloValues = tree.searchWithTimeConstraint(currentBoard, 5000);
         int bestMoveIndex = 0;
         float bestMoveValue = monteCarloValues[0];
         for(int i = 0; i < monteCarloValues.length; i++){
@@ -130,9 +114,9 @@ public class MCTSAgent implements ChessBot {
         }
         int[] coordinates;
         if(player == -1){
-            coordinates = flipCoordinates(getLogic().intToCoordinates(bestMoveIndex));
+            coordinates = flipCoordinates(Util.intToCoordinates(bestMoveIndex));
         }else{
-            coordinates = getLogic().intToCoordinates(bestMoveIndex);
+            coordinates = Util.intToCoordinates(bestMoveIndex);
         }
         System.out.println(coordinates[0] +" "+ coordinates[1] + " " + coordinates[2] +" "+ coordinates[3]);
         return new Move(new Vector2D(coordinates[0], coordinates[1]), new Vector2D(coordinates[2],coordinates[3]));

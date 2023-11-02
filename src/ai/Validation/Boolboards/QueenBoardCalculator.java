@@ -1,8 +1,8 @@
 package ai.Validation.Boolboards;
 
 public class QueenBoardCalculator extends BoolBoardCalculator{
-    RookBoardCalculator rookCalc;
-    BishopBoardCalculator bishopCalc;
+    final RookBoardCalculator rookCalc;
+    final BishopBoardCalculator bishopCalc;
     public QueenBoardCalculator(){
         this.bishopCalc = new BishopBoardCalculator();
         this.bishopCalc.calcAllBoards();

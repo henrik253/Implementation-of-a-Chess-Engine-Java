@@ -1,17 +1,17 @@
 package ai.MCTSAgent.MonteCarloTree;
 
-import ai.Logic.LogicTranslator;
+import ai.Util.Util;
 import ai.MCTSAgent.MCTSAgent;
 
 public class MonteCarloTree {
-    int simNum;
-    private final LogicTranslator logic;
+    final int simNum;
+    private final Util logic;
     private final float c;
     private final int simulations;
-    MCTSAgent ai;
+    final MCTSAgent ai;
     boolean lastSimulation;
 
-    public MonteCarloTree(MCTSAgent ai, LogicTranslator logic, float c, int simulations){
+    public MonteCarloTree(MCTSAgent ai, Util logic, float c, int simulations){
         this.simNum = 0;
         this.logic = logic;
         this.c = c;
@@ -19,15 +19,7 @@ public class MonteCarloTree {
         this.ai = ai;
         lastSimulation = false;
     }
-    public float[] search(int[][] board){
-        Node root = new Node(this, board, this.c, this.simulations, 1);
-        for (int i = 0; i < this.simulations; i++) {
-            runSimulation(root);
-        }
-        lastSimulation = true;
-        runSimulation(root);
-        return childVisitCountsToProbabilities(root);
-    }
+
     public float[] searchWithTimeConstraint(int[][] board, int milliSeconds){
         Node root = new Node(this, board, this.c, this.simulations, 1);
         long start = System.currentTimeMillis();
@@ -42,7 +34,7 @@ public class MonteCarloTree {
     }
 
     public float[] childVisitCountsToProbabilities(Node root) {
-        float[] probabilities = new float[this.getLogic().moveSize];
+        float[] probabilities = new float[Util.moveSize];
         float sum = 0.f;
         for(Node child : root.children){
             probabilities[child.moveLeadingTo] = child.visitCount;
@@ -76,7 +68,7 @@ public class MonteCarloTree {
         node.backtrackToRoot(value);
     }
 
-    public LogicTranslator getLogic() {
+    public Util getLogic() {
         return logic;
     }
 }

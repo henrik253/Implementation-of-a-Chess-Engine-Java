@@ -4,8 +4,8 @@ import ai.Validation.Boolboards.*;
 
 
 public class MovementBitBoardGenerator {
-    BoolBoardCalculator[] calculators;
-    public BitMaskArr bitMaskArr;
+    final BoolBoardCalculator[] calculators;
+    public final BitMaskArr bitMaskArr;
     public ULong[] rookBoards;
     public ULong[] knightBoards;
     public ULong[] pawnUpBoards;

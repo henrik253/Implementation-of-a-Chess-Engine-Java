@@ -2,6 +2,7 @@ package ai.DeeperBlue.NormalSearchTree.Nodes;
 
 import ai.DeeperBlue.DeeperBlueException;
 import ai.DeeperBlue.NormalSearchTree.DeeperBlueTree;
+import ai.Util.Util;
 import ai.Validation.BitboardValidation.BitboardMove;
 import ai.Validation.Bitboards.Bitboard;
 
@@ -28,7 +29,6 @@ public class DeeperBlueMinNode extends DeeperBlueNode{
             this.fillChildrenWithMaxNodes();
             Collections.sort(this.children);// sorts with the sorting nodes, not the values!!!!!!!!!!!
             for(DeeperBlueNode child : this.children){
-                this.tree.agent.nodesSearched++;
                 child.alpha = this.alpha;
                 child.expand();
                 child.expanded = true;
@@ -52,11 +52,11 @@ public class DeeperBlueMinNode extends DeeperBlueNode{
 
     private void fillChildrenWithMaxNodes() {
 
-        List<Integer> validMoves = this.tree.agent.translator.getValidMoves(intBoard, -1);
+        List<Integer> validMoves = Util.getValidMoves(intBoard, -1);
         Bitboard boardAfterMove;
         int[] currentMoveCoordinates;
         for(Integer moveInt : validMoves){
-            currentMoveCoordinates = this.tree.agent.translator.intToCoordinates(moveInt);
+            currentMoveCoordinates = Util.intToCoordinates(moveInt);
             int[] currentMove = new int[]{
                     currentMoveCoordinates[1] * 8 + currentMoveCoordinates[0],
                     currentMoveCoordinates[3] * 8 + currentMoveCoordinates[2]
@@ -67,7 +67,7 @@ public class DeeperBlueMinNode extends DeeperBlueNode{
             int[][] newIntBoard = boardAfterMove.toIntBoard();
             this.children.add(
                     new DeeperBlueMaxNode(
-                            flipBoardHorizontallyAndFLipPlayer(newIntBoard),  currentDepth + 1, this, this.tree,new int[]{
+                            ai.Util.Util.flipBoardHorizontallyAndFLipPlayer(newIntBoard),  currentDepth + 1, this, this.tree,new int[]{
                             currentMoveCoordinates[1] * 8 + currentMoveCoordinates[0],
                             currentMoveCoordinates[3] * 8 + currentMoveCoordinates[2]
                         }, addLeavesToBuffer

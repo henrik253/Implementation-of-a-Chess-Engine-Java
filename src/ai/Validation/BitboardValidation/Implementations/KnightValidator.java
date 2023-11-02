@@ -7,7 +7,7 @@ import ai.Validation.Bitboards.MovementBitBoardGenerator;
 import java.util.ArrayList;
 
 public class KnightValidator extends Validator {
-    int[][] offsets;
+    final int[][] offsets;
     public KnightValidator(MovementBitBoardGenerator generator){
         super(generator);
         this.offsets = new int[][]{

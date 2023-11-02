@@ -1,7 +1,7 @@
 package ai.Validation.Bitboards;
 
 public class BitMaskArr {
-    public long[]content;
+    public final long[]content;
     public BitMaskArr(){
         this.content = new long[64];
         for(int i = 0; i < 63; i++){

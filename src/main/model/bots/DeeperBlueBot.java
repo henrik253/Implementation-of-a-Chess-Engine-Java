@@ -3,25 +3,17 @@ package main.model.bots;
 import ai.DeeperBlue.DeeperBlueAgent;
 import ai.DeeperBlue.DeeperBlueException;
 
-import main.model.bots.ChessBot;
 import main.model.chessPieces.concretePieces.Piece;
 import utils.ChessPieceColor;
 import utils.Move;
 import utils.Vector2D;
-
-import java.io.IOException;
 
 public class DeeperBlueBot implements ChessBot {
     DeeperBlueAgent agent;
     Move lastMove;
     public DeeperBlueBot(){
         lastMove = new Move(new Vector2D(0, 0), new Vector2D(0,0));
-        this.agent = new DeeperBlueAgent(-1, 12, 7, 3);
-        try {
-            agent.addNeuralNetForSorting();
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
+        this.agent = new DeeperBlueAgent(-1, 12, 7, 3000, 800);
     }
     @Override
     public ChessPieceColor getColor() {

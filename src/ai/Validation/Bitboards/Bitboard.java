@@ -9,9 +9,9 @@ public class Bitboard {
     public PieceArray buffer;
     public ULong playerEnPassantSquares;
     public ULong enemyEnPassantSquares;
-    int[][] intBoardBuffer;
-    public boolean intBufferChangeBecauseOfFlip;
-    public boolean intBufferChangeBecauseOfMove;
+    final int[][] intBoardBuffer;
+    public final boolean intBufferChangeBecauseOfFlip;
+    public final boolean intBufferChangeBecauseOfMove;
 
     public boolean
             playerKingMoved,

@@ -4,6 +4,7 @@ package ai.NeuralNetsAndEvaluators.MPolicyNetwork;
 import ai.DeeperBlue.Evaluation.PieceValueCalculator;
 import ai.MCTSAgent.MCTSAgent;
 import ai.NeuralNetsAndEvaluators.IPolicyNetWork;
+import ai.Util.Util;
 import ai.Validation.BitboardValidation.BitboardMoveValidation;
 import ai.Validation.Bitboards.BitMaskArr;
 import ai.Validation.Bitboards.Bitboard;
@@ -18,9 +19,9 @@ public class MPolicyNetwork  implements IPolicyNetWork {
     static final int ENDGAME_KINGDST_WEIGHT = 10;
     static final int ENEMY_CHECK_BONUS_VALUE = 400;
     static final float PIECE_IN_DANGER_AFTER_MOVE_WEIGHT = 0.2f;
-    BitboardMoveValidation validation;
-    MCTSAgent ai;
-    PieceValueCalculator pieceValueCalculator;
+    final BitboardMoveValidation validation;
+    final MCTSAgent ai;
+    final PieceValueCalculator pieceValueCalculator;
 
     public MPolicyNetwork(BitMaskArr arr, MCTSAgent ai){
         this.validation = new BitboardMoveValidation(ai.arr, 1);
@@ -72,8 +73,8 @@ public class MPolicyNetwork  implements IPolicyNetWork {
         int[][] boardBefore = beforeMove;
         int[][] boardAfter = afterMove;
         if(player == -1){
-            boardBefore = flipBoardHorizontallyAndFLipPlayer(beforeMove);
-            boardAfter = flipBoardHorizontallyAndFLipPlayer(afterMove);
+            boardBefore = Util.flipBoardHorizontallyAndFLipPlayer(beforeMove);
+            boardAfter = Util.flipBoardHorizontallyAndFLipPlayer(afterMove);
         }
         int result = 0;
         boolean[][] attackableSquaresPlayerAfter = calcAttackedSquaresArray(boardAfter, 1);
@@ -82,7 +83,6 @@ public class MPolicyNetwork  implements IPolicyNetWork {
         int dstRow = move[1]/8;
         int dstCol = move[1]%8;
         int pieceType = beforeMove[startRow][startCol];
-        result += pieceInMoreOrLessDangerAfterMove(startRow, startCol, dstRow, dstCol, attackableSquaresPlayerBefore, attackableSquaresPlayerAfter, pieceType);
 
         return 0;
     }
@@ -92,7 +92,7 @@ public class MPolicyNetwork  implements IPolicyNetWork {
 
     public int evaluateStatic(int[][] board, int player){
         if(player == -1){
-            board = flipBoardHorizontallyAndFLipPlayer(board);
+            board = Util.flipBoardHorizontallyAndFLipPlayer(board);
         }
         int result = 0;
 
@@ -100,9 +100,9 @@ public class MPolicyNetwork  implements IPolicyNetWork {
         result -= countBlackPieces(board);
         result += encourageKingInEndGames(board);
         result += calcAttackedSquares(board, player);
-        result -= calcAttackedSquares(flipBoardHorizontallyAndFLipPlayer(board), player);
+        result -= calcAttackedSquares(Util.flipBoardHorizontallyAndFLipPlayer(board), player);
         result += attackedKingSquares(board, player);
-        result -= attackedKingSquares(flipBoardHorizontallyAndFLipPlayer(board), player);
+        result -= attackedKingSquares(Util.flipBoardHorizontallyAndFLipPlayer(board), player);
         return result;
     }
 
@@ -224,16 +224,6 @@ public class MPolicyNetwork  implements IPolicyNetWork {
                 if(board[row][col] < 0){
                     result += pieceValueCalculator.getValue(row, col, board, -1);
                 }
-            }
-        }
-        return result;
-    }
-
-    private int[][] flipBoardHorizontallyAndFLipPlayer(int[][] board) {
-        int[][] result = new int[8][8];
-        for(int row = 0; row < 8; row++){
-            for (int col = 0; col < 8; col++) {
-                result[7-row][col] = board[row][col] * -1;
             }
         }
         return result;

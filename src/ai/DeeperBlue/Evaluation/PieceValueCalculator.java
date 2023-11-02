@@ -6,21 +6,20 @@ import ai.Validation.Bitboards.BitMaskArr;
 import java.util.ArrayList;
 
 public class PieceValueCalculator {//gets unflipped board
-    static float[] PIECE_BONUS_WEIGHT = {0, 1, 0.8f, 1, 1, 1, 2};
-    static int[] PIECE_VALUES = {0, 5000, 450, 350, 900, 250, 100};
-    static float PIECE_GUARDING_WEIGHT = 0.1f;
-    static float PIECE_ATTACKING_WEIGHT = 0.1f;
-    static int ENDGAME_NUM_OF_PIECES = 5;
-    static int
-            KING = 1,
-            ROOK = 2,
-            BISHOP = 3,
-            QUEEN = 4,
-            KNIGHT = 5,
-            PAWN = 6;
+    static final float[] PIECE_BONUS_WEIGHT = {0, 1, 0.8f, 1, 1, 1, 2};
+    static final int[] PIECE_VALUES = {0, 5000, 450, 350, 900, 250, 100};
+    static final float PIECE_ATTACKING_WEIGHT = 0.1f;
+    static final int ENDGAME_NUM_OF_PIECES = 5;
+    static final int
+            KING = 1;
+    static final int ROOK = 2;
+    static int BISHOP = 3;
+    static final int QUEEN = 4;
+    static final int KNIGHT = 5;
+    static final int PAWN = 6;
 
-    static float[] SURVIVED_BONUS = {0, 0, 2.5f, 1.5f, 2.0f, 1.5f, 1.5f};
-    static float[][][] MIDGAME_BONUSES = new float[][][]{
+
+    static final float[][][] MIDGAME_BONUSES = new float[][][]{
         //KING
         {
                 { 0.5f, 0.5f, 0.5f, 0.5f, 0.5f, 0.5f, 0.5f, 0.5f},
@@ -89,20 +88,17 @@ public class PieceValueCalculator {//gets unflipped board
         },
 
     };
-    BitboardMoveValidation validation;
+    final BitboardMoveValidation validation;
     public PieceValueCalculator(){
         this.validation = new BitboardMoveValidation(new BitMaskArr(), 0);
     }
-    private int oneDimLerp(int input, int high, int low){//y between 2 and 32
-        int increment = (high - low)/30;
-        return low + input * increment;
-    }
+
     public int getValue(int row, int col, int[][] board, int player){
         int[][] newBoard;
         int newRow;
         if(player == -1){
             newRow = 7-row;
-            newBoard = flipBoardHorizontallyAndFLipPlayer(board);
+            newBoard =  ai.Util.Util.flipBoardHorizontallyAndFLipPlayer(board);
         }else{
             newBoard = board;
             newRow = row;
@@ -124,7 +120,7 @@ public class PieceValueCalculator {//gets unflipped board
         return switch (pieceType) {
             case 1 -> getKingValue(newRow , col);
             case 2 -> getRookValue(newRow , col, numOfPlayerPieces, numOfEnemyPieces, newBoard);
-            case 3 -> getBishopValue(newRow , col, numOfPlayerPieces, numOfEnemyPieces, newBoard);
+            case 3 -> getBishopValue(newRow , col, numOfEnemyPieces, newBoard);
             case 4 -> getQueenValue(newRow , col);
             case 5 -> getKnightValue(newRow , col,numOfPlayerPieces, numOfEnemyPieces, newBoard);
             case 6 -> getPawnValue(newRow , col);
@@ -139,7 +135,7 @@ public class PieceValueCalculator {//gets unflipped board
     private int getKnightValue(int row, int col, int numOfPLayerPieces, int numOfEnemyPieces, int[][] board) {
 
         if(numOfEnemyPieces + numOfEnemyPieces <= ENDGAME_NUM_OF_PIECES){// if it is an actual endgame push king
-            return knightPushKing(row, col, board);
+            return knightPushKing();
         }
         // if it isnt an actual endgame but the opponent hasn't way less Pieces push allPiecesEqual
         else if(numOfEnemyPieces * 1.5 < numOfPLayerPieces){
@@ -151,17 +147,17 @@ public class PieceValueCalculator {//gets unflipped board
 
     }
 
-    private int getBishopValue(int row, int col, int numOfPLayerPieces, int numOfEnemyPieces, int[][] board) {
+    private int getBishopValue(int row, int col, int numOfEnemyPieces, int[][] board) {
         ArrayList<int[]> validMoves = this.validation.getValidMovesForPiece(board, 1, row * 8 + col);
         if(numOfEnemyPieces + numOfEnemyPieces <= ENDGAME_NUM_OF_PIECES){// if it is an actual endgame push king
-            return bishopPushKing(row, col, board, validMoves);
+            return bishopPushKing(board, validMoves);
         }else{// try to control the middle territory by pushing pieces in the middle more
             return (int) (PIECE_VALUES[KNIGHT] * PIECE_BONUS_WEIGHT[KNIGHT] * MIDGAME_BONUSES[KNIGHT][row][col]);
         }
 
     }
-    private int bishopPushKing(int row, int col, int[][] board, ArrayList<int[]> validMoves) {
-        int result = (int) PIECE_VALUES[ROOK];
+    private int bishopPushKing(int[][] board, ArrayList<int[]> validMoves) {
+        int result = PIECE_VALUES[ROOK];
         int[] kingPosition = enemyKingPosition(board);
         for(int[] move : validMoves){
             if(move[1] == kingPosition[0] * 8 + kingPosition[1]){//checking enemyKing
@@ -215,26 +211,13 @@ public class PieceValueCalculator {//gets unflipped board
 
     //-----------------------------------Helper Methods---------------------------------------
 
-    private int[][] flipBoardHorizontallyAndFLipPlayer(int[][] board) {
-        int[][] result = new int[8][8];
-        for(int row = 0; row < 8; row++){
-            for (int col = 0; col < 8; col++) {
-                result[7-row][col] = board[row][col] * -1;
-            }
-        }
-        return result;
-    }
-    private int manhattanDistance(int sRow, int sCol, int dRow, int dCol) {
-        return Math.abs(sRow) - Math.abs(dRow) + Math.abs(sCol) - Math.abs(dCol);
-    }
-    private int knightPushKing(int row, int col, int[][] board) {
-        float[] distanceToKingEndGameBonus = new float[]{1.4f, 1.4f, 1.3f, 1.3f, 1.2f, 1.2f, 1.1f, 1.1f, 1.0f};
-        int result = PIECE_VALUES[KNIGHT];
-        result *= (int) distanceToKingEndGameBonus[manhattanDistance(row, col, enemyKingPosition(board)[0], enemyKingPosition(board)[1]) - 1];
-        return result;
+
+
+    private int knightPushKing() {
+        return PIECE_VALUES[KNIGHT];
     }
     private int rookPushKing(int row, int col, int[][] board, ArrayList<int[]> validMoves) {
-        int result = (int) PIECE_VALUES[ROOK];
+        int result = PIECE_VALUES[ROOK];
         int[] kingPosition = enemyKingPosition(board);
         for(int[] move : validMoves){
             if(move[1] == kingPosition[0] * 8 + kingPosition[1]){//checking enemyKing
@@ -251,17 +234,7 @@ public class PieceValueCalculator {//gets unflipped board
 
 
 
-    private void knightControlMiddle(int row, int col, int[][] board) {
-        float[] rowWeightsStartAndMiddle = new float[]{0.8f, 1.1f, 1.1f, 1.2f, 1.2f, 1.1f, 1.1f, 0.8f};
-        int result = PIECE_VALUES[KNIGHT];
-        ArrayList<int[]> validMovesForKnight = validation.getValidMovesForPiece(board, 1, row * 8 + col);
-        for(int[] move : validMovesForKnight){
-            if(board[move[1]/8][move[0]%8] < 0){
-                result += (int) ((PIECE_ATTACKING_WEIGHT * PIECE_VALUES[Math.abs(board[move[1]/8][move[1]%8])]) * rowWeightsStartAndMiddle[Math.abs(board[move[1]/8][move[1]%8])]);
-            }
-        }
-        result *= (int) rowWeightsStartAndMiddle[row];
-    }
+
     private int knightPushAllPiecesEqual(int row, int col, int[][] board) {
         int result = PIECE_VALUES[KNIGHT];
         ArrayList<int[]> validMovesForKnight = validation.getValidMovesForPiece(board, 1, row * 8 + col);

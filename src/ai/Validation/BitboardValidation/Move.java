@@ -5,13 +5,13 @@ import ai.Validation.Bitboards.Bitboard;
 // Applies move to the given bitboard
 // Always assumes that the move is a valid move!!!
 public class Move {
-    int start;
-    int destination;
-    int pieceType;
-    int startRow;
-    int startCol;
-    int destinationRow;
-    int destinationCol;
+    final int start;
+    final int destination;
+    final int pieceType;
+    final int startRow;
+    final int startCol;
+    final int destinationRow;
+    final int destinationCol;
     public Move(int start, int destination, int pieceType){
         this.start = start;
         this.destination = destination;

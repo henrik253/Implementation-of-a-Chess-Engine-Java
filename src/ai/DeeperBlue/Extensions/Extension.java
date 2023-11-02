@@ -4,6 +4,7 @@ import ai.DeeperBlue.DeeperBlueException;
 import ai.DeeperBlue.NormalSearchTree.Nodes.DeeperBlueExtensionNode;
 import ai.DeeperBlue.NormalSearchTree.Nodes.DeeperBlueMaxNode;
 import ai.DeeperBlue.NormalSearchTree.Nodes.DeeperBlueNode;
+import ai.Util.Util;
 import ai.Validation.BitboardValidation.BitboardMove;
 import ai.Validation.BitboardValidation.BitboardMoveValidation;
 import ai.Validation.Bitboards.BitMaskArr;
@@ -13,23 +14,21 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-import static ai.DeeperBlue.NormalSearchTree.Nodes.DeeperBlueNode.flipBoardHorizontallyAndFLipPlayer;
-
 public abstract class Extension {
-    public static int POSSIBLE_CHECKMATE = 1;
-    public static int POSSIBLE_PAWN_PROMOTION = 2;
-    public static int QUIESCENCE_SEARCH = 3;
-    public static BitboardMoveValidation validation = new BitboardMoveValidation(new BitMaskArr(), 0);
+    public static final int POSSIBLE_CHECKMATE = 1;
+    public static final int POSSIBLE_PAWN_PROMOTION = 2;
+    public static final int QUIESCENCE_SEARCH = 3;
+    public static final BitboardMoveValidation validation = new BitboardMoveValidation(new BitMaskArr(), 0);
     protected int id = -1;
     public abstract void expand(DeeperBlueExtensionNode e) throws DeeperBlueException;
     public abstract int interest(DeeperBlueExtensionNode e);
     protected void fillChildrenWithMaxNodes(DeeperBlueNode toExpand) {
 
-        List<Integer> validMoves = toExpand.tree.agent.translator.getValidMoves(toExpand.intBoard, -1);
+        List<Integer> validMoves = Util.getValidMoves(toExpand.intBoard, -1);
         Bitboard boardAfterMove;
         int[] currentMoveCoordinates;
         for(Integer moveInt : validMoves){
-            currentMoveCoordinates = toExpand.tree.agent.translator.intToCoordinates(moveInt);
+            currentMoveCoordinates = Util.intToCoordinates(moveInt);
             int[] currentMove = new int[]{
                     currentMoveCoordinates[1] * 8 + currentMoveCoordinates[0],
                     currentMoveCoordinates[3] * 8 + currentMoveCoordinates[2]
@@ -40,7 +39,7 @@ public abstract class Extension {
             int[][] newIntBoard = boardAfterMove.toIntBoard();
             toExpand.children.add(
                     new DeeperBlueMaxNode(
-                            flipBoardHorizontallyAndFLipPlayer(newIntBoard),  0, toExpand, toExpand.tree,new int[]{
+                            Util.flipBoardHorizontallyAndFLipPlayer(newIntBoard),  0, toExpand, toExpand.tree,new int[]{
                             currentMoveCoordinates[1] * 8 + currentMoveCoordinates[0],
                             currentMoveCoordinates[3] * 8 + currentMoveCoordinates[2]
                     }, false
@@ -52,7 +51,6 @@ public abstract class Extension {
         this.fillChildrenWithMaxNodes(leafNode);
         Collections.sort(leafNode.children);// sorts with the sorting nodes, not the values!!!!!!!!!!!
         for(DeeperBlueNode child : leafNode.children){
-            leafNode.tree.agent.nodesSearched++;
             child.alpha = leafNode.alpha;
             child.expand();
             child.expanded = true;

@@ -7,8 +7,6 @@ import java.util.ArrayList;
 
 public abstract class Validator {
 
-    private final MovementBitBoardGenerator generator;
-
     /*
         Always calculates the valid moves from the perspective of the player that's stored
         in the Bitboard struct, important for pawns. It doesn't check for king safety
@@ -16,7 +14,6 @@ public abstract class Validator {
     
         */
     public Validator(MovementBitBoardGenerator generator){
-        this.generator = generator;
     }
     public abstract ArrayList<int[]> getValidMoves(
             int start,

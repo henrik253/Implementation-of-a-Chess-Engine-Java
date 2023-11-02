@@ -57,9 +57,7 @@ public class OpeningBook{
     private int[] flatten(int[][] board) {
         int[] result = new int[64];
         for (int row = 0; row < board.length; row++) {
-            for (int col = 0; col < board[0].length; col++) {
-                result[col + row * 8] = board[row][col];
-            }
+            System.arraycopy(board[row], 0, result, row * 8, board[0].length);
         }
         return result;
     }

@@ -8,7 +8,7 @@ import ai.DeeperBlue.NormalSearchTree.Nodes.DeeperBlueNode;
 import java.util.ArrayList;
 
 public class PossiblePawnPromotionExtension extends Extension {
-    private static final int DISTANCE_TRESHOLD = 4;
+    private static final int DISTANCE_THRESHOLD = 4;
 
     @Override
     public void expand(DeeperBlueExtensionNode leafNode) throws DeeperBlueException {
@@ -18,7 +18,7 @@ public class PossiblePawnPromotionExtension extends Extension {
     }
 
     private void expandChildrensPawnMoves(DeeperBlueExtensionNode leafNode) throws DeeperBlueException {
-        ArrayList<int[]> currentValidMoves = new ArrayList<>();
+        ArrayList<int[]> currentValidMoves;
         for(DeeperBlueNode child : leafNode.children){
             currentValidMoves = validation.getValidMoves(child.intBoard, 1);
             for(int[] move : currentValidMoves){
@@ -61,11 +61,11 @@ public class PossiblePawnPromotionExtension extends Extension {
     // While reading keep in mind that the board is still flipped!
     @Override
     public int interest(DeeperBlueExtensionNode leafNode) {
-        int bestDistance = DISTANCE_TRESHOLD + 1;
+        int bestDistance = DISTANCE_THRESHOLD + 1;
         for (int row = 0; row < 8; row++) {
             for (int col = 0; col < 8; col++) {
                 if(leafNode.intBoard[row][col] == -6){
-                    if(row <= DISTANCE_TRESHOLD){
+                    if(row <= DISTANCE_THRESHOLD){
                         bestDistance = Math.min(bestDistance, row);
                     }
                 }
@@ -73,8 +73,8 @@ public class PossiblePawnPromotionExtension extends Extension {
         }
         int result = 100 - (bestDistance * 10);
 
-        if(bestDistance < DISTANCE_TRESHOLD + 1){
-            if(result > leafNode.currentHighestInterestValue && result > 50){
+        if(bestDistance < DISTANCE_THRESHOLD + 1){
+            if(result > leafNode.currentHighestInterestValue){
                 leafNode.currentHighestExtensionId = POSSIBLE_PAWN_PROMOTION;
                 leafNode.currentHighestInterestValue = result;
                 leafNode.interesting = true;

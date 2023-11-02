@@ -7,12 +7,12 @@ import ai.DeeperBlue.NormalSearchTree.Nodes.DeeperBlueNode;
 
 public class DeeperBlueTree {
     public DeeperBlueMaxNode root;
-    public DeeperBlueAgent agent;
+    public final DeeperBlueAgent agent;
     public DeeperBlueTree(DeeperBlueAgent agent){
         this.agent = agent;
     }
 
-    public void search(int[][] board, int currentDepth) throws DeeperBlueException {
+    public void search(int[][] board) throws DeeperBlueException {
         this.root = new DeeperBlueMaxNode(board, 0, this, true);
         this.root.expand();
     }

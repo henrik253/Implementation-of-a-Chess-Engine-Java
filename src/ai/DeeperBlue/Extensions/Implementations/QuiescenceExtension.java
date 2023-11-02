@@ -1,22 +1,18 @@
 package ai.DeeperBlue.Extensions.Implementations;
-
-import ai.DeeperBlue.DeeperBlueException;
 import ai.DeeperBlue.Evaluation.BoardEvaluator;
 import ai.DeeperBlue.Extensions.Extension;
 import ai.DeeperBlue.NormalSearchTree.Nodes.DeeperBlueExtensionNode;
-import ai.DeeperBlue.NormalSearchTree.Nodes.DeeperBlueNode;
 import ai.Validation.Bitboards.Bitboard;
-import chessAI.logic.boardEvaluation.Evaluate;
 
 import java.util.ArrayList;
 
 public class QuiescenceExtension extends Extension {
-    static int QUIESCENCE_MAX_DEPTH = 2;
+    static final int QUIESCENCE_MAX_DEPTH = 2;
     public QuiescenceExtension(){
         this.id = QUIESCENCE_SEARCH;
     }
     @Override
-    public void expand(DeeperBlueExtensionNode e) throws DeeperBlueException {
+    public void expand(DeeperBlueExtensionNode e) {
         e.value = quiescenceMax(e.intBoard, Float.MIN_VALUE, Float.MAX_VALUE, 0);
     }
 
@@ -59,7 +55,7 @@ public class QuiescenceExtension extends Extension {
         Bitboard beforeMove = new Bitboard(board, validation.arr);
         for(int[] move : validCaptures){
             value = quiescenceMax(
-                    BoardEvaluator.flipBoardHorizontallyAndFLipPlayer(
+                    ai.Util.Util.flipBoardHorizontallyAndFLipPlayer(
                             beforeMove.simulateMove(move).toIntBoard()
                     ),
                     alpha,
@@ -87,7 +83,7 @@ public class QuiescenceExtension extends Extension {
         Bitboard beforeMove = new Bitboard(board, validation.arr);
         for(int[] move : validCaptures){
             value = quiescenceMin(
-                    BoardEvaluator.flipBoardHorizontallyAndFLipPlayer(
+                    ai.Util.Util.flipBoardHorizontallyAndFLipPlayer(
                             beforeMove.simulateMove(move).toIntBoard()
                     ),
                     maxValue,

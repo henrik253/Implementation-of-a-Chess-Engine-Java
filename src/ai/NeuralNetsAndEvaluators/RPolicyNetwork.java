@@ -3,7 +3,7 @@ package ai.NeuralNetsAndEvaluators;
 import java.security.SecureRandom;
 
 public class RPolicyNetwork implements IPolicyNetWork {
-    SecureRandom rand;
+    final SecureRandom rand;
     public RPolicyNetwork(){
         rand = new SecureRandom();
     }

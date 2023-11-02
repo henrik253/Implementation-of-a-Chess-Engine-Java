@@ -1,24 +1,25 @@
 package ai.MCTSAgent.MonteCarloTree;
 
+import ai.Util.Util;
 import ai.Validation.Bitboards.Bitboard;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class Node {
-    MonteCarloTree tree;
-    float c;
-    int simulations;
+    final MonteCarloTree tree;
+    final float c;
+    final int simulations;
     Node parent;
-    int moveLeadingTo;
-    int[][] board;
-    ArrayList<Node> children;
+    final int moveLeadingTo;
+    final int[][] board;
+    final ArrayList<Node> children;
     float valueSum;
     int visitCount;
-    float prior;
-    int player;
-    int depth;
-    private Bitboard bitboard;
+    final float prior;
+    final int player;
+    final int depth;
+    private final Bitboard bitboard;
 
     public Node(MonteCarloTree tree, int[][] board, float c, int simulations, Node parent, int moveLeadingTo, float prior, int player, int depth){
         this.tree = tree;
@@ -73,7 +74,7 @@ public class Node {
     }
 
     boolean alreadyExpanded(){
-        return this.children.size() > 0;
+        return !this.children.isEmpty();
     }
 
     Node selectBestChild(){
@@ -98,7 +99,7 @@ public class Node {
     }
 
     public void expand(float[] policy) {
-        List<Integer> validMoves = this.tree.getLogic().getValidMoves(this.board, this.player);
+        List<Integer> validMoves = Util.getValidMoves(this.board, this.player);
 
         for(int move : validMoves) {
             int[][] newBoard = calculateNewBoard(this.bitboard, this.player, move);
@@ -118,7 +119,7 @@ public class Node {
     }
 
     private int[][] calculateNewBoard(Bitboard bitboard, int player, int move) {
-        int[] coordinates = this.tree.ai.getLogic().intToCoordinates(move);
+        int[] coordinates = Util.intToCoordinates(move);
         int start = coordinates[1] * 8 + coordinates[0];
         int destination = coordinates[3] * 8 + coordinates[2];
         Bitboard afterMove = bitboard.simulateMove(new int[]{start, destination});

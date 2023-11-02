@@ -8,12 +8,12 @@ import ai.Validation.Bitboards.MovementBitBoardGenerator;
 import java.util.ArrayList;
 
 public class BitboardMoveValidation {
-    MovementBitBoardGenerator generator;
-    boolean checkmateWhite;
-    boolean checkMateBlack;
-    public BitMaskArr arr;
-    Validator[] validators;
-    int kingSafetyRecursionDepth;
+    final MovementBitBoardGenerator generator;
+    final boolean checkmateWhite;
+    final boolean checkMateBlack;
+    public final BitMaskArr arr;
+    final Validator[] validators;
+    final int kingSafetyRecursionDepth;
 
     public BitboardMoveValidation(BitMaskArr arr, int kingSafetyRecursionDepth) {
         this.generator = new MovementBitBoardGenerator();
@@ -29,9 +29,6 @@ public class BitboardMoveValidation {
                 new PawnValidator(generator),
         };
         this.kingSafetyRecursionDepth = kingSafetyRecursionDepth;
-    }
-    public boolean checkmate(int[][] internalBoard, int player) {//gets unflipped board
-        return getValidMoves(internalBoard,player).size() == 0;
     }
     public ArrayList<int[]> getValidMoves(int[][] board, int player) {//gets unflipped board
         ArrayList<int[]> validMovesWithoutKingSafety;// holds valid moves without king safety

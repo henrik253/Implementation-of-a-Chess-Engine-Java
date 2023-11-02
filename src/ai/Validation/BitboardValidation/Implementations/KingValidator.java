@@ -34,21 +34,6 @@ public class KingValidator extends Validator {
             }
         }
         //castling
-        /*if(!bitboard.playerKingMoved){
-            if(!bitboard.rookKingSideMovedPlayer &&
-                    !bitboard.playerPieces.combinedPieces.at(rowStart, colStart + 1) &&
-                    !bitboard.playerPieces.combinedPieces.at(rowStart, colStart + 2) &&
-                    colStart + 2 < 8){
-                result.add(new int[]{start, (rowStart) * 8 + colStart + 2});
-            }
-            if(!bitboard.rookQueenSideMovedPlayer &&
-                    !bitboard.playerPieces.combinedPieces.at(rowStart, colStart - 1) &&
-                    !bitboard.playerPieces.combinedPieces.at(rowStart, colStart - 2) &&
-                    !bitboard.playerPieces.combinedPieces.at(rowStart, colStart - 3)&&
-                    colStart - 3 > 0){
-                result.add(new int[]{start, (rowStart) * 8 + colStart - 3});
-            }
-        }*/
         return result;
     }
 }

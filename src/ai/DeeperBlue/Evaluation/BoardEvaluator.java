@@ -1,14 +1,10 @@
 package ai.DeeperBlue.Evaluation;
 
-import ai.Validation.BitboardValidation.BitboardMoveValidation;
-import ai.Validation.Bitboards.BitMaskArr;
-import ai.Validation.Bitboards.Bitboard;
-
-import java.util.ArrayList;
+import static ai.Util.Util.flipBoardHorizontallyAndFLipPlayer;
 
 public class BoardEvaluator {
     static final float[] PIECE_VALUES = new float[]{0.f, 250.f, 22.5f, 17.5f, 45.f, 12.5f, 5.f};
-    static float[][][] PIECE_VALUE_BONUSES = new float[][][]{
+    static final float[][][] PIECE_VALUE_BONUSES = new float[][][]{
             {//King
                     {-4.0f, -3.5f, -3.5f, -3.5f, -3.5f, -3.5f, -3.5f, -4.0f},
                     {-3.0f, -3.0f, -3.0f, -3.0f, -3.0f, -3.0f, -3.0f, -3.0f},
@@ -71,24 +67,6 @@ public class BoardEvaluator {
             }
 
     };
-
-
-
-
-
-    public static float evaluateSimple(int[][] board) {
-        int result = 0;
-        for (int row = 0; row < 8; row++) {
-            for (int col = 0; col < 8; col++) {
-                if(board[row][col] > 0){
-                    result += PIECE_VALUES[board[row][col]];
-                }else if(board[row][col] < 0){
-                    result -= PIECE_VALUES[Math.abs(board[row][col])];
-                }
-            }
-        }
-        return result;
-    }
     public static float evaluateSimplePlusBonus(int[][] board){
         float result = 0;
         for (int row = 0; row < 8; row++) {
@@ -110,22 +88,4 @@ public class BoardEvaluator {
         return result;
     }
 
-
-
-    private static int manhattanDistance(int sRow, int sCol, int dRow, int dCol) {
-        return Math.abs(sRow) - Math.abs(dRow) + Math.abs(sCol) - Math.abs(dCol);
-    }
-
-
-
-
-    public static int[][] flipBoardHorizontallyAndFLipPlayer(int[][] board) {
-        int[][] result = new int[8][8];
-        for(int row = 0; row < 8; row++){
-            for (int col = 0; col < 8; col++) {
-                result[7-row][col] = board[row][col] * -1;
-            }
-        }
-        return result;
-    }
 }

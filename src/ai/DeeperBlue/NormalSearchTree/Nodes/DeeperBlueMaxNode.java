@@ -2,6 +2,7 @@ package ai.DeeperBlue.NormalSearchTree.Nodes;
 
 import ai.DeeperBlue.DeeperBlueException;
 import ai.DeeperBlue.NormalSearchTree.DeeperBlueTree;
+import ai.Util.Util;
 import ai.Validation.BitboardValidation.BitboardMove;
 import ai.Validation.Bitboards.Bitboard;
 
@@ -38,7 +39,6 @@ public class DeeperBlueMaxNode extends DeeperBlueNode{
             ArrayList<DeeperBlueNode> childrenToRemove = new ArrayList<>();
             ArrayList<DeeperBlueNode> childrenToAdd = new ArrayList<>();
             for(DeeperBlueNode child : this.children){
-                this.tree.agent.nodesSearched++;
                 child.beta = this.beta;
                 child.expand();
                 if(!child.children.isEmpty()){
@@ -53,7 +53,7 @@ public class DeeperBlueMaxNode extends DeeperBlueNode{
 
                     childrenToAdd.add(
                             new DeeperBlueExtensionNode(
-                                    flipBoardHorizontallyAndFLipPlayer(child.intBoard) ,  currentDepth + 1, this, this.tree, child.moveLeadingTo, this.addLeavesToBuffer
+                                    ai.Util.Util.flipBoardHorizontallyAndFLipPlayer(child.intBoard) ,  currentDepth + 1, this, this.tree, child.moveLeadingTo, this.addLeavesToBuffer
                             )
                     );
                     childrenToRemove.add(child);
@@ -80,11 +80,11 @@ public class DeeperBlueMaxNode extends DeeperBlueNode{
 
     private void fillChildrenWithMinNodes() {
 
-        List<Integer> validMoves = this.tree.agent.translator.getValidMoves(intBoard, -1);
+        List<Integer> validMoves = Util.getValidMoves(intBoard, -1);
         Bitboard boardAfterMove;
         int[] currentMoveCoordinates;
         for(Integer moveInt : validMoves){
-            currentMoveCoordinates = this.tree.agent.translator.intToCoordinates(moveInt);
+            currentMoveCoordinates = ai.Util.Util.intToCoordinates(moveInt);
             int[] currentMove = new int[]{
                     currentMoveCoordinates[1] * 8 + currentMoveCoordinates[0],
                     currentMoveCoordinates[3] * 8 + currentMoveCoordinates[2]
@@ -95,23 +95,22 @@ public class DeeperBlueMaxNode extends DeeperBlueNode{
             int[][] newIntBoard = boardAfterMove.toIntBoard();
             this.children.add(
                     new DeeperBlueMinNode(
-                            flipBoardHorizontallyAndFLipPlayer(newIntBoard) ,  currentDepth + 1, this, this.tree, new int[]{
+                            ai.Util.Util.flipBoardHorizontallyAndFLipPlayer(newIntBoard) ,  currentDepth + 1, this, this.tree, new int[]{
                             currentMoveCoordinates[1] * 8 + currentMoveCoordinates[0],
                             currentMoveCoordinates[3] * 8 + currentMoveCoordinates[2]
                     }, this.addLeavesToBuffer
                     )
             );
         }
-
     }
 
     private void fillChildrenWithExtensionNodes() {
 
-        List<Integer> validMoves = this.tree.agent.translator.getValidMoves(intBoard, -1);
+        List<Integer> validMoves = ai.Util.Util.getValidMoves(intBoard, -1);
         Bitboard boardAfterMove;
         int[] currentMoveCoordinates;
         for(Integer moveInt : validMoves){
-            currentMoveCoordinates = this.tree.agent.translator.intToCoordinates(moveInt);
+            currentMoveCoordinates = ai.Util.Util.intToCoordinates(moveInt);
             int[] currentMove = new int[]{
                     currentMoveCoordinates[1] * 8 + currentMoveCoordinates[0],
                     currentMoveCoordinates[3] * 8 + currentMoveCoordinates[2]
@@ -122,7 +121,7 @@ public class DeeperBlueMaxNode extends DeeperBlueNode{
             int[][] newIntBoard = boardAfterMove.toIntBoard();
             this.children.add(
                     new DeeperBlueExtensionNode(
-                            flipBoardHorizontallyAndFLipPlayer(newIntBoard) , currentDepth + 1,this, this.tree,new int[]{
+                            ai.Util.Util.flipBoardHorizontallyAndFLipPlayer(newIntBoard) , currentDepth + 1,this, this.tree,new int[]{
                             currentMoveCoordinates[1] * 8 + currentMoveCoordinates[0],
                             currentMoveCoordinates[3] * 8 + currentMoveCoordinates[2]
                     }, this.addLeavesToBuffer
@@ -136,6 +135,4 @@ public class DeeperBlueMaxNode extends DeeperBlueNode{
     public int compareTo(DeeperBlueNode o) {
         return Float.compare(this.sortingValue, o.sortingValue);
     }
-
-
 }

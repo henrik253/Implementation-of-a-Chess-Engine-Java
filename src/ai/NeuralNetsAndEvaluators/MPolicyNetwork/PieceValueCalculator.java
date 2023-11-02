@@ -1,24 +1,20 @@
 package ai.NeuralNetsAndEvaluators.MPolicyNetwork;
 
 public class PieceValueCalculator {//gets unflipped board
-    static int[] PIECE_BONUS_WEIGHT = {0, 1, 1, 1, 1, 1, 2};
-    static int[] PIECE_VALUES = {0, 5000, 450, 350, 900, 250, 100};
-    static int
-            KING = 1,
-            ROOK = 2,
-            BISHOP = 3,
-            QUEEN = 4,
-            KNIGHT = 5,
-            PAWN = 6;
+    static final int[] PIECE_BONUS_WEIGHT = {0, 1, 1, 1, 1, 1, 2};
+    static final int[] PIECE_VALUES = {0, 5000, 450, 350, 900, 250, 100};
+    static final int
+            KING = 1;
+    static final int ROOK = 2;
+    static final int BISHOP = 3;
+    static final int QUEEN = 4;
+    static final int KNIGHT = 5;
+    static final int PAWN = 6;
 
-    private int oneDimLerp(int input, int high, int low){//y between 2 and 32
-        int increment = (high - low)/30;
-        return low + input * increment;
-    }
     public int getValue(int row, int col, int[][] board, int player){
         int[][] newBoard;
         if(player == -1){
-            newBoard = flipBoardHorizontallyAndFLipPlayer(board);
+            newBoard =  ai.Util.Util.flipBoardHorizontallyAndFLipPlayer(board);
         }else{
             newBoard = board;
         }
@@ -58,13 +54,5 @@ public class PieceValueCalculator {//gets unflipped board
         return PIECE_VALUES[KING];
     }
 
-    private int[][] flipBoardHorizontallyAndFLipPlayer(int[][] board) {
-        int[][] result = new int[8][8];
-        for(int row = 0; row < 8; row++){
-            for (int col = 0; col < 8; col++) {
-                result[7-row][col] = board[row][col] * -1;
-            }
-        }
-        return result;
-    }
+
 }
