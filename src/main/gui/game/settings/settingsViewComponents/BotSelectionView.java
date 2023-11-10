@@ -1,5 +1,6 @@
 package main.gui.game.settings.settingsViewComponents;
 
+import javafx.event.ActionEvent;
 import javafx.geometry.Insets;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
@@ -65,20 +66,24 @@ public class BotSelectionView extends BorderPane { // TODO REMOVE BorderPane Wra
 		button1.setId("bot1Button");
 		button1.setStyle("-fx-base: green");
 		button1.setPadding(new Insets(BUTTON_PADDING, BUTTON_PADDING, BUTTON_PADDING, BUTTON_PADDING));
-		button1.setOnAction(event -> {
-			button1.setDisable(true);
-			button2.setDisable(false);
-			this.setCenter(botRepresentation1);
-		});
+		button1.setOnAction(this::onActionButton1);
 
 		button2.setId("bot2Button");
 		button2.setPadding(new Insets(BUTTON_PADDING, BUTTON_PADDING, BUTTON_PADDING, BUTTON_PADDING));
-		button2.setOnAction(event -> {
-			button1.setDisable(false);
-			button2.setDisable(true);
-			this.setCenter(botRepresentation2);
-		});
+		button2.setOnAction(this::onActionButton2);
 
+	}
+
+	private void onActionButton1(ActionEvent event) {
+		button1.setDisable(true);
+		button2.setDisable(false);
+		this.setCenter(botRepresentation1);
+	}
+
+	private void onActionButton2(ActionEvent event) {
+		button1.setDisable(false);
+		button2.setDisable(true);
+		this.setCenter(botRepresentation2);
 	}
 
 	private void initBotRepresentation() {
@@ -132,9 +137,20 @@ public class BotSelectionView extends BorderPane { // TODO REMOVE BorderPane Wra
 			selected.toggleSurrenderButton();
 		}
 	}
-	
+
 	public void setDisableColorSelect(boolean disable) {
 		selected.disableColorSelect(disable);
+	}
+
+	public void setVisibleBotSelectButtons(boolean visible) {
+		topBar.getChildren().forEach(c -> c.setVisible(visible));
+		if (!visible) { // without this user could be lost in menue because bot buttons disappear
+			if (selected == botRepresentation1) {
+				onActionButton1(new ActionEvent());
+			} else {
+				onActionButton2(new ActionEvent());
+			}
+		}
 	}
 
 }

@@ -59,4 +59,11 @@ public class Vector2D {
 		return "( " + x + " | " + y + " )";
 	}
 
+	public Vector2D getInverted(int numb) {
+		Vector2D invertedVec = new Vector2D(this.getX(),this.getY()); 
+		invertedVec.invertX(numb);
+		invertedVec.invertY(numb);
+		return invertedVec;
+	}
+
 }

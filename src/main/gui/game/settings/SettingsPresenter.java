@@ -12,11 +12,13 @@ public class SettingsPresenter {
 	public void setInGameContent() {
 		settingsView.toggleSelectSurrenderButton(true);
 		settingsView.setDisableColorSelect(true);
+		settingsView.setVisibleBotSelectButtons(false);
 	}
 
 	public void setNoGameContent() {
 		settingsView.toggleSelectSurrenderButton(false);
 		settingsView.setDisableColorSelect(false);
+		settingsView.setVisibleBotSelectButtons(true);
 	}
 
 	public Settings getSettings() {

@@ -11,8 +11,10 @@ import main.gui.game.settings.settingsViewComponents.BotRepresentation;
 import main.model.Model;
 import main.model.convertions.BoardConverter;
 import main.model.convertions.FENConverter;
+import main.model.gameLogic.BoardRepresentation;
 import main.model.gameStates.GameState;
 import main.model.gameStates.State;
+import utils.ChessPieceColor;
 import utils.Move;
 import utils.SimplePiece;
 import utils.Vector2D;
@@ -30,32 +32,26 @@ public class MainPresenter {
 
 	public boolean moveRequest(Vector2D oldPos, Vector2D newPos) {
 		boolean validMove = model.movePiece(oldPos, newPos); // after model.moveRequest
-
 		checkGameStates();
-
 		return validMove;
 	}
 
 	public SimplePiece[][] requestBotMove() {
-
-		// TODO TEMP
-
+		int c = 0;
 		while (State.gameState.inGame()) {
 			if (model.makeBotMove()) {
+				break;
+			}
+			if (++c >= 1000) {
+				System.err.print("\n Bot couldnt find a Move after " + c + " attempts.");
 				break;
 			}
 		}
 		checkGameStates();
 		return BoardConverter.convertToSimple(model.getBoard());
-
-//		model.makeBotMove();
-//		SimplePiece[][] simpleBoard = BoardConverter.convertToSimple(model.getBoard());
-//		return BoardConverter.convertToSimple(model.getBoard()); // no move
-		// TODO TEMP
 	}
 
 	public void checkGameStates() {
-
 		if (State.gameState.inGame()) {
 			return; // Game can continue normally
 		}
@@ -77,9 +73,15 @@ public class MainPresenter {
 	}
 
 	public void startGame() {
+		startModel();
 		startGameViews();
 		startBoard();
-		startModel();
+
+		if (model.getSelectedChessBot() != null) { // user plays against bot
+			if (model.getSelectedChessBot().getColor().isWhite()) {
+				gamePresenter.userMoveSucceeded();
+			}
+		}
 	}
 
 	private void startGameViews() {
@@ -90,9 +92,9 @@ public class MainPresenter {
 	private void startBoard() {
 		loadBoard(settings.selectedFEN.get());
 		// Dis- and enable listeners
-//		ChessPieceColor playerColor = settingsPresenter.getSelectedBot().getUserColor();
-//		gamePresenter.setPieceListenerDisabled(playerColor, false);
-//		gamePresenter.setPieceListenerDisabled(playerColor.getOpponentColor(), true);
+		ChessPieceColor playerColor = settingsPresenter.getSelectedBot().getUserColor();
+		gamePresenter.setPieceListenerDisabled(playerColor, false);
+		gamePresenter.setPieceListenerDisabled(playerColor.getOpponentColor(), true);
 	}
 
 	public void loadBoard(String fen) {
@@ -173,6 +175,9 @@ public class MainPresenter {
 		gameStartPresenter.botSelected(source);
 		gameOverPresenter.botSelected(source);
 		gamePresenter.userPlaysAs(source.getUserColor());
+		if (model != null) {
+			model.getSelectedChessBot().setColor(source.getUserColor().getOpponentColor());
+		}
 	}
 
 	public int getRoundCount() {
@@ -221,6 +226,7 @@ public class MainPresenter {
 	}
 
 	public List<Vector2D> getMoveablePositions(Vector2D pos) {
+		System.out.println(model.getBoardRepresentation());
 		return model.getMoveablePositions(pos);
 	}
 

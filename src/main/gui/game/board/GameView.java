@@ -62,6 +62,8 @@ public class GameView extends Pane {
 
 	public void userPlaysAs(ChessPieceColor selectedColor) {
 		board.setInverted(selectedColor.isBlack());
+		board.setDisabledSide(selectedColor.getOpponentColor());
+		
 	}
 
 	public void userMoveSucceeded() {
@@ -84,5 +86,10 @@ public class GameView extends Pane {
 	public void unmarkLastMovebleSquares() {
 		gamePresenter.unMarkMoveableSquares();	
 	}
+
+	public boolean isBoardInverted() {
+		return board.isInverted();
+	}
+
 
 }

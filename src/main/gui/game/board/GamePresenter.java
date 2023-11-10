@@ -44,7 +44,10 @@ public class GamePresenter {
 			gameView.loadSimpleBoard(mainPresenter.requestBotMove());
 			Move botMove = mainPresenter.getLastBotMove();
 			markCheckedKing();
-			markSquaresPieceMoved(botMove.getOldPos(), botMove.getNewPos());
+			final Vector2D oldPos = botMove.getOldPos(), newPos = botMove.getNewPos();
+			boolean inv = gameView.isBoardInverted();
+			int len = settings.columns - 1;
+			markSquaresPieceMoved(inv ? oldPos.getInverted(len) : oldPos, inv ? newPos.getInverted(len) : newPos);
 		}
 	}
 
@@ -60,11 +63,14 @@ public class GamePresenter {
 	}
 
 	private void markCheckedKing() {
+		boolean inv = gameView.isBoardInverted();
+		int len = settings.columns - 1;
 		if (mainPresenter.kingInCheck()) {
 			lastMarkedKingPos = mainPresenter.getKingCheckedPos();
-			gameView.markSquare(lastMarkedKingPos, settings.kingCheckMarked.get());
+			gameView.markSquare(inv ? lastMarkedKingPos.getInverted(len) : lastMarkedKingPos,
+					settings.kingCheckMarked.get());
 		} else if (lastMarkedKingPos != null) {
-			gameView.unmarkSquare(lastMarkedKingPos);
+			gameView.unmarkSquare(inv ? lastMarkedKingPos.getInverted(len) : lastMarkedKingPos);
 		}
 	}
 
@@ -115,16 +121,25 @@ public class GamePresenter {
 
 	public void markMoveableSquares(Vector2D pos) {
 		piecePosition = pos;
-		moveablePositions = mainPresenter.getMoveablePositions(pos);
+		final int len = settings.columns - 1; // either columns or rows, does not matter
+		final boolean inv = gameView.isBoardInverted();
+
+		moveablePositions = mainPresenter.getMoveablePositions(inv ? pos.getInverted(len) : pos);
+
 		gameView.markSquare(pos, settings.markedColorBright.get());
-		moveablePositions.forEach(position -> gameView.markSquare(position, settings.moveablePosMarked.get()));
+		moveablePositions.forEach(position -> gameView.markSquare(inv ? position.getInverted(len) : position,
+				settings.moveablePosMarked.get()));
 	}
 
 	public void unMarkMoveableSquares() {
 		if (moveablePositions == null)
 			return;
-		gameView.unmarkSquare(piecePosition);
-		moveablePositions.forEach(position -> gameView.unmarkSquare(position));
+
+		final boolean inv = gameView.isBoardInverted();
+		final int len = settings.columns - 1;
+		gameView.unmarkSquare(inv ? piecePosition.getInverted(len) : piecePosition);
+		moveablePositions.forEach(position -> gameView.unmarkSquare(inv ? position.getInverted(len) : position));
+
 	}
 
 }

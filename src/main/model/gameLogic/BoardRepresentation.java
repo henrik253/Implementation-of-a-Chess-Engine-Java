@@ -303,7 +303,7 @@ public class BoardRepresentation {
 		String result = "";
 		for (int i = 0; i < board.length; i++) {
 			for (int j = 0; j < board[i].length; j++) {
-
+				
 				if (board[i][j] instanceof Piece) {
 					result += board[i][j].toString().charAt(2);
 				} else
@@ -312,6 +312,7 @@ public class BoardRepresentation {
 				result += " | ";
 			}
 			result += "\n";
+			
 			result += "_".repeat(40);
 			result += "\n";
 		}

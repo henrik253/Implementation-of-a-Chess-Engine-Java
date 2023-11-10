@@ -31,12 +31,12 @@ public class MoveValidation {
 	}
 
 	public boolean makeMove(Vector2D oldPos, Vector2D newPos) {
-		System.out.println("MoveValidation.makeMove(oldPos,newPos) : " + oldPos + " " + newPos);
 		Piece movedPiece = board.getPiece(oldPos);
-
-		if (isNoValidMove(oldPos, newPos))
+		
+		if (isNoValidMove(oldPos, newPos)) {
 			return false;
-
+		}
+		
 		board.makeMove(oldPos, newPos);
 		board.calcAttackedSquaresBy(movedPiece.getColor());
 

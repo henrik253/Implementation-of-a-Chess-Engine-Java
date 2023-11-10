@@ -127,7 +127,7 @@ public class Board extends GridPane {
 
 	public void drawPiecesOnBoard(SimplePiece[][] board) {
 		clearPiecesOnBoard();
-		
+
 		if (inverted) {
 			board = invertBoard(board);
 		}
@@ -208,6 +208,18 @@ public class Board extends GridPane {
 		this.gameView = gameView;
 	}
 
+	public ChessPieceColor getDisabledSide() {
+		return disabledSide;
+	}
+
+	public void setDisabledSide(ChessPieceColor disabledSide) {
+		this.disabledSide = disabledSide;
+	}
+
+	public boolean isInverted() {
+		return inverted;
+	}
+
 	private class Piece extends Pane {
 
 		private ImageView imageView;
@@ -239,6 +251,7 @@ public class Board extends GridPane {
 		private void showMoveableSquares() {
 			Vector2D currentPos = new Vector2D(row.get(), column.get());
 			gameView.showMoveablePositions(currentPos);
+
 		}
 
 		private void onDisabled(MouseEvent event) {
@@ -279,6 +292,7 @@ public class Board extends GridPane {
 		public ChessPieceColor getColor() {
 			return color;
 		}
+
 	}
 
 	private static class MovedPiece {

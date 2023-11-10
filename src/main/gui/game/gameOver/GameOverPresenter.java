@@ -47,6 +47,7 @@ public class GameOverPresenter {
 
 	public void gameOver() {
 		gameOverView.drawScore(mainPresenter.getUserWins(), mainPresenter.getBotWins());
+		
 	}
 
 }

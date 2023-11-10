@@ -78,6 +78,10 @@ public class SettingsView extends Pane {
 		botSelectionView.setDisableColorSelect(disable);
 	}
 
+	public void setVisibleBotSelectButtons(boolean disable) {
+		botSelectionView.setVisibleBotSelectButtons(disable);
+	}
+
 	
 
 }

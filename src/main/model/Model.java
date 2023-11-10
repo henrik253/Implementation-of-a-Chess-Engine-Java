@@ -35,7 +35,7 @@ public class Model {
 	private ChessBot bot2 = new ClassicBot();
 
 	public Model() {
-		selectedChessBot = bot2;//new ClassicBot();
+		selectedChessBot = new RandomChessBot();//bot2;//new ClassicBot();
 		selectedChessBot.setColor(ChessPieceColor.BLACK);
 		gameStatistic = new GameStatistic();
 	}
@@ -49,7 +49,10 @@ public class Model {
 		this.boardRepresentation = new BoardRepresentation(FENConverter.convertPieceBoard(settings.selectedFEN.get())); // <----
 		moveValidation.setBoard(boardRepresentation);
 		this.moveValidation.setOnMove(ChessPieceColor.WHITE);
+		System.out.println("MODEL START GAME ");
 	}
+
+	
 
 	public void endGame() {
 		State.gameState = GameState.GAME_OVER;
@@ -171,5 +174,15 @@ public class Model {
 		return boardRepresentation.getPiece(pos).calculateMoveablePositions().stream().flatMap(s -> s.stream())
 				.toList();
 	}
+	
+	public ChessBot getSelectedChessBot() {
+		return selectedChessBot;
+	}
+
+
+	public void setSelectedChessBot(ChessBot selectedChessBot) {
+		this.selectedChessBot = selectedChessBot;
+	}
+
 
 }
