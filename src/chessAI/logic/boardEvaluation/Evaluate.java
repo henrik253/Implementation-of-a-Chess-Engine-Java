@@ -1,7 +1,7 @@
 package chessAI.logic.boardEvaluation;
 
-import main.model.chessPieces.concretePieces.Piece;
 import main.model.gameLogic.BoardRepresentation;
+import main.model.pieces.Piece;
 import utils.ChessPieceColor;
 
 public class Evaluate {
@@ -25,10 +25,9 @@ public class Evaluate {
 			}
 		}
 
-		if (color.isWhite())
-			return sumWhite - sumBlack;
 
-		return sumBlack - sumWhite;
+
+		return Math.abs(sumBlack - sumWhite);
 	}
 
 }

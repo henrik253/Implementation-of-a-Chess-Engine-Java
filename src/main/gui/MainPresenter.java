@@ -12,11 +12,11 @@ import main.model.Model;
 import main.model.convertions.BoardConverter;
 import main.model.convertions.FENConverter;
 import main.model.gameLogic.BoardRepresentation;
-import main.model.gameStates.GameState;
-import main.model.gameStates.State;
 import utils.ChessPieceColor;
+import utils.GameState;
 import utils.Move;
 import utils.SimplePiece;
+import utils.State;
 import utils.Vector2D;
 
 public class MainPresenter {
@@ -31,7 +31,15 @@ public class MainPresenter {
 	private Model model;
 
 	public boolean moveRequest(Vector2D oldPos, Vector2D newPos) {
-		boolean validMove = model.movePiece(oldPos, newPos); // after model.moveRequest
+		boolean validMove ; 
+		try {
+			validMove = model.movePiece(oldPos, newPos); // after model.moveRequest
+		}
+		catch(Exception e) {
+			e.printStackTrace();
+			System.err.println(model.getBoardRepresentation());
+			throw e;
+		}
 		checkGameStates();
 		return validMove;
 	}
@@ -39,9 +47,16 @@ public class MainPresenter {
 	public SimplePiece[][] requestBotMove() {
 		int c = 0;
 		while (State.gameState.inGame()) {
+		try	{
 			if (model.makeBotMove()) {
 				break;
 			}
+		}
+		catch(Exception e) {
+			e.printStackTrace();
+			System.err.println(model.getBoardRepresentation()); 
+			throw e;
+		}
 			if (++c >= 1000) {
 				System.err.print("\n Bot couldnt find a Move after " + c + " attempts.");
 				break;

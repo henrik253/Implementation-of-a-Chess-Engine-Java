@@ -1,12 +1,12 @@
 package main.model.gameLogic;
 
 import main.model.Model;
-import main.model.chessPieces.concretePieces.*;
-import main.model.gameStates.GameOverReason;
-import main.model.gameStates.GameState;
-import main.model.gameStates.InCheck;
-import main.model.gameStates.State;
+import main.model.pieces.*;
 import utils.ChessPieceColor;
+import utils.GameOverReason;
+import utils.GameState;
+import utils.InCheck;
+import utils.State;
 import utils.Vector2D;
 
 import java.util.LinkedList;
@@ -69,8 +69,8 @@ public class MoveValidation {
 	}
 
 	private void testCheckMate(Piece piece) {
-		if (isCheckMate(onMove.isWhite() ? board.getBlackKing() : board.getWhiteKing(), piece)) {
-			initiateCheckMate(); // TODO mehr Trennung zwischen Model und Presenter
+		if (isCheckMate(board.getKing(onMove.getOpponentColor()), piece)) {
+			initiateCheckMate(); 
 		}
 	}
 
@@ -87,7 +87,7 @@ public class MoveValidation {
 
 		final int[][] attackedSquaresByEnemy = board.calcAttackedSquaresBy(pieceColor.getOpponentColor());
 
-		King king = pieceColor.isWhite() ? board.getWhiteKing() : board.getBlackKing();
+		King king = board.getKing(pieceColor);
 
 		// checks if own side would be in check if it does the move
 		boolean check = inCheck(attackedSquaresByEnemy, king);
@@ -108,7 +108,7 @@ public class MoveValidation {
 	}
 
 	private boolean kingCanMove(King king) {
-		King k = onMove.isWhite() ? board.getBlackKing() : board.getWhiteKing();
+		King k = board.getKing(onMove.getOpponentColor());
 		int[][] attackedSquares = onMove.isWhite() ? board.getAttackedSquaresByWhite()
 				: board.getAttackedSquaresByBlack();
 
@@ -175,22 +175,7 @@ public class MoveValidation {
 	}
 
 	private boolean enemyInRemi() { // Fehleranfällig?
-		List<Piece> pieces = onMove.isWhite() ? board.getBlackPieces() : board.getWhitePieces();
-		List<Piece> piecesClone = new LinkedList<>(pieces);
-		// java.util.ConcurrentModificationException so we clone pieces
-		// exception is thrown when looping through the list and the list is changed
-		// from another thread
-		for (Piece p : piecesClone) {
-			for (List<Vector2D> moves : p.getMoveablePositions()) {
-				for (Vector2D move : moves) {
-					if (!kingInCheckIfPieceMoves(p.getPosition(), move)) { // if move was found, proof if its
-						return false; // a legal move
-					}
-
-				}
-			}
-		}
-		return true;
+		return false;
 	}
 
 	private void remis() {
@@ -218,8 +203,9 @@ public class MoveValidation {
 	public boolean enemyInCheck() {
 		int[][] attackedSquares = onMove.isWhite() ? board.getAttackedSquaresByWhite()
 				: board.getAttackedSquaresByBlack();
-		Vector2D pos = onMove.isWhite() ? board.getBlackKing().getPosition() : board.getWhiteKing().getPosition();
-
+		Vector2D pos = board.getKing(onMove.getOpponentColor()).getPosition();
+		
+		
 		boolean inCheck = attackedSquares[pos.getY()][pos.getX()] > 0;
 
 		return inCheck;

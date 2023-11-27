@@ -2,7 +2,7 @@ package ai.Util;
 
 import ai.Validation.BitboardValidation.BitboardMoveValidation;
 import ai.Validation.Bitboards.BitMaskArr;
-import main.model.chessPieces.concretePieces.Piece;
+import main.model.pieces.Piece;
 
 import java.util.ArrayList;
 import java.util.LinkedList;

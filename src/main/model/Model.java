@@ -3,22 +3,21 @@ package main.model;
 import java.util.List;
 
 import main.Settings;
-import main.model.bots.DeeperBlueBot;
-import main.model.bots.ChessBot;
-import main.model.bots.ClassicBot;
-import main.model.bots.RandomChessBot;
-import main.model.chessPieces.concretePieces.Piece;
+import main.model.chessbots.ChessBot;
+import main.model.chessbots.ClassicBot;
+import main.model.chessbots.DeeperBlueBot;
+import main.model.chessbots.RandomChessBot;
 import main.model.convertions.FENConverter;
 import main.model.gameLogic.BoardRepresentation;
 import main.model.gameLogic.MoveValidation;
-import main.model.gameStates.ChessMove;
-import main.model.gameStates.GameOverReason;
-import main.model.gameStates.GameState;
-import main.model.gameStates.InCheck;
-import main.model.gameStates.State;
-import main.model.statistics.GameStatistic;
+import main.model.pieces.Piece;
+import utils.ChessMove;
 import utils.ChessPieceColor;
+import utils.GameOverReason;
+import utils.GameState;
+import utils.InCheck;
 import utils.Move;
+import utils.State;
 import utils.Vector2D;
 
 public class Model {
@@ -27,19 +26,17 @@ public class Model {
 	private BoardRepresentation boardRepresentation;
 	private MoveValidation moveValidation;
 
-	private ChessBot selectedChessBot; // TODO
-
 	private GameStatistic gameStatistic;
 
+	private ChessBot selectedChessBot;
 	private ChessBot bot1 = new DeeperBlueBot();
 	private ChessBot bot2 = new ClassicBot();
 
 	public Model() {
-		selectedChessBot = new RandomChessBot();//bot2;//new ClassicBot();
-		selectedChessBot.setColor(ChessPieceColor.BLACK);
+		selectedChessBot = new RandomChessBot();//new DeeperBlueBot();// bot2;//new ClassicBot();
+		selectedChessBot.setColor(ChessPieceColor.BLACK); // By default black
 		gameStatistic = new GameStatistic();
 	}
-	
 
 	// GAME START
 	public void startGame() {
@@ -49,10 +46,9 @@ public class Model {
 		this.boardRepresentation = new BoardRepresentation(FENConverter.convertPieceBoard(settings.selectedFEN.get())); // <----
 		moveValidation.setBoard(boardRepresentation);
 		this.moveValidation.setOnMove(ChessPieceColor.WHITE);
+
 		System.out.println("MODEL START GAME ");
 	}
-
-	
 
 	public void endGame() {
 		State.gameState = GameState.GAME_OVER;
@@ -60,7 +56,14 @@ public class Model {
 
 	// GAME RUNNING
 	public boolean movePiece(Vector2D oldPos, Vector2D newPos) { // <----
-		boolean success = moveValidation.makeMove(oldPos, newPos);
+		boolean success;
+		try {
+			success = moveValidation.makeMove(oldPos, newPos);
+		} catch (Exception e) {
+			e.printStackTrace();
+			throw e;
+		}
+
 		updateState(success, new Move(oldPos, newPos));
 		enterGameResult();
 		return success;
@@ -94,8 +97,7 @@ public class Model {
 	}
 
 	public Vector2D getKingCheckedPos() {
-		return State.lastInCheck.isWhite() ? boardRepresentation.getWhiteKing().getPosition()
-				: boardRepresentation.getBlackKing().getPosition();
+		return boardRepresentation.getKing(State.lastInCheck).getPosition();
 	}
 
 	// All statistic are for the selectedChessBot
@@ -174,15 +176,13 @@ public class Model {
 		return boardRepresentation.getPiece(pos).calculateMoveablePositions().stream().flatMap(s -> s.stream())
 				.toList();
 	}
-	
+
 	public ChessBot getSelectedChessBot() {
 		return selectedChessBot;
 	}
 
-
 	public void setSelectedChessBot(ChessBot selectedChessBot) {
 		this.selectedChessBot = selectedChessBot;
 	}
-
 
 }

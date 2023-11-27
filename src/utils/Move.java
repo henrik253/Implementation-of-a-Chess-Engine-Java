@@ -1,6 +1,6 @@
 package utils;
 
-import main.model.chessPieces.concretePieces.Piece;
+import main.model.pieces.Piece;
 
 public final class Move {
 

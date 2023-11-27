@@ -1,12 +1,12 @@
 package main.model.convertions;
 
-import main.model.chessPieces.concretePieces.Bishop;
-import main.model.chessPieces.concretePieces.King;
-import main.model.chessPieces.concretePieces.Knight;
-import main.model.chessPieces.concretePieces.Pawn;
-import main.model.chessPieces.concretePieces.Piece;
-import main.model.chessPieces.concretePieces.Queen;
-import main.model.chessPieces.concretePieces.Rook;
+import main.model.pieces.Bishop;
+import main.model.pieces.King;
+import main.model.pieces.Knight;
+import main.model.pieces.Pawn;
+import main.model.pieces.Piece;
+import main.model.pieces.Queen;
+import main.model.pieces.Rook;
 import utils.ChessPieceColor;
 import utils.ChessPieceName;
 import utils.SimplePiece;
@@ -105,7 +105,7 @@ public class FENConverter { // Converting a FEN String to
 		case 'n' -> new Knight(color, row, column);
 		case 'q' -> new Queen(color, row, column);
 		case 'k' -> new King(color, row, column);
-		default -> throw new IllegalArgumentException();
+		default -> throw new IllegalArgumentException(c + " at " + " row " + row + " & column " + column);
 		};
 
 	}

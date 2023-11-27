@@ -5,9 +5,9 @@ import java.util.Map;
 import java.util.Map.Entry;
 
 import chessAI.logic.boardEvaluation.Evaluate;
-import main.model.chessPieces.concretePieces.Piece;
 import main.model.gameLogic.BoardRepresentation;
 import main.model.gameLogic.MoveValidation;
+import main.model.pieces.Piece;
 import utils.ChessPieceColor;
 import utils.Vector2D;
 

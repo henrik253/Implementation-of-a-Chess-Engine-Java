@@ -1,0 +1,159 @@
+package test.main.model;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
+
+import org.junit.After;
+import org.junit.Test;
+
+import main.model.convertions.FENConverter;
+import main.model.gameLogic.*;
+import main.model.pieces.Piece;
+import main.model.pieces.Queen;
+import utils.ChessPieceColor;
+import utils.Vector2D;
+
+public class CheckMateTest {
+
+	private final String DoubleRookCheckMateByBlack = "rr6/8/8/8/8/8/8/K7";
+	private final String DoubleRookNoCheckMate = "rr6/8/2K5/8/8/8/8/8";
+	private final String DoubleRookCheckMateByWhite = "k7/8/8/8/8/8/RR6/K7";
+	private final String QueenCheckingWhiteKing = "rr1k4/1q6/8/8/8/8/6K1/8";
+	private final String DoubleRookCheckMateByWhiteKingMovesBehind = "8/8/k7/8/8/8/RR6/K7";
+	private final String DoubleRookNoCheckMateByWhiteKingMovesToRight = "8/8/k7/8/8/8/R1R5/K7";
+	private final String kingCantMoveSurroundedByWhiteRooks = "8/2R1R3/5R2/3k4/1R6/8/2R5/K7";
+	private final String kingCanTakeSurroundedByWhiteRooks = "8/2R5/4R3/3k4/1R6/8/2R5/K7";
+
+	final BoardRepresentation board1 = new BoardRepresentation(
+			FENConverter.convertPieceBoard(DoubleRookCheckMateByBlack));
+	final BoardRepresentation board2 = new BoardRepresentation(FENConverter.convertPieceBoard(DoubleRookNoCheckMate));
+	final BoardRepresentation board3 = new BoardRepresentation(
+			FENConverter.convertPieceBoard(DoubleRookCheckMateByWhite));
+	final BoardRepresentation board4 = new BoardRepresentation(FENConverter.convertPieceBoard(QueenCheckingWhiteKing));
+
+	@Test
+	public void test_getCheckingPiece() {
+		System.out.println("START test_getCheckingPiece");
+		final BoardRepresentation board1 = new BoardRepresentation(
+				FENConverter.convertPieceBoard(DoubleRookCheckMateByBlack));
+		System.out.println(board1.toBoardString());
+		Piece expected = board1.getPiece(new Vector2D(0, 0));
+		Piece actual = Check.getCheckingPiece(board1, ChessPieceColor.WHITE);
+		assertEquals(expected, actual);
+
+		final BoardRepresentation board2 = new BoardRepresentation(
+				FENConverter.convertPieceBoard(DoubleRookNoCheckMate));
+		System.out.println(board2.toBoardString());
+		assertEquals(Check.getCheckingPiece(board2, ChessPieceColor.WHITE), null);
+
+		final BoardRepresentation board3 = new BoardRepresentation(
+				FENConverter.convertPieceBoard(DoubleRookCheckMateByWhite));
+		System.out.println(board3.toBoardString());
+		expected = board3.getPiece(new Vector2D(0, 6));
+		actual = Check.getCheckingPiece(board3, ChessPieceColor.BLACK);
+		assertEquals(expected, actual);
+
+		final BoardRepresentation board4 = new BoardRepresentation(
+				FENConverter.convertPieceBoard(QueenCheckingWhiteKing));
+
+		System.out.println(board4.toBoardString());
+		assertTrue(Check.getCheckingPiece(board4, ChessPieceColor.WHITE) instanceof Queen);
+		System.out.println("END test_getCheckingPiece");
+	}
+
+	final BoardRepresentation board5 = getBoard(DoubleRookCheckMateByWhiteKingMovesBehind);
+	final BoardRepresentation board6 = getBoard(DoubleRookNoCheckMateByWhiteKingMovesToRight);
+	final BoardRepresentation board7 = getBoard(kingCantMoveSurroundedByWhiteRooks);
+	final BoardRepresentation board8 = getBoard(kingCanTakeSurroundedByWhiteRooks);
+	final BoardRepresentation board9 = getBoard("8/8/2R1R3/1Q1k4/2R1R3/8/8/K7"); // cant be stopped
+	final BoardRepresentation board10 = getBoard("k3R3/1Q6/8/8/8/R7/8/8"); // can be stopped by taking the Queen
+	final BoardRepresentation board11 = getBoard("k3R3/1Q6/8/8/4B3/R7/8/8"); // cant be stopped, queen is protected by
+																				// // bishop
+	final BoardRepresentation board12 = getBoard("8/1q6/3K4/4q3/2n5/8/8/8"); // cant be stopped, black queen is //
+																				// protected by knight
+	final BoardRepresentation board13 = getBoard("8/1q6/3K4/4q3/8/8/8/8"); // can be stopped, black queen is not
+																			// protected
+
+	@Test
+	public void test_kingCanMove() {
+		System.out.println("START test_kingCanMove");
+		System.out.println(board1.toBoardString());
+		assertFalse(Check.kingCanMove(board1, ChessPieceColor.WHITE));
+		System.out.println(board3.toBoardString());
+		assertFalse(Check.kingCanMove(board3, ChessPieceColor.BLACK));
+
+		System.out.println(board5.toBoardString());
+		assertFalse(Check.kingCanMove(board5, ChessPieceColor.BLACK));
+
+		System.out.println(board6.toBoardString());
+		assertTrue(Check.kingCanMove(board6, ChessPieceColor.BLACK));
+
+		System.out.println(board7.toBoardString());
+		assertFalse(Check.kingCanMove(board7, ChessPieceColor.BLACK));
+
+		System.out.println(board8.toBoardString());
+		assertTrue(Check.kingCanMove(board8, ChessPieceColor.BLACK));
+
+		System.out.println(board9.toBoardString());
+		assertFalse(Check.kingCanMove(board9, ChessPieceColor.BLACK));
+
+		System.out.println(board10.toBoardString());
+		assertTrue(Check.kingCanMove(board10, ChessPieceColor.BLACK));
+
+		System.out.println(board11.toBoardString());
+		assertFalse(Check.kingCanMove(board11, ChessPieceColor.BLACK));
+
+		System.out.println(board12.toBoardString());
+		assertFalse(Check.kingCanMove(board12, ChessPieceColor.WHITE)); // white king 
+		
+		System.out.println(board13.toBoardString());
+		assertTrue(Check.kingCanMove(board13, ChessPieceColor.WHITE));
+		
+		System.out.println("END test_kingCanMove");
+	}
+	//
+
+	final BoardRepresentation board14 = getBoard("K7/8/8/8/8/q7/1q6/4B3"); // Bishop can block the checking queen
+	final BoardRepresentation board15 = getBoard("K7/8/3B4/8/8/q7/1q6/8"); // Bishop can take the checking queen
+	final BoardRepresentation board16 = getBoard("K7/2n5/3B4/8/8/q6R/1q2N3/3k4"); // Double Check by Knight and Queen
+	final BoardRepresentation board17 = getBoard("K7/2n5/3Bq3/8/8/7R/1q2N3/3k4"); // Bishop can take checking knight
+
+	@After
+	public void test_checkCanBeStopped() {
+		System.out.println("START test_checkCanBeStopped");
+		System.out.println(board14.toBoardString());
+		Piece checkingPiece = Check.getCheckingPiece(board14, ChessPieceColor.WHITE);
+		System.out.println("Checking Piece: " + checkingPiece);
+		assertTrue(Check.checkCanBeStopped(board14, ChessPieceColor.WHITE, checkingPiece));
+
+		System.out.println(board15.toBoardString());
+		checkingPiece = Check.getCheckingPiece(board15, ChessPieceColor.WHITE);
+		System.out.println("Checking Piece: " + checkingPiece);
+		assertTrue(Check.checkCanBeStopped(board15, ChessPieceColor.WHITE, checkingPiece));
+
+		System.out.println(board16.toBoardString());
+		checkingPiece = Check.getCheckingPiece(board16, ChessPieceColor.WHITE);
+		System.out.println("Checking Piece: " + checkingPiece);
+		assertFalse(Check.checkCanBeStopped(board16, ChessPieceColor.WHITE, checkingPiece));
+
+		System.out.println(board17.toBoardString());
+		checkingPiece = Check.getCheckingPiece(board17, ChessPieceColor.WHITE);
+		System.out.println("Checking Piece: " + checkingPiece);
+		assertTrue(Check.checkCanBeStopped(board17, ChessPieceColor.WHITE, checkingPiece));
+
+		System.out.println("END test_checkCanBeStopped");
+	}
+
+	private BoardRepresentation getBoard(String fen) {
+		return new BoardRepresentation(FENConverter.convertPieceBoard(fen));
+	}
+
+//	@Test
+//	public void test_CheckMate() {
+//		final BoardRepresentation board1 = new BoardRepresentation(FENConverter.convertPieceBoard(DoubleRookCheckMateByBlack));
+//		
+//		assertTrue(Check.isMate(board1, ChessPieceColor.WHITE));
+//	}
+
+}

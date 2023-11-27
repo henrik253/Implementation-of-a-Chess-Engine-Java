@@ -3,8 +3,8 @@ package main.gui.game.gameOver;
 import main.gui.MainPresenter;
 import main.gui.game.board.GamePresenter;
 import main.gui.game.settings.settingsViewComponents.BotRepresentation;
-import main.model.gameStates.State;
-import main.model.statistics.GameStatistic;
+import main.model.GameStatistic;
+import utils.State;
 
 public class GameOverPresenter {
 

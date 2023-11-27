@@ -5,9 +5,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import main.model.chessPieces.concretePieces.Piece;
 import main.model.gameLogic.BoardRepresentation;
 import main.model.gameLogic.MoveValidation;
+import main.model.pieces.Piece;
 import utils.ChessPieceColor;
 import utils.Move;
 import utils.Vector2D;

@@ -1,12 +1,12 @@
 package main.model.convertions;
 
-import main.model.chessPieces.concretePieces.Bishop;
-import main.model.chessPieces.concretePieces.King;
-import main.model.chessPieces.concretePieces.Knight;
-import main.model.chessPieces.concretePieces.Pawn;
-import main.model.chessPieces.concretePieces.Piece;
-import main.model.chessPieces.concretePieces.Queen;
-import main.model.chessPieces.concretePieces.Rook;
+import main.model.pieces.Bishop;
+import main.model.pieces.King;
+import main.model.pieces.Knight;
+import main.model.pieces.Pawn;
+import main.model.pieces.Piece;
+import main.model.pieces.Queen;
+import main.model.pieces.Rook;
 import utils.ChessPieceName;
 import utils.SimplePiece;
 

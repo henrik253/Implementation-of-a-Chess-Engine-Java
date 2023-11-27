@@ -3,9 +3,9 @@ package chessAI;
 import java.util.Map;
 import java.util.Map.Entry;
 
-import main.model.bots.ChessBot;
-import main.model.chessPieces.concretePieces.Piece;
+import main.model.chessbots.ChessBot;
 import main.model.gameLogic.BoardRepresentation;
+import main.model.pieces.Piece;
 import utils.ChessPieceColor;
 import utils.Move;
 import utils.Vector2D;
@@ -17,7 +17,7 @@ public class ClassicChessBot implements ChessBot {
 	private Move move;
 
 	public ClassicChessBot() {
-		depth = 4;
+		depth = 2;
 		color = ChessPieceColor.BLACK; // by default Black
 	}
 
