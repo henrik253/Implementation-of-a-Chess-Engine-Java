@@ -323,9 +323,9 @@ public class BoardRepresentation {
 			for (int j = 0; j < board[i].length; j++) {
 
 				if (board[i][j] instanceof Piece) {
-					result += board[i][j].toString().charAt(2);
+					result += board[i][j].getShortName();
 				} else
-					result += " ";
+					result += "  ";
 
 				result += " | ";
 			}

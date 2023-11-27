@@ -78,36 +78,37 @@ public class CheckMateTest {
 	@Test
 	public void test_kingCanMove() {
 		System.out.println("START test_kingCanMove");
-		System.out.println(board1.toBoardString());
+		System.out.println("board1 \n" + board1.toBoardString());
 		assertFalse(Check.kingCanMove(board1, ChessPieceColor.WHITE));
-		System.out.println(board3.toBoardString());
+		
+		System.out.println("board3 \n" + board3.toBoardString());
 		assertFalse(Check.kingCanMove(board3, ChessPieceColor.BLACK));
 
-		System.out.println(board5.toBoardString());
+		System.out.println("board5 \n" + board5.toBoardString());
 		assertFalse(Check.kingCanMove(board5, ChessPieceColor.BLACK));
 
-		System.out.println(board6.toBoardString());
+		System.out.println("board6 \n" + board6.toBoardString());
 		assertTrue(Check.kingCanMove(board6, ChessPieceColor.BLACK));
 
-		System.out.println(board7.toBoardString());
+		System.out.println("board7 \n" + board7.toBoardString());
 		assertFalse(Check.kingCanMove(board7, ChessPieceColor.BLACK));
 
-		System.out.println(board8.toBoardString());
+		System.out.println("board8 \n" + board8.toBoardString());
 		assertTrue(Check.kingCanMove(board8, ChessPieceColor.BLACK));
 
-		System.out.println(board9.toBoardString());
+		System.out.println("board9 \n" + board9.toBoardString());
 		assertFalse(Check.kingCanMove(board9, ChessPieceColor.BLACK));
 
-		System.out.println(board10.toBoardString());
+		System.out.println("board10 \n" + board10.toBoardString());
 		assertTrue(Check.kingCanMove(board10, ChessPieceColor.BLACK));
 
-		System.out.println(board11.toBoardString());
+		System.out.println("board11 \n" + board11.toBoardString());
 		assertFalse(Check.kingCanMove(board11, ChessPieceColor.BLACK));
 
-		System.out.println(board12.toBoardString());
+		System.out.println("board12 \n" + board12.toBoardString());
 		assertFalse(Check.kingCanMove(board12, ChessPieceColor.WHITE)); // white king 
 		
-		System.out.println(board13.toBoardString());
+		System.out.println("board13 \n" + board13.toBoardString());
 		assertTrue(Check.kingCanMove(board13, ChessPieceColor.WHITE));
 		
 		System.out.println("END test_kingCanMove");
@@ -148,12 +149,27 @@ public class CheckMateTest {
 	private BoardRepresentation getBoard(String fen) {
 		return new BoardRepresentation(FENConverter.convertPieceBoard(fen));
 	}
-
-//	@Test
-//	public void test_CheckMate() {
-//		final BoardRepresentation board1 = new BoardRepresentation(FENConverter.convertPieceBoard(DoubleRookCheckMateByBlack));
-//		
-//		assertTrue(Check.isMate(board1, ChessPieceColor.WHITE));
-//	}
+	
+	final BoardRepresentation board18 = getBoard("k7/1Q6/8/2N5/8/8/8/8"); // Checkmate by white
+	final BoardRepresentation board19 = getBoard("k7/2Q5/8/2N5/8/8/8/8"); // No Checkmate by white
+	final BoardRepresentation board20 = getBoard("k7/3Q4/8/8/1R2B3/8/2N5/3K4"); //Checkmate by white
+	final BoardRepresentation board21 = getBoard("8/1k6/4r3/8/8/8/3n2qr/5K2"); // Checkmate by black
+	final BoardRepresentation board22 = getBoard("8/1k4q1/4r3/8/2n5/8/7r/5K2"); // No Checkmate by black
+	final BoardRepresentation board23 = getBoard("rnbqkbnr/pppQpppp/8/1B6/4P3/8/PPPP1PPP/RNB1K1NR"); // No Checkmate by white,
+	// queen can be taken. 
+	
+	
+	@Test
+	public void test_CheckMate() {
+	
+		
+		assertTrue(Check.isMate(board18, ChessPieceColor.BLACK));
+		assertFalse(Check.isMate(board19, ChessPieceColor.BLACK));// falsse .
+		assertTrue(Check.isMate(board20, ChessPieceColor.BLACK));// false
+		assertTrue(Check.isMate(board21, ChessPieceColor.WHITE));
+		assertFalse(Check.isMate(board22, ChessPieceColor.WHITE));
+		assertFalse(Check.isMate(board23, ChessPieceColor.BLACK));
+		
+	}
 
 }

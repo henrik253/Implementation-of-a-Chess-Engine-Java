@@ -105,6 +105,13 @@ public abstract class Piece {
 	public String toString() {
 		return "( " + this.name + " " + this.color + " " + position.toString() + " )";
 	}
+	
+	public String getShortName() {
+		char c = this.name.toString().charAt(0);
+		if(this instanceof Knight)
+			c = 'N';
+		return "" + ( color.isBlack() ? Character.toLowerCase(c) : c); 
+	}
 
 	public ChessPieceColor getColor() {
 		return color;

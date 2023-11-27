@@ -49,11 +49,19 @@ public class Check {
 	}
 
 	public static boolean isMate(BoardRepresentation board, ChessPieceColor checkedSide) {
-		return isMate(board, checkedSide, getCheckingPiece(board, checkedSide.getOpponentColor()));
+		return isMate(board, checkedSide, getCheckingPiece(board,checkedSide));
 	}
 
 	public static boolean isMate(BoardRepresentation board, ChessPieceColor mated, Piece checkingPiece) {
-		return kingCanMove(board, mated) && checkCanBeStopped(board, mated, checkingPiece);
+		if(kingInCheck(board,mated)){
+			return !kingCanMove(board, mated) && !checkCanBeStopped(board, mated, checkingPiece);
+		}
+		return false;
+	}
+	
+	public static boolean kingInCheck(BoardRepresentation board,ChessPieceColor kingSide){
+		Vector2D kingPos = board.getKing(kingSide).getPosition(); 
+		return board.getAttackedSquares(kingSide.getOpponentColor())[kingPos.getY()][kingPos.getX()] > 0;
 	}
 
 	public static boolean kingCanMove(BoardRepresentation board, ChessPieceColor mated) {
@@ -90,10 +98,6 @@ public class Check {
 				for (Piece capturingPiece : pieces) {
 					List<Vector2D> movesOfCapturingPiece = capturingPiece.calculateMoveablePositions().stream()
 							.flatMap(list -> list.stream()).toList();
-
-			
-					
-
 					// Blocking the piece(s) delivering check || Capturing the checking piece.
 					for (Vector2D capturingPieceMove : movesOfCapturingPiece) {
 
