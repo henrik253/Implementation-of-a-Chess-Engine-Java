@@ -165,10 +165,10 @@ public class King extends Piece {
 	private void executeCastling(Vector2D oldPos, Vector2D newPos) { // TODO test Castling
 		boolean isRightSideCastle = newPos.getX() - this.position.getX() > 0;
 		Vector2D rookDirection = new Vector2D(isRightSideCastle ? -2 : 3, 0);
+
+		super.executeMove(oldPos, newPos);
 		Piece[][] board = this.board.getBoard();
-
-		super.executeMove(oldPos, newPos); // only rook needs to be moved
-
+		// only rook needs to be moved
 		int rookCol = isRightSideCastle ? this.board.getBoard().length - 1 : 0;
 		Vector2D rookPos = new Vector2D(rookCol, this.position.getY()); // on the same row
 		Rook rook = (Rook) this.board.getPiece(rookPos);

@@ -97,6 +97,7 @@ public class Check {
 		for (List<Vector2D> movesInDirection : attackingSquares) {
 			if (movesInDirection.contains(k.getPosition())) { 
 				checkingDirection = movesInDirection;
+				break;
 			}
 		}
 		

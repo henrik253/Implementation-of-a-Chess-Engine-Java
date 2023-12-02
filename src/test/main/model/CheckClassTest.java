@@ -14,7 +14,7 @@ import main.model.pieces.Queen;
 import utils.ChessPieceColor;
 import utils.Vector2D;
 
-public class CheckMateTest {
+public class CheckClassTest {
 
 	private final String DoubleRookCheckMateByBlack = "rr6/8/8/8/8/8/8/K7";
 	private final String DoubleRookNoCheckMate = "rr6/8/2K5/8/8/8/8/8";
@@ -37,19 +37,19 @@ public class CheckMateTest {
 		System.out.println("START test_getCheckingPiece");
 		final BoardRepresentation board1 = new BoardRepresentation(
 				FENConverter.convertPieceBoard(DoubleRookCheckMateByBlack));
-		System.out.println(board1.toBoardString());
+		System.out.println("board1 \n" +board1.toBoardString());
 		Piece expected = board1.getPiece(new Vector2D(0, 0));
 		Piece actual = Check.getCheckingPiece(board1, ChessPieceColor.WHITE);
 		assertEquals(expected, actual);
 
 		final BoardRepresentation board2 = new BoardRepresentation(
 				FENConverter.convertPieceBoard(DoubleRookNoCheckMate));
-		System.out.println(board2.toBoardString());
+		System.out.println("board2 \n" + board2.toBoardString());
 		assertEquals(Check.getCheckingPiece(board2, ChessPieceColor.WHITE), null);
 
 		final BoardRepresentation board3 = new BoardRepresentation(
 				FENConverter.convertPieceBoard(DoubleRookCheckMateByWhite));
-		System.out.println(board3.toBoardString());
+		System.out.println("board3 \n" +board3.toBoardString());
 		expected = board3.getPiece(new Vector2D(0, 6));
 		actual = Check.getCheckingPiece(board3, ChessPieceColor.BLACK);
 		assertEquals(expected, actual);
@@ -57,7 +57,7 @@ public class CheckMateTest {
 		final BoardRepresentation board4 = new BoardRepresentation(
 				FENConverter.convertPieceBoard(QueenCheckingWhiteKing));
 
-		System.out.println(board4.toBoardString());
+		System.out.println("board4 \n" + board4.toBoardString());
 		assertTrue(Check.getCheckingPiece(board4, ChessPieceColor.WHITE) instanceof Queen);
 		System.out.println("END test_getCheckingPiece");
 	}
@@ -119,30 +119,36 @@ public class CheckMateTest {
 	final BoardRepresentation board15 = getBoard("K7/8/3B4/8/8/q7/1q6/8"); // Bishop can take the checking queen
 	final BoardRepresentation board16 = getBoard("K7/2n5/3B4/8/8/q6R/1q2N3/3k4"); // Double Check by Knight and Queen
 	final BoardRepresentation board17 = getBoard("K7/2n5/3Bq3/8/8/7R/1q2N3/3k4"); // Bishop can take checking knight
-
-	@After
+	
+	final BoardRepresentation boardFromGame1 = getBoard("1r4n1/p2Q2pr/7p/3RP3/1kp1P3/5N2/1P1n2PP/1K6"); // Black Knight checking king
+	
+	@Test
 	public void test_checkCanBeStopped() {
 		System.out.println("START test_checkCanBeStopped");
-		System.out.println(board14.toBoardString());
+		System.out.println("board14 \n" +board14.toBoardString());
 		Piece checkingPiece = Check.getCheckingPiece(board14, ChessPieceColor.WHITE);
 		System.out.println("Checking Piece: " + checkingPiece);
 		assertTrue(Check.checkCanBeStopped(board14, ChessPieceColor.WHITE, checkingPiece));
 
-		System.out.println(board15.toBoardString());
+		System.out.println("board15 \n" +board15.toBoardString());
 		checkingPiece = Check.getCheckingPiece(board15, ChessPieceColor.WHITE);
 		System.out.println("Checking Piece: " + checkingPiece);
 		assertTrue(Check.checkCanBeStopped(board15, ChessPieceColor.WHITE, checkingPiece));
 
-		System.out.println(board16.toBoardString());
+		System.out.println("board16 \n" +board16.toBoardString());
 		checkingPiece = Check.getCheckingPiece(board16, ChessPieceColor.WHITE);
 		System.out.println("Checking Piece: " + checkingPiece);
 		assertFalse(Check.checkCanBeStopped(board16, ChessPieceColor.WHITE, checkingPiece));
 
-		System.out.println(board17.toBoardString());
+		System.out.println("board17 \n" +board17.toBoardString());
 		checkingPiece = Check.getCheckingPiece(board17, ChessPieceColor.WHITE);
 		System.out.println("Checking Piece: " + checkingPiece);
 		assertTrue(Check.checkCanBeStopped(board17, ChessPieceColor.WHITE, checkingPiece));
-
+		
+		System.out.println("board from playing Game \n" + boardFromGame1.toBoardString());
+		checkingPiece = Check.getCheckingPiece(boardFromGame1, ChessPieceColor.WHITE);
+		assertTrue(Check.checkCanBeStopped(boardFromGame1, ChessPieceColor.WHITE, checkingPiece));
+		
 		System.out.println("END test_checkCanBeStopped");
 	}
 
@@ -163,16 +169,39 @@ public class CheckMateTest {
 	
 	@Test
 	public void test_CheckMate() {
-	
-		
+		System.out.println("board18 \n" + board18.toBoardString());
 		assertTrue(Check.isMate(board18, ChessPieceColor.BLACK));
+		System.out.println("board19 \n" + board18.toBoardString());
 		assertFalse(Check.isMate(board19, ChessPieceColor.BLACK));// falsse .
+		System.out.println("board20 \n" + board18.toBoardString());
 		assertTrue(Check.isMate(board20, ChessPieceColor.BLACK));// false
+		System.out.println("board21 \n" + board18.toBoardString());
 		assertTrue(Check.isMate(board21, ChessPieceColor.WHITE));
+		System.out.println("board22 \n" + board18.toBoardString());
 		assertFalse(Check.isMate(board22, ChessPieceColor.WHITE));
+		System.out.println("board23 \n" + board18.toBoardString());
 		assertFalse(Check.isMate(board23, ChessPieceColor.BLACK));
+		System.out.println("board23 \n" + board18.toBoardString());
 		assertTrue(Check.isMate(board24, ChessPieceColor.BLACK));
-		
 	}
-
+	
+	final BoardRepresentation board25 = getBoard("k7/1q3r2/3n4/4q3/Bn6/8/1N6/K2B1R2"); // Knight on 2 b pinned
+	final BoardRepresentation board26 = getBoard("k7/1q6/3n4/4q3/Bn6/8/1N6/K1rB1R2"); // Knight on 2 b pinned + king in Check!
+	final BoardRepresentation board27 = getBoard("k7/1q6/3n4/1q6/Bn6/8/1N6/K1rB1R2"); // Knight on 2 b not pinned + king in Check!
+	
+	
+	@After public void test_PiecePinned() {
+		System.out.println("board 25 \n "  + board25);
+		Piece knight25 =  board25.getPiece(new Vector2D(1,6));
+		assertTrue(Check.isPiecePinned(board25, knight25));
+		
+		System.out.println("board 26 \n "  + board26);
+		Piece knight26 = board26.getPiece(new Vector2D(1,6));
+		assertTrue(Check.isPiecePinned(board26, knight26));
+		
+		System.out.println("board 27 \n "  + board27);
+		Piece knight27 = board27.getPiece(new Vector2D(1,6));
+		assertFalse(Check.isPiecePinned(board27, knight27));
+	}
+	
 }

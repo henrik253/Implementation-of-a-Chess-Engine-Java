@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Map;
 
 import main.model.gameLogic.BoardRepresentation;
+import main.model.gameLogic.Check;
 import main.model.gameLogic.MoveValidation;
 import main.model.pieces.Piece;
 import utils.ChessPieceColor;
@@ -14,17 +15,18 @@ import utils.Vector2D;
 
 public class MoveGeneration {
 
-	private static MoveValidation validation = new MoveValidation();
-
 	public static Map<Piece, Vector2D[]> getMoves(final BoardRepresentation boardR, final ChessPieceColor color) {
-		validation.setOnMove(color);
-		validation.setBoard(boardR);
 
 		Map<Piece, Vector2D[]> allMoves = new HashMap<>();
-		Piece[][] board = boardR.getBoard();
+		Piece[][] board = boardR.getBoard().clone();
+		boolean inCheck = Check.kingInCheck(boardR, color);
 
 		for (Piece[] row : board) {
 			for (Piece p : row) {
+
+				if (Check.isPiecePinned(boardR, p)) { // Pinned piece can be ignored
+					continue;
+				}
 
 				if (p != null && p.getColor() == color) {
 					List<List<Vector2D>> movesInDirections = p.calculateMoveablePositions();
@@ -33,19 +35,23 @@ public class MoveGeneration {
 					for (List<Vector2D> moves : movesInDirections) {
 						for (Vector2D move : moves) {
 
-							if (validation.kingInCheckIfPieceMoves(p.getPosition(), move)) {
-								continue;
+							if (inCheck) {
+								if(Check.checkCanBeStopped(boardR, color, p)) {
+									tempResult.add(move);
+								}
+							} else {
+								tempResult.add(move);
 							}
-							
-							tempResult.add(move);
 						}
 					}
-					// TODO CHECK IF KING WOULD BE IN CHECK IF PIECE MOVES ! NO PSEUDO LEGAL MOVES ?
+
 					allMoves.put(p, tempResult.toArray(new Vector2D[tempResult.size()]));
 				}
 			}
 		}
 		return allMoves;
 	}
+	
+
 
 }

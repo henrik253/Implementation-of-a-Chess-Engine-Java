@@ -45,13 +45,13 @@ public class BoardRepresentation {
 
 	}
 
-	public BoardRepresentation(Piece[][] board, BoardRepresentation boardRepresentation) {
-		this.board = board;
-		whitePieces = boardRepresentation.whitePieces;
-		blackPieces = boardRepresentation.blackPieces;
-		capturedPieces = boardRepresentation.capturedPieces;
-		whiteKing = boardRepresentation.whiteKing;
-		blackKing = boardRepresentation.blackKing;
+	public BoardRepresentation(Piece[][] board,final BoardRepresentation boardRepresentation) {
+		this.board = board.clone();
+		whitePieces =  new LinkedList<>(boardRepresentation.whitePieces);
+		blackPieces =  new LinkedList<>(boardRepresentation.blackPieces);
+		capturedPieces = new LinkedList<>(boardRepresentation.capturedPieces);
+		whiteKing = (King) boardRepresentation.whiteKing.clone();
+		blackKing = (King) boardRepresentation.blackKing.clone();
 		lastMove = boardRepresentation.lastMove;
 
 		setBoardForPieces(); // before initPieces() !
