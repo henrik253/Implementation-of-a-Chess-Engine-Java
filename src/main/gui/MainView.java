@@ -3,7 +3,7 @@ package main.gui;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Pane;
 import main.Settings;
-import main.gui.game.board.GameView;
+import main.gui.game.board.view.GameView;
 import main.gui.game.gameOver.GameOverView;
 import main.gui.game.gameStart.GameStartView;
 import main.gui.game.settings.SettingsView;

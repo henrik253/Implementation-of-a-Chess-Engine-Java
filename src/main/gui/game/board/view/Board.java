@@ -1,4 +1,4 @@
-package main.gui.game.board;
+package main.gui.game.board.view;
 
 import java.util.LinkedList;
 import java.util.List;

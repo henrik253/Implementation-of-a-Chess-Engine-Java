@@ -18,6 +18,7 @@ public class GameOverView extends Pane {
 
 	private static final String PATH = "file:resources/";
 	private static final String FILENAME = "user";
+	
 	private static final String DATATYPE = ".png";
 	private static final Double IMAGE_SIZE = 64.0;
 
@@ -40,6 +41,7 @@ public class GameOverView extends Pane {
 
 	private Pane contentBox;
 	private Button playAgainButton;
+	private Button inspectGameButton;
 
 	private BorderPane playerWrapper;
 	private Pane playerImageWrapper;
@@ -65,6 +67,7 @@ public class GameOverView extends Pane {
 	public void init() {
 		initContentBox();
 		initPlayButton();
+		initInspectGameButton();
 
 		initVsTextWrapper(); // PlayerWrapper & BotWrapper elems need the TextWrapper to be first init.
 		initBotWrapper();
@@ -77,7 +80,8 @@ public class GameOverView extends Pane {
 	private void style() {
 		getChildren().add(overlay); // Adding the color fade in the background
 		this.getChildren().add(contentBox);
-		contentBox.getChildren().addAll(playAgainButton, playerWrapper, textWrapper, botWrapper, gameSentenceWrapper);
+		contentBox.getChildren().addAll(playAgainButton, inspectGameButton, playerWrapper, textWrapper, botWrapper,
+				gameSentenceWrapper);
 
 		pause = new PauseTransition(Duration.millis(DELAY));
 
@@ -191,6 +195,32 @@ public class GameOverView extends Pane {
 		double offset = gameSentence.getBoundsInLocal().getWidth() / 2;
 		gameSentenceWrapper.setTranslateX(playAgainButton.getPrefWidth() / 2 + offset);
 		gameSentenceWrapper.setTranslateY((contentBox.getPrefHeight() / 4));
+	}
+
+	private void initInspectGameButton() {
+		inspectGameButton = new Button(settings.inspectGameButtonText.get());
+		inspectGameButton.setId("inspectGameButton");
+		
+		double y = contentBox.getPrefHeight() / 20, x = contentBox.getPrefWidth() / 20;
+
+		inspectGameButton.setTranslateY(y);
+		inspectGameButton.setTranslateX(x);
+		
+		inspectGameButton.setOnMousePressed( event -> {
+			contentBox.setVisible(false);
+		});
+		
+		inspectGameButton.setOnMouseReleased( event -> {
+			contentBox.setVisible(true);
+		});
+		
+		inspectGameButton.setOnMouseEntered( event -> {
+			inspectGameButton.setText(settings.inspectGameButtonTextHover.get());
+		});
+		
+		inspectGameButton.setOnMouseExited( event -> {
+			inspectGameButton.setText(settings.inspectGameButtonText.get());
+		});
 	}
 
 	public Overlay getOverlay() {

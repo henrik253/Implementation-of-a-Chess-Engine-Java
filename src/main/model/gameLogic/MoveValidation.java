@@ -69,7 +69,7 @@ public class MoveValidation {
 	}
 
 	private void testCheckMate(Piece piece) {
-		if (isCheckMate(board.getKing(onMove.getOpponentColor()), piece)) {
+		if (Check.isMate(board, piece.getColor().getOpponentColor(), piece)) {
 			initiateCheckMate(); 
 		}
 	}
@@ -103,77 +103,6 @@ public class MoveValidation {
 		return attackedSquares[king.getPosition().getY()][king.getPosition().getX()] > 0;
 	}
 
-	public boolean isCheckMate(King king, Piece movedPiece) {// TODO Game Logic???
-		return !allyPieceStopsCheck(king, movedPiece) && !kingCanMove(king);
-	}
-
-	private boolean kingCanMove(King king) {
-		King k = board.getKing(onMove.getOpponentColor());
-		int[][] attackedSquares = onMove.isWhite() ? board.getAttackedSquaresByWhite()
-				: board.getAttackedSquaresByBlack();
-
-		List<List<Vector2D>> moveablePositions = k.getAttackableSquares();
-
-		// 1. Moving your king to a non-attacked square
-		for (List<Vector2D> movesInDirection : moveablePositions) {
-			for (Vector2D move : movesInDirection) {
-				Piece piece = board.getPiece(move);
-				if (attackedSquares[move.getY()][move.getX()] == 0 && !isAllyPiece(piece, move)) {
-					if (!kingInCheckIfPieceMoves(k.getPosition(), move)) { // King can move on that square
-						return true;
-					}
-				}
-			}
-		}
-
-		return false;
-	}
-
-	private boolean allyPieceStopsCheck(King king, Piece movedPiece) { // TODO use attackedSquares by Enemy ? King?
-		List<Piece> enemyPieces = onMove.isWhite() ? board.getBlackPieces() : board.getWhitePieces();
-		List<List<Vector2D>> attackingSquares = movedPiece.calculateAttackablePositions();
-
-		// movedPiece.getPosition() returns the updated position of the moved piece
-		for (List<Vector2D> movesInDirection : attackingSquares) {
-			if (movesInDirection.contains(king.getPosition())) { // direction the piece is checking the king
-				for (Piece enemyPiece : enemyPieces) {
-					List<Vector2D> enemyPieceMoves = enemyPiece.calculateMoveablePositions().stream()
-							.flatMap(list -> list.stream()).toList();
-
-					// Blocking the piece(s) delivering check || Capturing the checking piece.
-					for (Vector2D enemyPieceMove : enemyPieceMoves) {
-						if ((canBeBlocked(movesInDirection, enemyPieceMove, enemyPiece, king)
-								|| canBeCaptured(enemyPieceMove, enemyPiece, movedPiece))
-								&& !kingInCheckIfPieceMoves(enemyPiece.getPosition(), enemyPieceMove)) {
-							return true;
-						}
-					}
-				}
-			}
-		}
-		return false;
-	}
-
-	private boolean canBeBlocked(List<Vector2D> movesInDirection, Vector2D enemyPieceMove, Piece enemyPiece,
-			King enemyKing) {
-
-		if (enemyPieceMove.equals(enemyKing.getPosition())) // kings pos in not included in can be blocked!
-			return false;
-
-		return movesInDirection.contains(enemyPieceMove) && enemyPiece != enemyKing;
-	}
-
-	private boolean canBeCaptured(Vector2D enemyPieceMove, Piece enemyPiece, Piece movedPiece) {
-		int[][] attackedSquares = onMove.isWhite() ? board.getAttackedSquaresByWhite()
-				: board.getAttackedSquaresByBlack();
-
-		if (enemyPiece instanceof King) { // king can only take piece if is not in check after this
-			return enemyPieceMove.equals(movedPiece.getPosition())
-					&& attackedSquares[movedPiece.getPosition().getY()][movedPiece.getPosition().getX()] == 0;
-		}
-		return enemyPieceMove.equals(movedPiece.getPosition());
-	}
-
 	private boolean enemyInRemi() { // Fehleranfällig?
 		return false;
 	}
@@ -201,8 +130,7 @@ public class MoveValidation {
 	}
 
 	public boolean enemyInCheck() {
-		int[][] attackedSquares = onMove.isWhite() ? board.getAttackedSquaresByWhite()
-				: board.getAttackedSquaresByBlack();
+		int[][] attackedSquares = board.calcAttackedSquaresBy(onMove);
 		Vector2D pos = board.getKing(onMove.getOpponentColor()).getPosition();
 		
 		

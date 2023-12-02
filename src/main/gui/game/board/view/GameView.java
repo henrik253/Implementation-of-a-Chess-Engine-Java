@@ -1,9 +1,10 @@
-package main.gui.game.board;
+package main.gui.game.board.view;
 
 import java.util.List;
 
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
+import main.gui.game.board.presenter.GamePresenter;
 import utils.ChessPieceColor;
 import utils.SimplePiece;
 import utils.Vector2D;

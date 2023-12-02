@@ -27,7 +27,10 @@ public class Settings { // Settings is not static, to make different saveable se
 	
 	public StringProperty playButtonTextStart = new SimpleStringProperty("Start Game");
 	public StringProperty playButtonTextContinue = new SimpleStringProperty("Continue");
-
+	public StringProperty inspectGameButtonText = new SimpleStringProperty("inspect");
+	public StringProperty inspectGameButtonTextHover = new SimpleStringProperty("inspect (Press Mouse)");
+	
+	
 	public DoubleProperty settingsViewTranslateX = new SimpleDoubleProperty();
 	public DoubleProperty settingsViewTranslateY = new SimpleDoubleProperty(0);
 	public DoubleProperty settingsViewPrefWidth = new SimpleDoubleProperty();
@@ -56,6 +59,8 @@ public class Settings { // Settings is not static, to make different saveable se
 			"2N5/4P1K1/4k1B1/2b1p3/3P3p/2pn3N/b3Pr2/3r4 w - - 0 1",
 			"2R5/2p5/p1n1b3/q2pb2k/3P2p1/3nK1p1/p6P/8 w - - 0 1", "6q1/7P/2P5/2p2Q2/1p1PPK2/3pP2P/4Ppk1/7R w - - 0 1",
 			"B7/3P1qn1/4p2p/b3R3/2R2Np1/P1P3P1/3k4/6K1 w - - 0 1", "4k2r/6r1/8/8/8/8/3R4/R3K3", defaultFENString };
+
+
 
 	public Settings() {
 		squareHeight.bind(Bindings.divide(boardHeight, rows));

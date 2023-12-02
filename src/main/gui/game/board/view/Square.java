@@ -1,4 +1,4 @@
-package main.gui.game.board;
+package main.gui.game.board.view;
 
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
@@ -9,6 +9,4 @@ public class Square extends Rectangle {
 		super(width, height, color);
 	}
 	
-	
-
 }

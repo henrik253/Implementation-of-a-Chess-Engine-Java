@@ -286,25 +286,6 @@ public class BoardRepresentation {
 		this.board = board;
 	}
 	
-	public int[][] getAttackedSquares(ChessPieceColor color){
-		return color.isWhite() ? attackedSquaresByWhite : attackedSquaresByBlack; 
-	}
-	
-	public int[][] getAttackedSquaresByWhite() {
-		return attackedSquaresByWhite;
-	}
-
-	public void setAttackedSquaresByWhite(int[][] attackedSquaresByWhite) {
-		this.attackedSquaresByWhite = attackedSquaresByWhite;
-	}
-
-	public int[][] getAttackedSquaresByBlack() {
-		return attackedSquaresByBlack;
-	}
-
-	public void setAttackedSquaresByBlack(int[][] attackedSquaresByBlack) {
-		this.attackedSquaresByBlack = attackedSquaresByBlack;
-	}
 
 
 	public List<Move> getMoveHistory() {
@@ -325,7 +306,7 @@ public class BoardRepresentation {
 				if (board[i][j] instanceof Piece) {
 					result += board[i][j].getShortName();
 				} else
-					result += "  ";
+					result += " ";
 
 				result += " | ";
 			}

@@ -33,7 +33,7 @@ public class Model {
 	private ChessBot bot2 = new ClassicBot();
 
 	public Model() {
-		selectedChessBot = new RandomChessBot();//new DeeperBlueBot();// bot2;//new ClassicBot();
+		selectedChessBot = new DeeperBlueBot();//new ClassicBot();// new RandomChessBot();// bot1;//new DeeperBlueBot();// bot2;//new ClassicBot();
 		selectedChessBot.setColor(ChessPieceColor.BLACK); // By default black
 		gameStatistic = new GameStatistic();
 	}

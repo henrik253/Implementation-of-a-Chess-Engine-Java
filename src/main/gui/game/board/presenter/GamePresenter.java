@@ -1,10 +1,13 @@
-package main.gui.game.board;
+package main.gui.game.board.presenter;
 
 import java.util.List;
 
-import javafx.application.Platform;
+
+import javafx.concurrent.Service;
+import javafx.concurrent.Task;
 import main.Settings;
 import main.gui.MainPresenter;
+import main.gui.game.board.view.GameView;
 import utils.ChessPieceColor;
 import utils.Move;
 import utils.SimplePiece;
@@ -22,7 +25,13 @@ public class GamePresenter {
 
 	private List<Vector2D> moveablePositions;
 	private Vector2D piecePosition;
-
+	
+	private Service<SimplePiece[][]> chessBotCalculation = new ChessBotCalculationService();
+	
+	public GamePresenter() {
+		initChessBotCalculation();
+	}
+	
 	public void setBoard(SimplePiece[][] simplePieceBoard) {
 		gameView.initSimplePieceBoard(simplePieceBoard);
 	}
@@ -41,13 +50,7 @@ public class GamePresenter {
 
 	public void userMoveSucceeded() {
 		if (mainPresenter.gameIsRunning()) {
-			gameView.loadSimpleBoard(mainPresenter.requestBotMove());
-			Move botMove = mainPresenter.getLastBotMove();
-			markCheckedKing();
-			final Vector2D oldPos = botMove.getOldPos(), newPos = botMove.getNewPos();
-			boolean inv = gameView.isBoardInverted();
-			int len = settings.columns - 1;
-			markSquaresPieceMoved(inv ? oldPos.getInverted(len) : oldPos, inv ? newPos.getInverted(len) : newPos);
+			chessBotCalculation.restart();		
 		}
 	}
 
@@ -140,6 +143,33 @@ public class GamePresenter {
 		gameView.unmarkSquare(inv ? piecePosition.getInverted(len) : piecePosition);
 		moveablePositions.forEach(position -> gameView.unmarkSquare(inv ? position.getInverted(len) : position));
 
+	}
+	
+	private void initChessBotCalculation() {
+		chessBotCalculation.setOnSucceeded(event -> gameView.loadSimpleBoard(chessBotCalculation.getValue()));
+	}
+	
+	private class ChessBotCalculationService extends Service<SimplePiece[][]>{
+
+		@Override
+		protected Task<SimplePiece[][]> createTask() {
+			return new ChessBotCalculationTask();
+		}}
+	
+	private class ChessBotCalculationTask extends Task<SimplePiece[][]>{
+
+		@Override
+		protected SimplePiece[][] call() throws Exception {
+			SimplePiece[][] board = mainPresenter.requestBotMove();
+			Move botMove = mainPresenter.getLastBotMove();
+			markCheckedKing();
+			final Vector2D oldPos = botMove.getOldPos(), newPos = botMove.getNewPos();
+			boolean inv = gameView.isBoardInverted();
+			int len = settings.columns - 1;
+			markSquaresPieceMoved(inv ? oldPos.getInverted(len) : oldPos, inv ? newPos.getInverted(len) : newPos);
+			return board;
+		}
+		
 	}
 
 }

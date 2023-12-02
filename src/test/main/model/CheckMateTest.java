@@ -157,6 +157,8 @@ public class CheckMateTest {
 	final BoardRepresentation board22 = getBoard("8/1k4q1/4r3/8/2n5/8/7r/5K2"); // No Checkmate by black
 	final BoardRepresentation board23 = getBoard("rnbqkbnr/pppQpppp/8/1B6/4P3/8/PPPP1PPP/RNB1K1NR"); // No Checkmate by white,
 	// queen can be taken. 
+	final BoardRepresentation board24 = getBoard("r1bqkbnr/4pQpp/np2B3/p1p5/4P3/8/PPPP1PPP/RNB1K1NR"); // Checkmate by white
+	
 	
 	
 	@Test
@@ -169,6 +171,7 @@ public class CheckMateTest {
 		assertTrue(Check.isMate(board21, ChessPieceColor.WHITE));
 		assertFalse(Check.isMate(board22, ChessPieceColor.WHITE));
 		assertFalse(Check.isMate(board23, ChessPieceColor.BLACK));
+		assertTrue(Check.isMate(board24, ChessPieceColor.BLACK));
 		
 	}
 

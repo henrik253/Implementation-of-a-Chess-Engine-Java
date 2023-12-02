@@ -3,7 +3,7 @@ package main.gui;
 import java.util.List;
 
 import main.Settings;
-import main.gui.game.board.GamePresenter;
+import main.gui.game.board.presenter.GamePresenter;
 import main.gui.game.gameOver.GameOverPresenter;
 import main.gui.game.gameStart.GameStartPresenter;
 import main.gui.game.settings.SettingsPresenter;
@@ -31,11 +31,10 @@ public class MainPresenter {
 	private Model model;
 
 	public boolean moveRequest(Vector2D oldPos, Vector2D newPos) {
-		boolean validMove ; 
+		boolean validMove;
 		try {
 			validMove = model.movePiece(oldPos, newPos); // after model.moveRequest
-		}
-		catch(Exception e) {
+		} catch (Exception e) {
 			e.printStackTrace();
 			System.err.println(model.getBoardRepresentation());
 			throw e;
@@ -47,16 +46,15 @@ public class MainPresenter {
 	public SimplePiece[][] requestBotMove() {
 		int c = 0;
 		while (State.gameState.inGame()) {
-		try	{
-			if (model.makeBotMove()) {
-				break;
+			try {
+				if (model.makeBotMove()) {
+					break;
+				}
+			} catch (Exception e) {
+				e.printStackTrace();
+				System.err.println(model.getBoardRepresentation());
+				throw e;
 			}
-		}
-		catch(Exception e) {
-			e.printStackTrace();
-			System.err.println(model.getBoardRepresentation()); 
-			throw e;
-		}
 			if (++c >= 1000) {
 				System.err.print("\n Bot couldnt find a Move after " + c + " attempts.");
 				break;

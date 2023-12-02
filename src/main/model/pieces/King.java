@@ -66,8 +66,7 @@ public class King extends Piece {
 	@Override
 	public List<List<Vector2D>> calculateMoveablePositions() {
 		List<List<Vector2D>> moves = new LinkedList<>();
-		int[][] attackedSquaresEnemy = color.isWhite() ? board.getAttackedSquaresByBlack()
-				: board.getAttackedSquaresByWhite(); // attackedSquares updated?
+		int[][] attackedSquaresEnemy = board.calcAttackedSquaresBy(color.getOpponentColor());
 
 		if (outOfBounds(position)) // base case
 			return moves;
@@ -129,7 +128,7 @@ public class King extends Piece {
 		if (!firstMove)
 			return false;
 		try {
-			int[][] aS = this.color.isWhite() ? board.getAttackedSquaresByBlack() : board.getAttackedSquaresByWhite();
+			int[][] aS = board.calcAttackedSquaresBy(color.getOpponentColor());
 			Piece[][] b = board.getBoard();
 			boolean isRightSideCastle = pos.getX() - this.position.getX() > 0;
 			int rookCol = isRightSideCastle ? this.board.getBoard().length - 1 : 0;

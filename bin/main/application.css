@@ -42,6 +42,26 @@
     -fx-effect: dropshadow( gaussian , rgba(0.0,0.0,0.0,0.5) , 2.0,0.0,0.0,1.0 );
 }
 
+#inspectGameButton{
+	  -fx-background-color: #55a630;
+    -fx-background-radius: 5.0;
+    -fx-border-width: 2.0;
+    -fx-font-family: "Helvetica";
+    -fx-font-size: 14.0px;
+    -fx-text-fill: white;
+    -fx-effect: dropshadow( gaussian , rgba(0.0,0.0,0.0,0.5) , 2.0,0.0,0.0,1.0 );
+}
+
+#inspectGameButton:hover{
+	  -fx-background-color: #63b037;
+    -fx-background-radius: 5.0;
+    -fx-border-width: 2.0;
+    -fx-font-family: "Helvetica";
+    -fx-font-size: 14.0px;
+    -fx-text-fill: white;
+    -fx-effect: dropshadow( gaussian , rgba(0.0,0.0,0.0,0.5) , 2.0,0.0,0.0,1.0 );
+}
+
 
 
 #playButton:hover {
