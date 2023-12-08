@@ -1,4 +1,4 @@
-package main.model.convertions;
+package main.model.conversions;
 
 import main.model.pieces.Bishop;
 import main.model.pieces.King;

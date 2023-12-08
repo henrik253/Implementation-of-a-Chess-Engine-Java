@@ -6,6 +6,7 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Background;
+import javafx.scene.layout.BackgroundFill;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
@@ -194,10 +195,9 @@ public class GameStartView extends Pane {
 
 	public void drawSelectedBot(BotRepresentation source) {
 		this.botImage = new ImageView(source.getImage().getImage());
-		botWrapper.setBackground(Background.fill(source.getUserColor().isWhite() ? Color.web(BLACK) : Color.WHITE));
-		playerWrapper
-				.setBackground(Background.fill(source.getUserColor().isWhite() ? Color.WHITE : Color.web(BLACK)));
-
+		botWrapper.setBackground(new Background(new BackgroundFill(source.getUserColor().isWhite() ? Color.web(BLACK) : Color.WHITE,null,null)));
+		playerWrapper.setBackground(new Background(new BackgroundFill(source.getUserColor().isWhite() ? Color.WHITE : Color.web(BLACK),null,null)));
+		
 		drawBotRepresentation();
 		drawBotName(source);
 	}

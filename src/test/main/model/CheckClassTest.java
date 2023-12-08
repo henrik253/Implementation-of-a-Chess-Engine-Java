@@ -7,7 +7,7 @@ import static org.junit.Assert.assertTrue;
 import org.junit.After;
 import org.junit.Test;
 
-import main.model.convertions.FENConverter;
+import main.model.conversions.FENConverter;
 import main.model.gameLogic.*;
 import main.model.pieces.Piece;
 import main.model.pieces.Queen;

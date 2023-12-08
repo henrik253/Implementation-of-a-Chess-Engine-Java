@@ -6,7 +6,11 @@ import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.Background;
+import javafx.scene.layout.BackgroundFill;
 import javafx.scene.layout.Border;
+import javafx.scene.layout.BorderStroke;
+import javafx.scene.layout.BorderStrokeStyle;
+import javafx.scene.layout.BorderWidths;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
@@ -79,8 +83,8 @@ public class BotRepresentation extends Pane {
 
 		initColorSelectMenue();
 
-		this.setBackground(Background.fill(Color.web("#E9E9E9")));
-		this.setBorder(Border.stroke(Color.LIGHTGRAY));
+		this.setBackground(new Background(new BackgroundFill(Color.web("#E9E9E9"),null,null)));
+		this.setBorder(new Border(new BorderStroke(Color.LIGHTGRAY,BorderStrokeStyle.SOLID,null,new BorderWidths(1))));
 
 		imageWrapper.getChildren().add(imageView);
 		this.getChildren().addAll(selectButton, informationText, heading, imageWrapper);

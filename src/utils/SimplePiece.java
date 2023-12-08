@@ -13,7 +13,16 @@ public class SimplePiece {
 	public ChessPieceName getName() {
 		return name;
 	}
-
+	
+	@Override
+	public boolean equals(Object o) {
+		if(o instanceof SimplePiece) {
+			SimplePiece p = (SimplePiece) o; 
+			return p.name.equals(this.name) && p.color.equals(this.color);
+		}
+		return false; 
+	}
+	
 	public ChessPieceColor getColor() {
 		return color;
 	}

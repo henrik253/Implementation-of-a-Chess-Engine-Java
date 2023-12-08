@@ -4,7 +4,7 @@ import javafx.scene.layout.Pane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
-import main.model.convertions.FENConverter;
+import main.model.conversions.FENConverter;
 import javafx.scene.control.TextField;
 
 public class InsertBoardView extends Pane {

@@ -7,7 +7,7 @@ import main.model.chessbots.ChessBot;
 import main.model.chessbots.ClassicBot;
 import main.model.chessbots.DeeperBlueBot;
 import main.model.chessbots.RandomChessBot;
-import main.model.convertions.FENConverter;
+import main.model.conversions.FENConverter;
 import main.model.gameLogic.BoardRepresentation;
 import main.model.gameLogic.MoveValidation;
 import main.model.pieces.Piece;
