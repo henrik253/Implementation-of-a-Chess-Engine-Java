@@ -132,10 +132,7 @@ public class MoveValidation {
 	public boolean enemyInCheck() {
 		int[][] attackedSquares = board.calcAttackedSquaresBy(onMove);
 		Vector2D pos = board.getKing(onMove.getOpponentColor()).getPosition();
-		
-		
 		boolean inCheck = attackedSquares[pos.getY()][pos.getX()] > 0;
-
 		return inCheck;
 	}
 
