@@ -9,8 +9,6 @@ import main.gui.game.gameStart.GameStartPresenter;
 import main.gui.game.settings.SettingsPresenter;
 import main.gui.game.settings.settingsViewComponents.BotRepresentation;
 import main.model.Model;
-import main.model.conversions.BoardConverter;
-import main.model.conversions.FENConverter;
 import main.model.gameLogic.BoardRepresentation;
 import utils.ChessPieceColor;
 import utils.GameState;
@@ -18,6 +16,8 @@ import utils.Move;
 import utils.SimplePiece;
 import utils.State;
 import utils.Vector2D;
+import utils.conversions.BoardConverter;
+import utils.conversions.FENConverter;
 
 public class MainPresenter {
 

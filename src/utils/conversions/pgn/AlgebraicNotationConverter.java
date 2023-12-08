@@ -1,4 +1,4 @@
-package main.model.conversions;
+package utils.conversions.pgn;
 
 import utils.SimplePiece;
 

@@ -1,15 +1,15 @@
-package test.main.model;
+package test.utils;
 
 import org.junit.Test;
 
-import main.model.conversions.PGNParser;
+import utils.conversions.pgn.PGNParser;
 
 public class PGNParserTest {
 
 	private static final String PATH = "file:resources/";
 	private static final String FILE_NAME = "opening";
 	private static final String FILE_FORMAT = ".pgn";
-	private static final String PGN_FILE_PATH = "C:\\Users\\rftpool23\\Desktop\\Teamprojekt\\resources\\opening.pgn";
+	private static final String PGN_FILE_PATH = "C:\\Users\\Genii\\Desktop\\Teamprojekt\\resources\\opening.pgn";
 
 	
 	@Test

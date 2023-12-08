@@ -7,12 +7,12 @@ import static org.junit.Assert.assertTrue;
 import org.junit.After;
 import org.junit.Test;
 
-import main.model.conversions.FENConverter;
 import main.model.gameLogic.*;
 import main.model.pieces.Piece;
 import main.model.pieces.Queen;
 import utils.ChessPieceColor;
 import utils.Vector2D;
+import utils.conversions.FENConverter;
 
 public class CheckClassTest {
 
