@@ -67,10 +67,14 @@ public class Check {
 	public static boolean kingCanMove(BoardRepresentation board, ChessPieceColor mated) {
 		King k = board.getKing(mated);
 		Vector2D kPos = k.getPosition();
-		board.getBoard()[kPos.getY()][kPos.getX()] = null; // king could move on squares behind him that arent checked
+		board.getBoard()[kPos.getY()][kPos.getX()] = null; // king could move on
+															// squares behind
+															// him that arent
+															// checked
 		int[][] attackedSquares = board.calcAttackedSquaresBy(mated.getOpponentColor());
 		board.getBoard()[kPos.getY()][kPos.getX()] = k;
-		List<List<Vector2D>> moves = k.calculateMoveablePositions(); // shows squar
+		List<List<Vector2D>> moves = k.calculateMoveablePositions(); // shows
+																		// squar
 
 		for (List<Vector2D> movesInDir : moves) {
 			for (Vector2D move : movesInDir) {
@@ -91,62 +95,71 @@ public class Check {
 		if (attackedSquares[k.getPosition().getY()][k.getPosition().getX()] >= 2) {
 			return false;
 		}
-		
+
 		// getting the direction the piece is checking
 		List<Vector2D> checkingDirection = null;
 		for (List<Vector2D> movesInDirection : attackingSquares) {
-			if (movesInDirection.contains(k.getPosition())) { 
+			if (movesInDirection.contains(k.getPosition())) {
 				checkingDirection = movesInDirection;
 				break;
 			}
 		}
 		
+		if(checkingDirection == null) {
+			return false;
+		}
+		
 		for (Piece stoppingCheckPiece : pieces) {
-			
-			if(isPiecePinned(board,stoppingCheckPiece))
-				continue; 
-			
+
+			if (isPiecePinned(board, stoppingCheckPiece))
+				continue;
+
 			List<Vector2D> movesOfCapturingPiece = stoppingCheckPiece.calculateMoveablePositions().stream()
 					.flatMap(list -> list.stream()).toList();
-			// Blocking the piece(s) delivering check || Capturing the checking piece.
+			// Blocking the piece(s) delivering check || Capturing the checking
+			// piece.
 			for (Vector2D capturingPieceMove : movesOfCapturingPiece) {
 
 				if (canBeBlocked(checkingDirection, capturingPieceMove, stoppingCheckPiece, k)
 						|| checkingPiece.getPosition().equals(capturingPieceMove)) {
 
-					return true; 
+					return true;
 				}
 			}
 		}
 
 		return false;
 	}
-	
-	public static boolean isPiecePinned(BoardRepresentation board,Piece p) {
-		if(p instanceof King) { // king itself cant be pinned
-			return false; 
+
+	public static boolean isPiecePinned(BoardRepresentation board, Piece p) {
+		if (p instanceof King) { // king itself cant be pinned
+			return false;
 		}
 		Vector2D kingPos = board.getKing(p.getColor()).getPosition();
-		
+
 		int[][] attackedSquaresWithPiece = board.calcAttackedSquaresBy(p.getColor().getOpponentColor());
-		
+
 		Piece possiblePinnedPiece = board.getBoard()[p.getPosition().getY()][p.getPosition().getX()];
-		board.getBoard()[p.getPosition().getY()][p.getPosition().getX()] = null; // removing piece from board
-		int[][] attackedSquaresWithoutPiece = board
-				.calcAttackedSquaresBy(p.getColor().getOpponentColor());
+		board.getBoard()[p.getPosition().getY()][p.getPosition().getX()] = null; // removing
+																					// piece
+																					// from
+																					// board
+		int[][] attackedSquaresWithoutPiece = board.calcAttackedSquaresBy(p.getColor().getOpponentColor());
 		board.getBoard()[p.getPosition().getY()][p.getPosition().getX()] = possiblePinnedPiece;
-		
-		// if piece is removed and the attackedSquare of king is the same the piece was not pinned
-		return attackedSquaresWithPiece[kingPos.getY()][kingPos.getX()] != attackedSquaresWithoutPiece[kingPos.getY()][kingPos.getX()];
+
+		// if piece is removed and the attackedSquare of king is the same the
+		// piece was not pinned
+		return attackedSquaresWithPiece[kingPos.getY()][kingPos
+				.getX()] != attackedSquaresWithoutPiece[kingPos.getY()][kingPos.getX()];
 	}
 
-	private static boolean canBeBlocked(List<Vector2D> movesInDirection, Vector2D enemyPieceMove, Piece enemyPiece,
+	private static boolean canBeBlocked(List<Vector2D> checkingDirection, Vector2D enemyPieceMove, Piece enemyPiece,
 			King enemyKing) {
 
-		if (enemyPieceMove.equals(enemyKing.getPosition())) // kings pos in not included in can be blocked!
-			return false;
-
-		return movesInDirection.contains(enemyPieceMove) && enemyPiece != enemyKing;
+		if (enemyPieceMove.equals(enemyKing.getPosition()) || checkingDirection.isEmpty()) { // kings pos in not
+			return false; // included in can be blocked!
+		}
+		return checkingDirection.contains(enemyPieceMove) && enemyPiece != enemyKing;
 	}
 
 	// TODO

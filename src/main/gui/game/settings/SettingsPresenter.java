@@ -20,7 +20,11 @@ public class SettingsPresenter {
 		settingsView.setDisableColorSelect(false);
 		settingsView.setVisibleBotSelectButtons(true);
 	}
-
+	
+	public void loadBoard(String fen) {
+		mainPresenter.loadBoard(fen);
+	}
+	
 	public Settings getSettings() {
 		return settings;
 	}

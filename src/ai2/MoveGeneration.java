@@ -1,4 +1,4 @@
-package chessAI;
+package ai2;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -23,7 +23,10 @@ public class MoveGeneration {
 
 		for (Piece[] row : board) {
 			for (Piece p : row) {
-
+				
+				if(p == null)
+					continue; 
+				
 				if (Check.isPiecePinned(boardR, p)) { // Pinned piece can be ignored
 					continue;
 				}

@@ -1,6 +1,6 @@
 package main.model.chessbots;
 
-import chessAI.ClassicChessBot;
+import ai2.ClassicChessBot;
 import main.model.pieces.Piece;
 import utils.ChessPieceColor;
 import utils.Move;

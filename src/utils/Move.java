@@ -1,6 +1,7 @@
 package utils;
 
 import main.model.pieces.Piece;
+import main.model.pieces.Rook;
 
 public final class Move {
 
@@ -12,8 +13,49 @@ public final class Move {
 	private Piece capturedPiece;
 
 	private Piece transformed;
-
+	
+	private Vector2D oldRookPos;
+	private Vector2D newRookPos;
+	private Rook rook;
+	
 	private boolean movedPieceFirstMove = false;
+	public Vector2D getOldRookPos() {
+		return oldRookPos;
+	}
+
+	public void setOldRookPos(Vector2D oldRookPos) {
+		this.oldRookPos = oldRookPos;
+	}
+
+	public Vector2D getNewRookPos() {
+		return newRookPos;
+	}
+
+	public void setNewRookPos(Vector2D newRookPos) {
+		this.newRookPos = newRookPos;
+	}
+
+	public Rook getRook() {
+		return rook;
+	}
+
+	public void setRook(Rook rook) {
+		this.rook = rook;
+	}
+
+	public boolean isCastlingMove() {
+		return castlingMove;
+	}
+
+	public void setCastlingMove(boolean castlingMove) {
+		this.castlingMove = castlingMove;
+	}
+
+	public boolean isMovedPieceFirstMove() {
+		return movedPieceFirstMove;
+	}
+
+	private boolean castlingMove = false;
 
 	public Move(Vector2D oldPos, Vector2D newPos) {
 		this.oldPos = oldPos;

@@ -11,6 +11,7 @@ import main.model.pieces.King;
 import main.model.pieces.Pawn;
 import main.model.pieces.Piece;
 import main.model.pieces.Queen;
+import main.model.pieces.Rook;
 
 public class BoardRepresentation {
 
@@ -45,10 +46,11 @@ public class BoardRepresentation {
 
 	}
 
-	public BoardRepresentation(Piece[][] board,final BoardRepresentation boardRepresentation) {
+	public BoardRepresentation(Piece[][] board,
+			final BoardRepresentation boardRepresentation) {
 		this.board = board.clone();
-		whitePieces =  new LinkedList<>(boardRepresentation.whitePieces);
-		blackPieces =  new LinkedList<>(boardRepresentation.blackPieces);
+		whitePieces = new LinkedList<>(boardRepresentation.whitePieces);
+		blackPieces = new LinkedList<>(boardRepresentation.blackPieces);
 		capturedPieces = new LinkedList<>(boardRepresentation.capturedPieces);
 		whiteKing = (King) boardRepresentation.whiteKing.clone();
 		blackKing = (King) boardRepresentation.blackKing.clone();
@@ -89,16 +91,18 @@ public class BoardRepresentation {
 
 	public BoardRepresentation(int length) {
 		this.board = new Piece[length][length];
-		this.attackedSquaresByWhite = calcAttackedSquaresBy(ChessPieceColor.WHITE);
-		this.attackedSquaresByBlack = calcAttackedSquaresBy(ChessPieceColor.BLACK);
+		this.attackedSquaresByWhite = calcAttackedSquaresBy(
+				ChessPieceColor.WHITE);
+		this.attackedSquaresByBlack = calcAttackedSquaresBy(
+				ChessPieceColor.BLACK);
 	}
 
 	public int[][] calcAttackedSquaresBy(ChessPieceColor color) {
 		int[][] attackedSquares = new int[board.length][board.length];
-		for(int i=0; i < board.length; i++) {
-			for(int j=0; j < board.length;j++) {
-				if(board[i][j] != null && board[i][j].getColor() == color) {
-					markAttackedSquares(board[i][j],attackedSquares);
+		for (int i = 0; i < board.length; i++) {
+			for (int j = 0; j < board.length; j++) {
+				if (board[i][j] != null && board[i][j].getColor() == color) {
+					markAttackedSquares(board[i][j], attackedSquares);
 				}
 			}
 		}
@@ -106,93 +110,102 @@ public class BoardRepresentation {
 	}
 
 	private void markAttackedSquares(Piece piece, int[][] attackedSquares) {
-		List<List<Vector2D>> moves = piece.calculateAttackableAndMoveablePositions(); 
-		moves.forEach(movesInDir -> movesInDir.forEach(m -> attackedSquares[m.getY()][m.getX()]++));
+		List<List<Vector2D>> moves = piece
+				.calculateAttackableAndMoveablePositions();
+		moves.forEach(movesInDir -> movesInDir
+				.forEach(m -> attackedSquares[m.getY()][m.getX()]++));
 	}
 
 	public void makeMove(Vector2D oldPos, Vector2D newPos) {
 		copy = getBoardClone();
 		currentMove = new Move(oldPos, newPos);
 		// order in which funcs are called is important!
-		Piece movedPiece = this.getPiece(oldPos); // get the piece
+		Piece movedPiece = getPiece(oldPos); // get the piece
+
+		if (movedPiece == null) {
+			throw new NullPointerException("\n couldnt find a piece at " + oldPos
+					+ "\n Board: \n" + this.toBoardString());
+		}
+
 		currentMove.setMovedPiece(movedPiece);
-		Piece removedPiece = removePiece(newPos); // remove the piece that is on the pos the moving piece want
+		Piece removedPiece = removePiece(newPos); // remove the piece that is on
+													// the pos the moving piece
+													// want
 													// to get
 		movedPiece.executeMove(oldPos, newPos);
 
-		
 		lastMove = currentMove;
 		lastMove.setCapturedPiece(removedPiece);
 		moveHistory.add(lastMove);
 	}
 
-//	public void undoLastMove() {
-//		// STEPS OF UNDO
-//		// 1. if piece captured get it
-//		// 2. bring moved piece back to pos
-//		// 3. (bring captured piece back to his pos or transform e.g. Pawn->Queen to
-//		// Queen->Pawn)
-//		// if it was first move of movedPiece then it needs to be set back!
-//		// 4. refresh lists that manage pieces e.g whitePieces, blackPieces,
-//		// capturedPieces
-//
-//		Vector2D oldPos = lastMove.getOldPos(), newPos = lastMove.getNewPos();
-//		Piece capturedPiece = lastMove.getCapturedPiece();
-//		Piece movedPiece = lastMove.getMovedPiece(); // getPiece(newPos); throws Error !
-//
-//		// UNDO the Move
-//		board[oldPos.getY()][oldPos.getX()] = movedPiece;
-//		board[newPos.getY()][newPos.getX()] = capturedPiece;
-//
-//		try {
-//			movedPiece.setPosition(oldPos); // TODO null ptr exc. because movedPiece is null!
-//		} catch (Exception e) {
-//			System.out.print(" UNDO LAST MOVE: ");
-//			System.out.println(lastMove);
-//			System.out.println(this);
-//			System.out.println(" - ");
-//			System.out.println(lastMove.getMovedPiece());
-//			System.out.println(" - ");
-//			throw new IllegalArgumentException();
-//		}
-//
-//		if (lastMove.pieceGotCaptured()) {
-//			capturedPiece.setPosition(newPos);
-//			capturedPieces.remove(capturedPiece);
-//			if (capturedPiece.getColor().isWhite())
-//				whitePieces.add(capturedPiece);
-//			else
-//				blackPieces.add(capturedPiece);
-//		}
-//
-//		if (lastMove.wasFirstMoveOfMovedPiece()) {
-//			movedPiece.setFirstMove(true);
-//		}
-//
-//		if (lastMove.pieceTransformed()) {
-//			Piece to = lastMove.getTransformed(); // e.g. the Pawn
-//
-//			Piece from = getPiece(lastMove.getOldPos()); // TODO null ptr exc. bc. from == null
-//			// e.g. the queen?
-//
-//			to.setPosition(lastMove.getOldPos().clone());
-//			from.setPosition(lastMove.getOldPos().clone()); // important step
-//			replacePiece(from, to);
-//		}
-//
-//		moveHistory.remove(moveHistory.size() - 1);
-//
-//		if (moveHistory.size() > 0)
-//			lastMove = moveHistory.get(moveHistory.size() - 1);
-//	}
-	
-	public void undoLastMove() {	
-		board = copy; 
+	public void undoLastMove() {
+		// STEPS OF UNDO
+		// 1. if piece captured get it
+		// 2. bring moved piece back to pos
+		// 3. (bring captured piece back to his pos or transform e.g.
+		// Pawn->Queen to
+		// Queen->Pawn)
+		// if it was first move of movedPiece then it needs to be set back!
+		// 4. refresh lists that manage pieces e.g whitePieces, blackPieces,
+		// capturedPieces
+
+		Vector2D oldPos = lastMove.getOldPos(), newPos = lastMove.getNewPos();
+		Piece capturedPiece = lastMove.getCapturedPiece();
+		Piece movedPiece = lastMove.getMovedPiece(); // getPiece(newPos); throws
+														// Error !
+
+		if (movedPiece == null) {
+			throw new NullPointerException(" couldnt find a piece at " + oldPos
+					+ "\n Board: \n" + this.toBoardString());
+		}
+
+		// UNDO the Move
+		board[oldPos.getY()][oldPos.getX()] = movedPiece;
+		board[newPos.getY()][newPos.getX()] = capturedPiece; // captured Piece or null 
 		
+		movedPiece.setPosition(oldPos);
+
+		if (lastMove.pieceGotCaptured()) {
+			capturedPiece.setPosition(newPos);
+			capturedPieces.remove(capturedPiece);	
+			getPieces(capturedPiece.getColor()).add(capturedPiece);
+		}	
+
+		if (lastMove.wasFirstMoveOfMovedPiece()) {
+			movedPiece.setFirstMove(true);
+		}
+		
+		if(lastMove.isCastlingMove()) {
+			Vector2D oldRookPos = lastMove.getOldRookPos(), newRookPos = lastMove.getNewRookPos();
+			Rook rook = lastMove.getRook();
+			rook.setPosition(oldRookPos);
+			board[newRookPos.getY()][newRookPos.getX()] = null;
+			board[oldRookPos.getY()][oldRookPos.getX()] = rook;
+		}
+
+		if (lastMove.pieceTransformed()) {
+			Piece to = lastMove.getTransformed(); // e.g. the Pawn
+			Piece from = getPiece(lastMove.getOldPos()); // TODO null ptr exc.															// bc. from == null
+			// e.g. the queen?
+			to.setPosition(lastMove.getOldPos().clone());
+			from.setPosition(lastMove.getOldPos().clone()); // important step
+			replacePiece(from, to);
+		}
+
 		moveHistory.remove(moveHistory.size() - 1);
+
 		if (moveHistory.size() > 0)
 			lastMove = moveHistory.get(moveHistory.size() - 1);
 	}
+
+	// public void undoLastMove() {
+	// board = copy;
+	//
+	// moveHistory.remove(moveHistory.size() - 1);
+	// if (moveHistory.size() > 0)
+	// lastMove = moveHistory.get(moveHistory.size() - 1);
+	// }
 
 	public Piece removePiece(Vector2D pos) {
 		Piece piece = getPiece(pos);
@@ -221,7 +234,9 @@ public class BoardRepresentation {
 
 	public boolean isCheckOn(Piece king, Vector2D pos) {
 		ChessPieceColor enemyPieceColor = king.getColor().getOpponentColor();
-		int[][] attackedSquares = enemyPieceColor.isWhite() ? attackedSquaresByBlack : attackedSquaresByWhite;
+		int[][] attackedSquares = enemyPieceColor.isWhite()
+				? attackedSquaresByBlack
+				: attackedSquaresByWhite;
 		return attackedSquares[pos.getY()][pos.getX()] > 0;
 	}
 
@@ -232,8 +247,8 @@ public class BoardRepresentation {
 	public List<Piece> getBlackPieces() {
 		return blackPieces;
 	}
-	
-	public List<Piece> getPieces(ChessPieceColor color){
+
+	public List<Piece> getPieces(ChessPieceColor color) {
 		return color.isWhite() ? whitePieces : blackPieces;
 	}
 
@@ -254,8 +269,8 @@ public class BoardRepresentation {
 	}
 
 	public Piece getPiece(Vector2D position) {
-		Piece p = board[position.getY()][position.getX()]; 
-		
+		Piece p = board[position.getY()][position.getX()];
+
 		return p;
 	}
 
@@ -265,7 +280,8 @@ public class BoardRepresentation {
 
 	@Override
 	public BoardRepresentation clone() {
-		BoardRepresentation clone = new BoardRepresentation(this.getBoardClone(), this);
+		BoardRepresentation clone = new BoardRepresentation(
+				this.getBoardClone(), this);
 		return clone;
 	}
 
@@ -275,7 +291,8 @@ public class BoardRepresentation {
 			for (int column = 0; column < board[row].length; column++) {
 				Piece p = this.board[row][column];
 				if (p != null) {
-					result[row][column] = p; // cloning the p wont change the relying board of p
+					result[row][column] = p; // cloning the p wont change the
+												// relying board of p
 				}
 			}
 		}
@@ -285,8 +302,6 @@ public class BoardRepresentation {
 	public void setBoard(Piece[][] board) {
 		this.board = board;
 	}
-	
-
 
 	public List<Move> getMoveHistory() {
 		return moveHistory;
@@ -295,8 +310,6 @@ public class BoardRepresentation {
 	public Move getLastMove() {
 		return this.lastMove;
 	}
-
-	
 
 	public String toBoardString() {
 		String result = "";
@@ -323,28 +336,29 @@ public class BoardRepresentation {
 	}
 
 	public String toString() {
-		String resultWhite = "";
-		String resultBlack = "";
-		for (int i = 0; i < board.length; i++) {
-			for (int j = 0; j < board[i].length; j++) {
-				resultWhite += attackedSquaresByWhite[i][j];
-
-				resultBlack += attackedSquaresByBlack[i][j];
-
-				resultWhite += " | ";
-				resultBlack += " | ";
-			}
-			resultWhite += "\n";
-			resultWhite += "_".repeat(40);
-			resultWhite += "\n";
-
-			resultBlack += "\n";
-			resultBlack += "_".repeat(40);
-			resultBlack += "\n";
-		}
-		return "WHITE: \n" + resultWhite + " \n"  + "\n \n" + "BLACK: \n" + resultBlack + " \n"
-				+ toBoardString() + "#".repeat(50);
-//		return toBoardString();
+		// String resultWhite = "";
+		// String resultBlack = "";
+		// for (int i = 0; i < board.length; i++) {
+		// for (int j = 0; j < board[i].length; j++) {
+		// resultWhite += attackedSquaresByWhite[i][j];
+		//
+		// resultBlack += attackedSquaresByBlack[i][j];
+		//
+		// resultWhite += " | ";
+		// resultBlack += " | ";
+		// }
+		// resultWhite += "\n";
+		// resultWhite += "_".repeat(40);
+		// resultWhite += "\n";
+		//
+		// resultBlack += "\n";
+		// resultBlack += "_".repeat(40);
+		// resultBlack += "\n";
+		// }
+		// return "WHITE: \n" + resultWhite + " \n" + "\n \n" + "BLACK: \n" +
+		// resultBlack + " \n"
+		// + toBoardString() + "#".repeat(50);
+		return toBoardString();
 	}
 
 	public King getKing(ChessPieceColor color) {

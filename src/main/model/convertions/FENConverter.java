@@ -48,7 +48,7 @@ public class FENConverter { // Converting a FEN String to
 		return board;
 	}
 
-	public static SimplePiece buildSimplePiece(char c) {
+	private static SimplePiece buildSimplePiece(char c) {
 		ChessPieceColor color = Character.isUpperCase(c) ? ChessPieceColor.WHITE : ChessPieceColor.BLACK;
 		c = Character.toLowerCase(c);
 		return switch (c) {
@@ -89,13 +89,13 @@ public class FENConverter { // Converting a FEN String to
 				}
 			}
 		} catch (Exception e) {
-			e.printStackTrace();
+			throw e;
 		}
 
 		return board;
 	}
 
-	public static Piece buildPiece(char c, int row, int column) {
+	private static Piece buildPiece(char c, int row, int column) {
 		ChessPieceColor color = Character.isUpperCase(c) ? ChessPieceColor.WHITE : ChessPieceColor.BLACK;
 		c = Character.toLowerCase(c);
 		return switch (c) {

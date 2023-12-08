@@ -1,4 +1,4 @@
-package chessAI;
+package ai2;
 
 import java.util.Map;
 import java.util.Map.Entry;
@@ -17,7 +17,7 @@ public class ClassicChessBot implements ChessBot {
 	private Move move;
 
 	public ClassicChessBot() {
-		depth = 2;
+		depth = 4;
 		color = ChessPieceColor.BLACK; // by default Black
 	}
 
@@ -34,8 +34,8 @@ public class ClassicChessBot implements ChessBot {
 
 			
 				if (color.isWhite()) {
-					int bestValue = Integer.MIN_VALUE;
-					int val = MiniMax.max(boardR, depth, Integer.MIN_VALUE, Integer.MAX_VALUE);
+					float bestValue = Float.MIN_VALUE;
+					float val = MiniMax.max(boardR, depth, Integer.MIN_VALUE, Integer.MAX_VALUE);
 					if (val > bestValue) {
 						bestValue = val;
 						oldPos = pMoves.getKey().getPosition().clone();
@@ -43,8 +43,8 @@ public class ClassicChessBot implements ChessBot {
 					}
 
 				} else {
-					int bestValue = Integer.MAX_VALUE;
-					int val = MiniMax.min(boardR, depth, Integer.MIN_VALUE, Integer.MAX_VALUE);
+					float bestValue = Float.MAX_VALUE;
+					float val = MiniMax.min(boardR, depth, Integer.MIN_VALUE, Integer.MAX_VALUE);
 					
 					if (val < bestValue) {
 						bestValue = val;

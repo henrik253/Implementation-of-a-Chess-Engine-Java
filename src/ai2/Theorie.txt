@@ -1,0 +1,6 @@
+
+
+Problem: 
+Chess contains many forcing tactical sequences.  If someone takes your bishop with a knight, you'd better take their knight back.
+
+-> make capture or do nothing
