@@ -43,7 +43,7 @@ public class Model {
 		State.gameState = GameState.IN_GAME;
 		State.gameOverReason = GameOverReason.NONE;
 		State.inCheck = InCheck.OFF;
-		this.boardRepresentation = new BoardRepresentation(FENConverter.convertPieceBoard(settings.selectedFEN.get())); // <----
+		this.boardRepresentation = new BoardRepresentation(FENConverter.convertToPieceBoard(settings.selectedFEN.get())); // <----
 		moveValidation.setBoard(boardRepresentation);
 		this.moveValidation.setOnMove(ChessPieceColor.WHITE);
 

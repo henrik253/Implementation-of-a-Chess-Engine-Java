@@ -26,36 +26,36 @@ public class CheckClassTest {
 	private final String kingCanTakeSurroundedByWhiteRooks = "8/2R5/4R3/3k4/1R6/8/2R5/K7";
 
 	final BoardRepresentation board1 = new BoardRepresentation(
-			FENConverter.convertPieceBoard(DoubleRookCheckMateByBlack));
-	final BoardRepresentation board2 = new BoardRepresentation(FENConverter.convertPieceBoard(DoubleRookNoCheckMate));
+			FENConverter.convertToPieceBoard(DoubleRookCheckMateByBlack));
+	final BoardRepresentation board2 = new BoardRepresentation(FENConverter.convertToPieceBoard(DoubleRookNoCheckMate));
 	final BoardRepresentation board3 = new BoardRepresentation(
-			FENConverter.convertPieceBoard(DoubleRookCheckMateByWhite));
-	final BoardRepresentation board4 = new BoardRepresentation(FENConverter.convertPieceBoard(QueenCheckingWhiteKing));
+			FENConverter.convertToPieceBoard(DoubleRookCheckMateByWhite));
+	final BoardRepresentation board4 = new BoardRepresentation(FENConverter.convertToPieceBoard(QueenCheckingWhiteKing));
 
 	@Test
 	public void test_getCheckingPiece() {
 		System.out.println("START test_getCheckingPiece");
 		final BoardRepresentation board1 = new BoardRepresentation(
-				FENConverter.convertPieceBoard(DoubleRookCheckMateByBlack));
+				FENConverter.convertToPieceBoard(DoubleRookCheckMateByBlack));
 		System.out.println("board1 \n" +board1.toBoardString());
 		Piece expected = board1.getPiece(new Vector2D(0, 0));
 		Piece actual = Check.getCheckingPiece(board1, ChessPieceColor.WHITE);
 		assertEquals(expected, actual);
 
 		final BoardRepresentation board2 = new BoardRepresentation(
-				FENConverter.convertPieceBoard(DoubleRookNoCheckMate));
+				FENConverter.convertToPieceBoard(DoubleRookNoCheckMate));
 		System.out.println("board2 \n" + board2.toBoardString());
 		assertEquals(Check.getCheckingPiece(board2, ChessPieceColor.WHITE), null);
 
 		final BoardRepresentation board3 = new BoardRepresentation(
-				FENConverter.convertPieceBoard(DoubleRookCheckMateByWhite));
+				FENConverter.convertToPieceBoard(DoubleRookCheckMateByWhite));
 		System.out.println("board3 \n" +board3.toBoardString());
 		expected = board3.getPiece(new Vector2D(0, 6));
 		actual = Check.getCheckingPiece(board3, ChessPieceColor.BLACK);
 		assertEquals(expected, actual);
 
 		final BoardRepresentation board4 = new BoardRepresentation(
-				FENConverter.convertPieceBoard(QueenCheckingWhiteKing));
+				FENConverter.convertToPieceBoard(QueenCheckingWhiteKing));
 
 		System.out.println("board4 \n" + board4.toBoardString());
 		assertTrue(Check.getCheckingPiece(board4, ChessPieceColor.WHITE) instanceof Queen);
@@ -153,7 +153,7 @@ public class CheckClassTest {
 	}
 
 	private BoardRepresentation getBoard(String fen) {
-		return new BoardRepresentation(FENConverter.convertPieceBoard(fen));
+		return new BoardRepresentation(FENConverter.convertToPieceBoard(fen));
 	}
 	
 	final BoardRepresentation board18 = getBoard("k7/1Q6/8/2N5/8/8/8/8"); // Checkmate by white

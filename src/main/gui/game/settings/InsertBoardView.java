@@ -67,7 +67,7 @@ public class InsertBoardView extends Pane {
 			
 			try {
 				// if no exception is thrown the fen is valid!
-				FENConverter.convertPieceBoard(fen);
+				FENConverter.convertToPieceBoard(fen);
 				informationText.setText(SUCCESS);
 				settingsView.saveFENString(fen);
 			} catch (Exception e) {

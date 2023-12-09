@@ -63,7 +63,7 @@ public class FENConverter { // Converting a FEN String to
 
 	}
 
-	public static Piece[][] convertPieceBoard(String fen) {
+	public static Piece[][] convertToPieceBoard(String fen) {
 		Piece[][] board = new Piece[ROWS][COLUMNS];
 
 		int row = 0;

@@ -4,12 +4,17 @@ import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import utils.SimpleBoard;
+import main.model.gameLogic.*;
+import main.model.pieces.*;
+import utils.ChessPieceColor;
+import utils.Move;
 import utils.SimplePiece;
+import utils.Vector2D;
 import utils.conversions.FENConverter;
 
 /*
@@ -44,7 +49,7 @@ import utils.conversions.FENConverter;
 public class PGNParser {
 
 	private static final String DEFAULT_BOARD = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1";
-	private static SimplePiece[][] startingBoard = FENConverter.convertSimplePieceBoard(DEFAULT_BOARD);
+	private static Piece[][] startingBoard =new BoardRepresentation(FENConverter.convertToPieceBoard(DEFAULT_BOARD)).getBoard();
 
 	private static final String STARTING_SYMBOL = "1.";
 	private static final String PGN_STRING_SEPERATOR = " "; // Space
@@ -52,8 +57,8 @@ public class PGNParser {
 	private static final char PGN_COMMENT_START = '{';
 	private static final char PGN_COMMENT_END = '}';
 
-	public static Map<String, List<SimpleBoard>> parsePGNFile(String path) {
-		Map<String, List<SimpleBoard>> result = new HashMap<>();
+	public static Map<String, List<Piece[][]>> parsePGNFile(String path) {
+		Map<String, List<Piece[][]>> result = new HashMap<>();
 		// iterating through the the file and calling for every PGNString
 		// parsePGNStringToSimpleBoard
 		try (BufferedReader reader = new BufferedReader(new FileReader(path))) {
@@ -86,11 +91,13 @@ public class PGNParser {
 
 	// pgn string has following endings either "numb. moveWhite end" or "numb.
 	// moveWhite moveBlack end"
-	public static List<SimpleBoard> parsePGNStringToSimpleBoard(String pgn) {
-		List<SimpleBoard> result = new ArrayList<>();
+	public static List<Piece[][]> parsePGNStringToSimpleBoard(String pgn) {
+		List<Piece[][]> result = new ArrayList<>();
 		String[] expressions = pgn.split(PGN_STRING_SEPERATOR);
 		// moveEntry is represented by 3 expression numb moveWhite moveBlack
 		final int moveEntryLength = 3;
+		Piece[][] board = startingBoard;
+		
 		for (int i = 0; i < expressions.length; i += moveEntryLength) {
 			
 			if (i + moveEntryLength + 1 == expressions.length) {
@@ -98,22 +105,50 @@ public class PGNParser {
 				System.out.println(expressions[i] + " " + expressions[i + 1] + " " + expressions[i + 2] + " "+ expressions[i + 3]);
 				break;
 			}
-			
 			String moveNumber = expressions[i];
-			String whiteMove = expressions[i + 1];
-			String blackMove = expressions[i + 2];
-			System.out.println(moveNumber + " " + whiteMove + " " + blackMove);
+			String whiteMoveS = expressions[i + 1];
+			String blackMoveS = expressions[i + 2];
 			
+			
+			
+			// DEBUG 
+			System.out.println("String for white move " + whiteMoveS);
+			Move whiteMove = AlgebraicNotationConverter.getMove(whiteMoveS,board,ChessPieceColor.WHITE); 
+			
+			
+			BoardRepresentation boardRwhiteMoved = makeMoveAndCopy(whiteMove,board);
+			
+			System.out.println("Board after white moved: \n" + boardRwhiteMoved);
+			board = boardRwhiteMoved.getBoard();
+			System.out.println(whiteMove);
+			
+			System.out.println("String for black move : " + blackMoveS);
+			Move blackMove = AlgebraicNotationConverter.getMove(blackMoveS,board,ChessPieceColor.BLACK); 
+		
+			BoardRepresentation boardRblackMoved = makeMoveAndCopy(blackMove,board);
+			
+			System.out.println("Board after black moved: \n" +boardRblackMoved);
+			System.out.println(blackMove);
+			
+			board = boardRblackMoved.getBoard();
+			
+			// DEBUG
 		}
 		return result;
 	}
-
-	// No copy of the board
-	public static SimpleBoard makeMoveOnBoard(String move, SimpleBoard simpleBoard) {
-		SimplePiece[][] board = simpleBoard.getBoard();
-
-		return simpleBoard;
+	
+	public static BoardRepresentation makeMoveAndCopy(Move move,Piece[][] board){
+		Piece[][] copy = new Piece[board.length][];
+		Vector2D from = move.getOldPos() , to = move.getNewPos();
+		for(int i = 0; i < board.length ; i++) {
+			copy[i] = Arrays.copyOf(board[i],board[i].length);
+		}
+		copy[to.getY()][to.getX()] = copy[from.getY()][from.getX()];
+		copy[from.getY()][from.getX()] = null;
+		
+		return new BoardRepresentation(copy);
 	}
+	
 	private static final String PGN_FILE_PATH = "C:\\Users\\Genii\\Desktop\\Teamprojekt\\resources\\opening.pgn";
 	public static void main(String[] args) {
 		parsePGNFile(PGN_FILE_PATH);

@@ -112,7 +112,7 @@ public final class Move {
 
 	@Override
 	public String toString() {
-		return oldPos.toString() + " " + newPos.toString() + " " + capturedPiece;
+		return oldPos.toString() + " -> " + newPos.toString();
 	}
 
 }
