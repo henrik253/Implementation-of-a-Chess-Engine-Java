@@ -17,6 +17,10 @@ public class Knight extends Piece {
 	public Knight(ChessPieceColor color, int row, int column) {
 		super(ChessPieceName.KNIGHT, color, row, column);
 	}
+	
+	public Knight(ChessPieceColor color, Vector2D position) {
+		this(color, position.getY(), position.getX());
+	}
 
 	@Override
 	public List<List<Vector2D>> calculateAttackablePositions() {

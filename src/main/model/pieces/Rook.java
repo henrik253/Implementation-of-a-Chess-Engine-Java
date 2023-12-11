@@ -18,6 +18,10 @@ public class Rook extends Piece {
 		super(ChessPieceName.ROOK, color, row, column);
 	}
 
+	public Rook(ChessPieceColor color, Vector2D position) {
+		this(color, position.getY(), position.getX());
+	}
+	
 	@Override
 	public List<List<Vector2D>> calculateAttackablePositions() {
 		List<List<Vector2D>> moves = new LinkedList<>();

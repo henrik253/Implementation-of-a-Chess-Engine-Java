@@ -18,6 +18,10 @@ public class Bishop extends Piece {
 		super(ChessPieceName.BISHOP, color, row, column);
 		// TODO Auto-generated constructor stub
 	}
+	
+	public Bishop(ChessPieceColor color, Vector2D position) {
+		this(color, position.getY(), position.getX());
+	}
 
 	@Override
 	public List<List<Vector2D>> calculateAttackablePositions() {

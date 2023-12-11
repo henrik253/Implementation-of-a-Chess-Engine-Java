@@ -1,6 +1,9 @@
 package utils.conversions.pgn;
 
 import main.model.pieces.Piece;
+
+import java.util.List;
+
 import main.model.gameLogic.*;
 import utils.ChessPieceColor;
 import utils.ChessPieceName;
@@ -64,12 +67,13 @@ public class AlgebraicNotationConverter {
 				if (Character.isDigit(input.charAt(2))) {
 					// normal move in this case like Rd5
 					return getMove(starting, null, input.charAt(1) + "" + input.charAt(2), board, color);
-				} else if (Character.isAlphabetic(input.charAt(2))) {
-					// move like Rdd5
-					return getMove(starting, input.charAt(1), input.charAt(2) + "" + input.charAt(3), board, color);
-				} else if (input.charAt(2) == 'x') {
+				}  else if (input.charAt(2) == 'x') {
 					// capturing move like Rdxd5
 					return getMove(starting, input.charAt(1), input.charAt(3) + "" + input.charAt(4), board, color);
+				}
+				else if (Character.isAlphabetic(input.charAt(2))) {
+					// move like Rdd5
+					return getMove(starting, input.charAt(1), input.charAt(2) + "" + input.charAt(3), board, color);
 				}
 
 			} else if (Character.isDigit(input.charAt(1))) {
@@ -77,12 +81,12 @@ public class AlgebraicNotationConverter {
 				// checking
 				// for the rows
 				// examples: R3d5 R2xd5
-				if (Character.isAlphabetic(input.charAt(2))) {
+				if (input.charAt(2) == 'x') {
+					return getMove(starting, input.charAt(1), input.charAt(3) + "" + input.charAt(4), board, color);
+				} else if (Character.isAlphabetic(input.charAt(2))) {
 					// move like R3d5
 					return getMove(starting, input.charAt(1), input.charAt(2) + "" + input.charAt(3), board, color);
-				} else if (input.charAt(2) == 'x') {
-					return getMove(starting, input.charAt(1), input.charAt(3) + "" + input.charAt(4), board, color);
-				}
+				} 
 			}
 
 		} else {
@@ -91,17 +95,22 @@ public class AlgebraicNotationConverter {
 					&& input.charAt(2) <= 'h' && Character.isDigit(input.charAt(3))) {
 				// in this case pawn is capturing for example: exd5 so the last two characters
 				// are the position where he is capturing
-				return getMove('P', null, input.charAt(2) + "" + input.charAt(3), board, color);
+				// starting as indistinct because we say Pawn on e captures d5
+				return getMove('P', starting, input.charAt(2) + "" + input.charAt(3), board, color);
 
 			} else if ((starting >= 'a' && starting <= 'h') && Character.isDigit(input.charAt(1))
-					&& input.length() == 2) {
+					&& (input.length() == 2 || input.charAt(2) != '=')) { //  input.charAt(2) can be sth like # , + ... 
 				// in this case pawn on starting line is moving to
 				// Character.isDigit(algebraicMove.charAt(1)
 				return getMove('P', null, input.charAt(0) + "" + input.charAt(1), board, color);
 			} else if ((starting >= 'a' && starting <= 'h') && Character.isDigit(input.charAt(1))
 					&& input.charAt(2) == '=') {
 				// in this case its a promoting pawn
-				return getMove('P', null, input.charAt(0) + "" + input.charAt(1), board, color);
+				char promoting = input.charAt(3);
+				Move promotingPawnMove  = getMove('P', null, input.charAt(0) + "" + input.charAt(1), board, color);
+				Piece promotingPawn = board[promotingPawnMove.getOldPos().getY()][promotingPawnMove.getOldPos().getX()];
+				promotingPawnMove.setPromotingPiece(promotingPawn, getPieceName(promoting));
+				return promotingPawnMove;
 			}
 
 		}
@@ -115,6 +124,7 @@ public class AlgebraicNotationConverter {
 		int newColumn = movingPos.charAt(0) - 'a';
 		int newRow = board.length - Character.getNumericValue(movingPos.charAt(1));
 		Vector2D to = new Vector2D(newColumn, newRow);
+		System.out.println("movingPos: " + movingPos + " to: " + to);
 		ChessPieceName pieceName = getPieceName(pieceSign);
 
 		Vector2D from = findPiecePosition(pieceName, color, to, board, indistinct);
@@ -124,71 +134,73 @@ public class AlgebraicNotationConverter {
 
 	private static Move getCastlingMove(String move, Piece[][] board, ChessPieceColor color) {
 		// king pos can be hard coded
-		// kingPos Black = 4 | 0 , kingPos White = 4 | 7
 		Vector2D from = color.isWhite() ? new Vector2D(4, 7) : new Vector2D(4, 0);
-		Vector2D to = move.equals(KING_SIDE_CASTLE) ? Vector2D.plus(from, new Vector2D(0, 2))
-				: Vector2D.plus(from, new Vector2D(0, -2));
+		// checkining Queen_Side_Castle for the case O-O+ and KingSideCastle contains O-O-O 
+		Vector2D to = move.contains(QUEEN_SIDE_CASTLE) ?Vector2D.plus(from, new Vector2D(-2,0)):Vector2D.plus(from, new Vector2D(2 , 0)); // contains becuase sth. like this O-O+
 		return new Move(from, to);
 	}
 
+
 	private static Vector2D findPiecePosition(ChessPieceName name, ChessPieceColor color, Vector2D to, Piece[][] board,
 			Character indistinct) {
-		Vector2D[] wrapper = {new Vector2D(-1,-1)};
-
+		// check if matching piece could move to position "to"
+		
 		if (indistinct == null) {
+			// iterating though the whole board
 			for (int row = 0; row < board.length; row++) {
 				for (int column = 0; column < board[row].length; column++) {
 					Piece p = board[row][column];
-
-					// check if matching piece could move to position "to"
+				
 					if (p != null && p.getName().equals(name) && p.getColor().equals(color)) {
-						for (var direction : p.calculateMoveablePositions()) {
-							for (var pos : direction) {
-								if (pos.equals(to)) {
-									wrapper[0] = p.getPosition().clone();
-								}
-							}
+						Vector2D matchingMove = getMatchingMoveablePosition(p, to);
+						if (matchingMove != null) {
+							return matchingMove;
 						}
 					}
 				}
 			}
 		} else {
+			// iterating trough the desired column
 			if (Character.isAlphabetic(indistinct)) {
 				// looking the column
-				int column = 'a' - indistinct;
+				int column = indistinct - 'a';
 				for (int index = 0; index < board.length; index++) {
 					Piece p = board[index][column];
 					if (p != null && p.getName().equals(name) && p.getColor().equals(color)) {
-						p.calculateAttackableAndMoveablePositions().forEach(direction -> direction.forEach(pos -> {
-							if (pos.equals(to)) {
-								wrapper[0] = p.getPosition().clone();
-							}
-						}));
+						Vector2D matchingMove = getMatchingMoveablePosition(p, to);
+						if (matchingMove != null) {
+							return matchingMove;
+						}
 					}
 				}
-			} else if (Character.isDigit(indistinct)) {
-				// looking in the row
+			} else 
+				if (Character.isDigit(indistinct)) {
+				// iterating trough the desired row
 				int row = board.length - Character.getNumericValue(indistinct);
 				for (int index = 0; index < board.length; index++) {
 					Piece p = board[row][index];
 					if (p != null && p.getName().equals(name) && p.getColor().equals(color)) {
-						p.calculateAttackableAndMoveablePositions().forEach(direction -> direction.forEach(pos -> {
-							if (pos.equals(to)) {
-								wrapper[0] = p.getPosition().clone();
-							}
-						}));
+						Vector2D matchingMove = getMatchingMoveablePosition(p, to);
+						if (matchingMove != null) {
+							return matchingMove;
+						}
 					}
 				}
-			} else {
-				throw new IllegalArgumentException(
-						"Char indistinct: " + indistinct + " couldnt be assigned to any row or column");
 			}
 
 		}
-		if(wrapper[0].getX() == -1) {
-			System.err.println("couldnt find piece move " + to + " " + name);
+		return null;
+	}
+
+	private static Vector2D getMatchingMoveablePosition(Piece p, Vector2D to) {
+		for (List<Vector2D> direction : p.calculateMoveablePositions()) {
+			for (Vector2D pos : direction) {
+				if (pos.equals(to)) {
+					return p.getPosition().clone();
+				}
+			}
 		}
-		return wrapper[0];
+		return null;
 	}
 
 	private static ChessPieceName getPieceName(Character c) {
@@ -205,11 +217,4 @@ public class AlgebraicNotationConverter {
 		};
 	}
 
-	public static void main(String[] args) {
-		// Testing methods
-		// Rh1
-		BoardRepresentation boardR = new BoardRepresentation(
-				FENConverter.convertToPieceBoard("3k4/1q6/8/8/8/8/3K4/r7"));
-		System.out.println(getMove('R', null, "h1", boardR.getBoard(), ChessPieceColor.BLACK));
-	}
 }

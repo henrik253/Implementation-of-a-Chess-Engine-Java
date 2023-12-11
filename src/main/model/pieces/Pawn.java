@@ -41,15 +41,16 @@ public class Pawn extends Piece {
 		if (board.getMoveHistory().size() < 2) // At least one Move has been executed and one current move
 			return false;
 
-		Move lastMove = board.getLastMove();
-		if (isDoublePawnMove(lastMove) && isEnemyPawnNextTo(newPosition, lastMove)) { // TODO is this right?
+		Move lastMove = board.getLastMove(); // is correct
+		if (isDoublePawnMove(lastMove) && isEnemyPawnNextTo(newPosition, lastMove)
+				&& isAttackOnSameColumnAsDoubleMovedPawn(newPosition, lastMove)) { // TODO is this right?
 			return true;
 		}
 
 		return false;
 	}
 
-	private boolean isEnemyPawnNextTo(Vector2D pos, Move lastMove) {
+	private boolean isEnemyPawnNextTo(Vector2D movingPos, Move lastMove) {
 		Piece enemyPiece = board.getPiece(lastMove.getNewPos());
 
 		if (enemyPiece == null || !(enemyPiece instanceof Pawn))
@@ -59,13 +60,18 @@ public class Pawn extends Piece {
 		Vector2D left = new Vector2D(-1, 0);
 
 		// check left/right
-		return Vector2D.plus(position, right).equals(enemyPiece.getPosition())
-				|| (Vector2D.plus(position, left).equals(enemyPiece.getPosition()));
+		return (Vector2D.plus(position, right).equals(enemyPiece.getPosition())
+				|| Vector2D.plus(position, left).equals(enemyPiece.getPosition()));
 	}
 
 	private boolean isDoublePawnMove(Move move) {
 		Piece lastMovedPiece = board.getPiece(move.getNewPos());
 		return lastMovedPiece instanceof Pawn && Math.abs(move.getNewPos().getY() - move.getOldPos().getY()) == 2;
+	}
+
+	private boolean isAttackOnSameColumnAsDoubleMovedPawn(Vector2D movingPosition, Move lastMove) {
+		Piece doubleMovedPawn = board.getPiece(lastMove.getNewPos());
+		return doubleMovedPawn.getPosition().getX() == movingPosition.getX();
 	}
 
 	private boolean validPawnMove(Vector2D newPosition) {
@@ -106,9 +112,7 @@ public class Pawn extends Piece {
 		this.attackableSquares = moves;
 		return moves;
 	}
-	
-	
-	
+
 	@Override
 	public List<List<Vector2D>> calculateAttackableAndMoveablePositions() {
 		List<List<Vector2D>> moves = new LinkedList<>();
@@ -176,26 +180,55 @@ public class Pawn extends Piece {
 			super.executeMove(oldPos, newPos); // normal behaviour !
 
 		if (isPawnOnEndline()) {
-			transformPawn();
+			promotePawn();
+		}
+	}
+
+	public void executeMove(Vector2D oldPos, Vector2D newPos, ChessPieceName promoting) {
+
+		if (enPassant(newPos)) {
+			executeEnPassant(oldPos, newPos);
+		} else
+			super.executeMove(oldPos, newPos); // normal behaviour !
+
+		if (isPawnOnEndline()) {
+			promotePawn(promoting);
 		}
 	}
 
 	private void executeEnPassant(Vector2D oldPos, Vector2D newPos) { // UNSECURE !
 		super.executeMove(oldPos, newPos);
-		Piece attackedPiece = board.getPiece(board.getCurrentMove().getNewPos());
+		Piece doubleMovedPawn = board.getPiece(board.getLastMove().getNewPos()); // the double moved Pawn
 
-		Vector2D attackedPos = attackedPiece.getPosition();
 		Piece[][] board = this.board.getBoard();
-		board[attackedPos.getY()][attackedPos.getX()] = null;
-		this.board.removePiece(attackedPiece.getPosition());
+		board[doubleMovedPawn.getPosition().getY()][doubleMovedPawn.getPosition().getX()] = null;
+		this.board.removePiece(doubleMovedPawn.getPosition());
 	}
 
 	private boolean isPawnOnEndline() {
 		return position.getY() == endline;
 	}
 
-	private void transformPawn() { // auto Queen for the first
-		board.replacePiece(this, new Queen(this.color, this.position));
+	private void promotePawn() { // auto Queen for the first
+		board.promotePiece(this, new Queen(this.color, this.position));
+	}
+
+	private void promotePawn(ChessPieceName promotingPiece) { // auto Queen for the first
+		switch (promotingPiece) {
+		case KNIGHT:
+			board.promotePiece(this, new Knight(this.color, this.position));
+			break;
+		case QUEEN:
+			board.promotePiece(this, new Queen(this.color, this.position));
+			break;
+		case BISHOP:
+			board.promotePiece(this, new Bishop(this.color, this.position));
+			break;
+		case ROOK:
+			board.promotePiece(this, new Rook(this.color, this.position));
+			break;
+		}
+
 	}
 
 	public boolean isFirstMove() {

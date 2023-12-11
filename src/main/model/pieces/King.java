@@ -115,7 +115,6 @@ public class King extends Piece {
 
 	@Override
 	public void executeMove(Vector2D oldPos, Vector2D newPos) {
-
 		if (isValidCastle(newPos)) {
 			executeCastling(oldPos, newPos);
 		} else {
@@ -131,8 +130,8 @@ public class King extends Piece {
 		try {
 			int[][] aS = board.calcAttackedSquaresBy(color.getOpponentColor());
 			Piece[][] b = board.getBoard();
-			boolean isRightSideCastle = pos.getX() - this.position.getX() > 0;
-			int rookCol = isRightSideCastle ? this.board.getBoard().length - 1 : 0;
+			boolean kingSideCastle = pos.getX() > this.getPosition().getX();
+			int rookCol = kingSideCastle ? this.board.getBoard().length - 1 : 0; // either left corner or right corner
 			Vector2D rookPos = new Vector2D(rookCol, this.position.getY()); // on the same row
 			Piece rook = board.getPiece(rookPos);
 
@@ -141,8 +140,8 @@ public class King extends Piece {
 
 			boolean inCheck = false;
 			boolean pieceOnSquare = false;
-
-			if (isRightSideCastle) {
+	
+			if (kingSideCastle) {
 				int x0 = this.position.getX();
 				int x1 = this.position.getX() + 1, x2 = this.position.getX() + 2;
 				int y0 = this.position.getY();
@@ -152,11 +151,17 @@ public class King extends Piece {
 				int x0 = this.position.getX();
 				int x1 = this.position.getX() - 1, x2 = this.position.getX() - 2, x3 = this.position.getX() - 3;
 				int y0 = this.position.getY();
-				inCheck = aS[y0][x0] > 0 || aS[y0][x1] > 0 || aS[y0][x2] > 0 || aS[y0][x3] > 0;
+	
+			
+				inCheck = aS[y0][x0] > 0 || aS[y0][x1] > 0 || aS[y0][x2] > 0; // only the squares where king would move through in check
 				pieceOnSquare = b[y0][x1] != null || b[y0][x2] != null || b[y0][x3] != null; // BETWEEN K & R
 			}
-			return ((int) Math.abs((((double) (position.getX() - pos.getX())))) == 2) && rook.firstMove && firstMove
+			boolean validMove = ((int) Math.abs((((double) (position.getX() - pos.getX())))) == 2); 
+
+			
+			return validMove && rook.firstMove && firstMove
 					&& !inCheck && !pieceOnSquare;
+			
 		} catch (IndexOutOfBoundsException e) {
 			System.err.println("Castling Error in King Class");
 		}
