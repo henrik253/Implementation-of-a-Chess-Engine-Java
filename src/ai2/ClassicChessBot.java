@@ -34,8 +34,11 @@ public class ClassicChessBot implements ChessBot {
 		Vector2D oldPos = null, newPos = null;
 		
 		if(openingBook.hasNextMove()) {
+			try {
 			move = openingBook.getNextMove(board);
 			return move;
+			}catch(Exception e) {
+			}
 		}
 		
 		for (Entry<Piece, Vector2D[]> pMoves : moves.entrySet()) {
