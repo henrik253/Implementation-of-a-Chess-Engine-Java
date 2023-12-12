@@ -124,7 +124,6 @@ public class AlgebraicNotationConverter {
 		int newColumn = movingPos.charAt(0) - 'a';
 		int newRow = board.length - Character.getNumericValue(movingPos.charAt(1));
 		Vector2D to = new Vector2D(newColumn, newRow);
-		System.out.println("movingPos: " + movingPos + " to: " + to);
 		ChessPieceName pieceName = getPieceName(pieceSign);
 
 		Vector2D from = findPiecePosition(pieceName, color, to, board, indistinct);
