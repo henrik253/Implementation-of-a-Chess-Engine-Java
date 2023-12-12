@@ -35,7 +35,7 @@ public class BoardRepresentation {
 	private Piece[][] copy;
 
 	public BoardRepresentation(Piece[][] board) {
-		this.board = board;
+		this.board = board.clone();
 		whitePieces = new LinkedList<>();
 		blackPieces = new LinkedList<>();
 		capturedPieces = new LinkedList<>();
@@ -48,15 +48,15 @@ public class BoardRepresentation {
 	}
 
 	public BoardRepresentation(Piece[][] board, final BoardRepresentation boardRepresentation) {
-		this.board = board.clone();
+		this.board = board;
 		whitePieces = new LinkedList<>(boardRepresentation.whitePieces);
 		blackPieces = new LinkedList<>(boardRepresentation.blackPieces);
 		capturedPieces = new LinkedList<>(boardRepresentation.capturedPieces);
 		whiteKing = (King) boardRepresentation.whiteKing.clone();
 		blackKing = (King) boardRepresentation.blackKing.clone();
 		lastMove = boardRepresentation.lastMove;
+		
 		moveHistory = new LinkedList<>(boardRepresentation.moveHistory);
-		setBoardForPieces(); // before initPieces() !
 		calcAttackedSquaresBy(ChessPieceColor.WHITE);
 		calcAttackedSquaresBy(ChessPieceColor.BLACK);
 	}
@@ -113,7 +113,7 @@ public class BoardRepresentation {
 	}
 
 	public void makeMove(Vector2D oldPos, Vector2D newPos) {
-		copy = getBoardClone();
+	//	copy = getBoardClone();
 		currentMove = new Move(oldPos, newPos);
 		// order in which funcs are called is important!
 		Piece movedPiece = getPiece(oldPos); // get the piece
@@ -137,7 +137,7 @@ public class BoardRepresentation {
 	
 	// this method is a edgecase 
 	public void makeMove(Vector2D oldPos, Vector2D newPos, ChessPieceName promotingPiece) {
-		copy = getBoardClone();
+		//copy = getBoardClone();
 		currentMove = new Move(oldPos, newPos);
 		// order in which funcs are called is important!
 		Piece movedPiece = getPiece(oldPos); // get the piece
@@ -203,8 +203,9 @@ public class BoardRepresentation {
 			Vector2D oldRookPos = lastMove.getOldRookPos(), newRookPos = lastMove.getNewRookPos();
 			Rook rook = lastMove.getRook();
 			rook.setPosition(oldRookPos);
+			rook.setFirstMove(true);
 			board[newRookPos.getY()][newRookPos.getX()] = null;
-			board[oldRookPos.getY()][oldRookPos.getX()] = rook;
+			board[oldRookPos.getY()][oldRookPos.getX()] = rook;		
 		}
 
 		if (lastMove.pawnWillPromote()) {
@@ -301,23 +302,37 @@ public class BoardRepresentation {
 
 	@Override
 	public BoardRepresentation clone() {
-		BoardRepresentation clone = new BoardRepresentation(this.getBoardClone(), this);
-		return clone;
-	}
-
-	public Piece[][] getBoardClone() {
 		Piece[][] result = new Piece[board.length][board.length];
+		BoardRepresentation clone = new BoardRepresentation(result, this);
 		for (int row = 0; row < board.length; row++) {
 			for (int column = 0; column < board[row].length; column++) {
 				Piece p = this.board[row][column];
 				if (p != null) {
-					result[row][column] = p; // cloning the p wont change the
-												// relying board of p
+					Piece pieceClone = p.clone();
+					result[row][column] = pieceClone; 
+					pieceClone.setBoard(clone);
 				}
 			}
 		}
-		return result;
+		return clone;
 	}
+	
+	public BoardRepresentation softClone() { // cloning without cloning the pieces to reduce memory
+		Piece[][] result = new Piece[board.length][board.length];
+		BoardRepresentation clone = new BoardRepresentation(result, this);
+		for (int row = 0; row < board.length; row++) {
+			for (int column = 0; column < board[row].length; column++) {
+				Piece p = this.board[row][column];
+				if (p != null) {
+					Piece pieceClone = p;
+					result[row][column] = pieceClone; 
+					pieceClone.setBoard(clone);
+				}
+			}
+		}
+		return clone;
+	}
+
 
 	public void setBoard(Piece[][] board) {
 		this.board = board;

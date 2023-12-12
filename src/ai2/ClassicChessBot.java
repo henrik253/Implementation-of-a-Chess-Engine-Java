@@ -3,6 +3,7 @@ package ai2;
 import java.util.Map;
 import java.util.Map.Entry;
 
+import ai2.opening.OpeningBook;
 import main.model.chessbots.ChessBot;
 import main.model.gameLogic.BoardRepresentation;
 import main.model.pieces.Piece;
@@ -16,23 +17,30 @@ public class ClassicChessBot implements ChessBot {
 	private ChessPieceColor color;
 	private Move move;
 
+	private OpeningBook openingBook = OpeningBook.openingBook;
+	
 	public ClassicChessBot() {
-		depth = 4;
+		depth = 2;
 		color = ChessPieceColor.BLACK; // by default Black
 	}
+	
+	
 
 	@Override
 	public Move makeMove(Piece[][] board) {
 
 		BoardRepresentation boardR = new BoardRepresentation(board);
 		Map<Piece, Vector2D[]> moves = MoveGeneration.getMoves(boardR, color);
-
 		Vector2D oldPos = null, newPos = null;
-
+		
+		if(openingBook.hasNextMove()) {
+			move = openingBook.getNextMove(board);
+			return move;
+		}
+		
 		for (Entry<Piece, Vector2D[]> pMoves : moves.entrySet()) {
 			for (Vector2D move : pMoves.getValue()) {
 
-			
 				if (color.isWhite()) {
 					float bestValue = Float.MIN_VALUE;
 					float val = MiniMax.max(boardR, depth, Integer.MIN_VALUE, Integer.MAX_VALUE);

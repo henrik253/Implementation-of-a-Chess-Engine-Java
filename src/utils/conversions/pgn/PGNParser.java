@@ -86,21 +86,20 @@ public class PGNParser {
 					pgnBuild = removeCommentsFromPGN(pgnBuild);
 					pgnBuild = removeSubvariations(pgnBuild);
 					pgn = pgnBuild.toString();
-
+					
 					// the pgn contains double numbers for example 24. b3 24... Qf5
 					pgn = pgn.replaceAll("\\d+\\.\\.\\.", "");
 					pgn = pgn.replaceAll("\\$\\d+", "");
 					// the builded pgn still contains double spaces so we change all
 					// double,tripple... spaces to one space
 					pgn = pgn.toString().replaceAll("\\s+", PGN_STRING_SEPERATOR);
-
+					
 					int c = (int) (((++count) / 14757.0) * 100);
 
 					if (lastEffort != c) {
 						lastEffort = c;
 						System.err.println("Effort: " + c + "%");
 					}
-
 					List<Piece[][]> gameHistory = parsePGNStringToSimpleBoard(pgn);
 					result.put(pgn, gameHistory);
 				}
@@ -209,7 +208,7 @@ public class PGNParser {
 	}
 
 	public static BoardRepresentation makeCopyAndMove(Move move, BoardRepresentation board) {
-		BoardRepresentation clone = board.clone();
+		BoardRepresentation clone = board.softClone();
 		try {
 			if (move.pawnWillPromote()) {
 				clone.makeMove(move.getOldPos(), move.getNewPos(), move.getPromotingPiece());
@@ -224,19 +223,4 @@ public class PGNParser {
 	}
 
 	
-	private static final String PGN_FILE_PATH = "C:\\Users\\Genii\\Desktop\\Teamprojekt\\resources\\opening.pgn";
-	public static void main(String[] args) {
-
-		//Map<String, List<Piece[][]>> c = parsePGNFile(PGN_FILE_PATH);
-		System.out.println("done");
-		int count = 0;
-		for (Entry<String, List<Piece[][]>> e : c.entrySet()) {
-
-			if (count++ == 1) {
-				break;
-			}
-		}
-
-		
-	}
 }
