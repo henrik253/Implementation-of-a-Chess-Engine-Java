@@ -70,9 +70,10 @@ public class Model {
 	}
 
 	public boolean makeBotMove() {
-		Move move = selectedChessBot.makeMove(boardRepresentation.clone().getBoard());
+		BoardRepresentation boardForBot = boardRepresentation.clone();
+		Move move = selectedChessBot.makeMove(boardForBot.getBoard());
 		System.out.println(move);
-		boolean success = moveValidation.makeMove(move.getOldPos(), move.getNewPos());
+		boolean success = moveValidation.makeMove(move.from(), move.to());
 		updateState(success, move);
 		enterGameResult();
 		return success;

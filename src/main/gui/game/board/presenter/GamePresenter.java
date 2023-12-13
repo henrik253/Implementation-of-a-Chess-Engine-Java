@@ -163,7 +163,7 @@ public class GamePresenter {
 			SimplePiece[][] board = mainPresenter.requestBotMove();
 			Move botMove = mainPresenter.getLastBotMove();
 			markCheckedKing();
-			final Vector2D oldPos = botMove.getOldPos(), newPos = botMove.getNewPos();
+			final Vector2D oldPos = botMove.from(), newPos = botMove.to();
 			boolean inv = gameView.isBoardInverted();
 			int len = settings.columns - 1;
 			markSquaresPieceMoved(inv ? oldPos.getInverted(len) : oldPos, inv ? newPos.getInverted(len) : newPos);

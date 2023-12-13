@@ -174,7 +174,7 @@ public class BoardRepresentation {
 		// 4. refresh lists that manage pieces e.g whitePieces, blackPieces,
 		// capturedPieces
 
-		Vector2D oldPos = lastMove.getOldPos(), newPos = lastMove.getNewPos();
+		Vector2D oldPos = lastMove.from(), newPos = lastMove.to();
 		Piece capturedPiece = lastMove.getCapturedPiece();
 		Piece movedPiece = lastMove.getMovedPiece(); // getPiece(newPos); throws
 														// Error !
@@ -211,10 +211,10 @@ public class BoardRepresentation {
 
 		if (lastMove.pawnWillPromote()) {
 			Piece to = lastMove.getPromoting(); // e.g. the Pawn
-			Piece from = getPiece(lastMove.getOldPos()); // TODO null ptr exc. // bc. from == null
+			Piece from = getPiece(lastMove.from()); // TODO null ptr exc. // bc. from == null
 			// e.g. the queen?
-			to.setPosition(lastMove.getOldPos().clone());
-			from.setPosition(lastMove.getOldPos().clone()); // important step
+			to.setPosition(lastMove.from().clone());
+			from.setPosition(lastMove.from().clone()); // important step
 			promotePiece(from, to);
 		}
 
@@ -395,6 +395,38 @@ public class BoardRepresentation {
 		// resultBlack + " \n"
 		// + toBoardString() + "#".repeat(50);
 		return toBoardString();
+	}
+	
+	@Override
+	public boolean equals(Object b) {
+		if(b instanceof BoardRepresentation) {
+			return isSameBoard(this.getBoard(),((BoardRepresentation) b).getBoard());
+		}
+		else
+			throw new IllegalArgumentException(" cant compare " + b + " to BoardRepresentation");
+	}
+	
+	public static boolean isSameBoard(final Piece[][] board1,final Piece[][] board2) {
+		for (int i = 0; i < board1.length; i++) {
+			for (int j = 0; j < board1[i].length; j++) {
+				Piece board1Piece = board1[i][j];
+				Piece board2Piece = board2[i][j];
+				if (board1Piece != null && board2Piece != null) { // are pieces
+					if (board1Piece.getName() == board2Piece.getName()
+							&& board1Piece.getColor() == board2Piece.getColor()) {
+						continue;
+					} else {
+						return false;
+					}
+				} else if (board1Piece == null && board2Piece == null) {
+					continue;
+				} else {
+					return false;
+				}
+
+			}
+		}
+		return true;
 	}
 
 	public King getKing(ChessPieceColor color) {

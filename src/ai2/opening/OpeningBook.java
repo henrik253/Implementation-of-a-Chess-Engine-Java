@@ -68,7 +68,7 @@ public class OpeningBook {
 		} else {
 			List<List<Piece[][]>> updated = new ArrayList<>();
 			usableBoardHistorys.forEach(gameHistory -> gameHistory.forEach(board -> {
-				if (isSameBoard(currentBoard, board)) {
+				if (BoardRepresentation.isSameBoard(currentBoard, board)) {
 					updated.add(gameHistory);
 				}
 			}));

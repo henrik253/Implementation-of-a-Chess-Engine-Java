@@ -16,6 +16,7 @@ public class MoveValidation {
 	private Model model;
 
 	private ChessPieceColor onMove;
+	private BoardRepresentation startingBoard; 
 	private BoardRepresentation board;
 
 	public MoveValidation(ChessPieceColor startingColor) {
@@ -104,7 +105,7 @@ public class MoveValidation {
 	}
 
 	private boolean enemyInRemi() { // Fehleranfällig?
-		return false;
+		return Remis.isRemis(board, board.getMoveHistory(), onMove, startingBoard);
 	}
 
 	private void remis() {
@@ -150,6 +151,10 @@ public class MoveValidation {
 
 	public void setBoard(BoardRepresentation board) {
 		this.board = board;
+		System.out.println("set Board");
+		System.out.println(board.hashCode());
+		startingBoard = board.clone();
+		System.out.println(startingBoard.hashCode());
 	}
 
 	public Model getModel() {

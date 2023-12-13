@@ -108,7 +108,7 @@ public class AlgebraicNotationConverter {
 				// in this case its a promoting pawn
 				char promoting = input.charAt(3);
 				Move promotingPawnMove  = getMove('P', null, input.charAt(0) + "" + input.charAt(1), board, color);
-				Piece promotingPawn = board[promotingPawnMove.getOldPos().getY()][promotingPawnMove.getOldPos().getX()];
+				Piece promotingPawn = board[promotingPawnMove.from().getY()][promotingPawnMove.from().getX()];
 				promotingPawnMove.setPromotingPiece(promotingPawn, getPieceName(promoting));
 				return promotingPawnMove;
 			}

@@ -211,9 +211,9 @@ public class PGNParser {
 		BoardRepresentation clone = board.softClone();
 		try {
 			if (move.pawnWillPromote()) {
-				clone.makeMove(move.getOldPos(), move.getNewPos(), move.getPromotingPiece());
+				clone.makeMove(move.from(), move.to(), move.getPromotingPiece());
 			} else {
-				clone.makeMove(move.getOldPos(), move.getNewPos());
+				clone.makeMove(move.from(), move.to());
 			}
 		} catch (Exception e) {
 			System.err.println("problem with making move on board \n" + board + " \n move: " + move);

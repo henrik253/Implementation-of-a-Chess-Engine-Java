@@ -51,7 +51,7 @@ public class Pawn extends Piece {
 	}
 
 	private boolean isEnemyPawnNextTo(Vector2D movingPos, Move lastMove) {
-		Piece enemyPiece = board.getPiece(lastMove.getNewPos());
+		Piece enemyPiece = board.getPiece(lastMove.to());
 
 		if (enemyPiece == null || !(enemyPiece instanceof Pawn))
 			return false;
@@ -65,12 +65,12 @@ public class Pawn extends Piece {
 	}
 
 	private boolean isDoublePawnMove(Move move) {
-		Piece lastMovedPiece = board.getPiece(move.getNewPos());
-		return lastMovedPiece instanceof Pawn && Math.abs(move.getNewPos().getY() - move.getOldPos().getY()) == 2;
+		Piece lastMovedPiece = board.getPiece(move.to());
+		return lastMovedPiece instanceof Pawn && Math.abs(move.to().getY() - move.from().getY()) == 2;
 	}
 
 	private boolean isAttackOnSameColumnAsDoubleMovedPawn(Vector2D movingPosition, Move lastMove) {
-		Piece doubleMovedPawn = board.getPiece(lastMove.getNewPos());
+		Piece doubleMovedPawn = board.getPiece(lastMove.to());
 		return doubleMovedPawn.getPosition().getX() == movingPosition.getX();
 	}
 
@@ -198,7 +198,7 @@ public class Pawn extends Piece {
 
 	private void executeEnPassant(Vector2D oldPos, Vector2D newPos) { // UNSECURE !
 		super.executeMove(oldPos, newPos);
-		Piece doubleMovedPawn = board.getPiece(board.getLastMove().getNewPos()); // the double moved Pawn
+		Piece doubleMovedPawn = board.getPiece(board.getLastMove().to()); // the double moved Pawn
 
 		Piece[][] board = this.board.getBoard();
 		board[doubleMovedPawn.getPosition().getY()][doubleMovedPawn.getPosition().getX()] = null;

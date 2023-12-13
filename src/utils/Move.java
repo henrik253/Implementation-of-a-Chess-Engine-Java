@@ -115,11 +115,11 @@ public final class Move {
 		this.movedPieceFirstMove = movedPieceFirstMove;
 	}
 
-	public Vector2D getOldPos() {
+	public Vector2D from() {
 		return oldPos;
 	}
 
-	public Vector2D getNewPos() {
+	public Vector2D to() {
 		return newPos;
 	}
 
