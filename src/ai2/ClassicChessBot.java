@@ -31,6 +31,7 @@ public class ClassicChessBot implements ChessBot {
 
 		BoardRepresentation boardR = new BoardRepresentation(board);
 		Map<Piece, Vector2D[]> moves = MoveGeneration.getMoves(boardR, color);
+		
 		Vector2D oldPos = null, newPos = null;
 		
 		if(openingBook.hasNextMove()) {

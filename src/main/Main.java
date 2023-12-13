@@ -47,9 +47,9 @@ public class Main extends Application {
 		initGUIComponents();
 		initModelComponents();
 		combineGUItoModel();
-
 		primaryStage.setScene(scene);
 		primaryStage.show();
+	
 	}
 
 	public void initGUIComponents() {

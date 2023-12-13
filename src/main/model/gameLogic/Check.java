@@ -54,7 +54,7 @@ public class Check {
 
 	public static boolean isMate(BoardRepresentation board, ChessPieceColor mated, Piece checkingPiece) {
 		if (kingInCheck(board, mated)) {
-			return !kingCanMove(board, mated) && !checkCanBeStopped(board, mated, checkingPiece);
+			return !kingCanMove(board, mated) && !checkCanBeStoppedByAnyPiece(board, mated, checkingPiece);
 		}
 		return false;
 	}
@@ -85,7 +85,8 @@ public class Check {
 		return false;
 	}
 
-	public static boolean checkCanBeStopped(BoardRepresentation board, ChessPieceColor mated, Piece checkingPiece) {
+	public static boolean checkCanBeStoppedByAnyPiece(BoardRepresentation board, ChessPieceColor mated,
+			Piece checkingPiece) {
 		List<Piece> pieces = board.getPieces(mated);
 		King k = board.getKing(mated);
 		List<List<Vector2D>> attackingSquares = checkingPiece.calculateAttackablePositions();
@@ -104,11 +105,11 @@ public class Check {
 				break;
 			}
 		}
-		
-		if(checkingDirection == null) {
+
+		if (checkingDirection == null) {
 			return false;
 		}
-		
+
 		for (Piece stoppingCheckPiece : pieces) {
 
 			if (isPiecePinned(board, stoppingCheckPiece))
@@ -121,7 +122,7 @@ public class Check {
 			for (Vector2D capturingPieceMove : movesOfCapturingPiece) {
 
 				if (canBeBlocked(checkingDirection, capturingPieceMove, stoppingCheckPiece, k)
-						|| checkingPiece.getPosition().equals(capturingPieceMove)) {
+						|| canBeCaptured(checkingPiece, capturingPieceMove)) {
 
 					return true;
 				}
@@ -129,6 +130,19 @@ public class Check {
 		}
 
 		return false;
+	}
+
+	public static boolean checkCanBeStoppedWithPieceMove(BoardRepresentation board, ChessPieceColor checked,
+			Piece checkingPiece,Vector2D from,Vector2D to) {
+		// also checks for double check 
+			board.makeMove(from, to);
+			boolean stillInCheck = kingInCheck(board,checked);
+			board.undoLastMove();
+			return !stillInCheck;
+	}
+	
+	public static boolean checkCanBeStoppedWithPieceMove(BoardRepresentation board,ChessPieceColor checked,Vector2D from,Vector2D to) {
+		return checkCanBeStoppedWithPieceMove(board,checked,getCheckingPiece(board,checked),from,to);
 	}
 
 	public static boolean isPiecePinned(BoardRepresentation board, Piece p) {
@@ -153,13 +167,17 @@ public class Check {
 				.getX()] != attackedSquaresWithoutPiece[kingPos.getY()][kingPos.getX()];
 	}
 
-	private static boolean canBeBlocked(List<Vector2D> checkingDirection, Vector2D enemyPieceMove, Piece enemyPiece,
+	public static boolean canBeBlocked(List<Vector2D> checkingDirection, Vector2D enemyPieceMove, Piece enemyPiece,
 			King enemyKing) {
-
+		System.out.println(checkingDirection);
 		if (enemyPieceMove.equals(enemyKing.getPosition()) || checkingDirection.isEmpty()) { // kings pos in not
 			return false; // included in can be blocked!
 		}
 		return checkingDirection.contains(enemyPieceMove) && enemyPiece != enemyKing;
+	}
+
+	public static boolean canBeCaptured(Piece checkingPiece, Vector2D capturingMove) {
+		return checkingPiece.getPosition().equals(capturingMove);
 	}
 
 	// TODO

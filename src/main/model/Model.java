@@ -174,8 +174,14 @@ public class Model {
 	}
 
 	public List<Vector2D> getMoveablePositions(Vector2D pos) {
+		try {
 		return boardRepresentation.getPiece(pos).calculateMoveablePositions().stream().flatMap(s -> s.stream())
 				.toList();
+		}catch(Exception e) {
+			System.err.println("Tryed to access position: " + pos + " on board:");
+			System.err.println(boardRepresentation);
+			throw e;
+		}
 	}
 
 	public ChessBot getSelectedChessBot() {

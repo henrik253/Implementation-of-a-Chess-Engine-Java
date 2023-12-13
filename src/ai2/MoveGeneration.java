@@ -23,52 +23,55 @@ public class MoveGeneration {
 		Map<Piece, Vector2D[]> allMoves = new LinkedHashMap<>();
 		Piece[][] board = boardR.getBoard().clone();
 		boolean inCheck = Check.kingInCheck(boardR, color);
-
+		
+		
+		
 		for (Piece[] row : board) {
 			for (Piece p : row) {
-				
-				if(p == null)
-					continue; 
-				
+
+				if (p == null)
+					continue;
+
 				if (Check.isPiecePinned(boardR, p)) { // Pinned piece can be ignored
 					continue;
 				}
 
 				if (p != null && p.getColor() == color) {
 					List<List<Vector2D>> movesInDirections = p.calculateMoveablePositions();
-					List<Vector2D> tempResult = new ArrayList<>();
+					List<Vector2D> movesOfPiece = new ArrayList<>();
 
 					for (List<Vector2D> moves : movesInDirections) {
 						for (Vector2D move : moves) {
 
 							if (inCheck) {
-								if(Check.checkCanBeStopped(boardR, color, p)) {
-									tempResult.add(move);
+								if (Check.checkCanBeStoppedWithPieceMove(boardR, color, p.getPosition(), move)) {
+									movesOfPiece.add(move);
 								}
 							} else {
-								tempResult.add(move);
+								movesOfPiece.add(move);
 							}
 						}
 					}
-					
-					allMoves.put(p, tempResult.toArray(new Vector2D[tempResult.size()]));
+					if (movesOfPiece.size() > 0) {
+						allMoves.put(p, movesOfPiece.toArray(new Vector2D[movesOfPiece.size()]));
+					}
 				}
 			}
 		}
-		
-		allMoves =  sortPieceOrder(allMoves);
+
+		allMoves = sortPieceOrder(allMoves);
 		System.out.println(allMoves);
 		return allMoves;
 	}
-	
-	private static Map<Piece,Vector2D[]> sortPieceOrder(Map<Piece, Vector2D[]> allMoves){
-		Comparator<Map.Entry<Piece,Vector2D[]>> comparator = (entry1,entry2) ->   entry2.getKey().value - entry1.getKey().value;
-		List<Map.Entry<Piece,Vector2D[]>> entries = new ArrayList<>(allMoves.entrySet());
-		Collections.sort(entries,comparator);
-		Map<Piece,Vector2D[]> sortedMap = new LinkedHashMap<>();
-		entries.forEach( entrie -> sortedMap.put(entrie.getKey(), entrie.getValue()));
+
+	private static Map<Piece, Vector2D[]> sortPieceOrder(Map<Piece, Vector2D[]> allMoves) {
+		Comparator<Map.Entry<Piece, Vector2D[]>> comparator = (entry1, entry2) -> entry2.getKey().value
+				- entry1.getKey().value;
+		List<Map.Entry<Piece, Vector2D[]>> entries = new ArrayList<>(allMoves.entrySet());
+		Collections.sort(entries, comparator);
+		Map<Piece, Vector2D[]> sortedMap = new LinkedHashMap<>();
+		entries.forEach(entrie -> sortedMap.put(entrie.getKey(), entrie.getValue()));
 		return sortedMap;
 	}
-
 
 }

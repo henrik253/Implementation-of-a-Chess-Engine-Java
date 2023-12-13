@@ -128,26 +128,26 @@ public class CheckClassTest {
 		System.out.println("board14 \n" +board14.toBoardString());
 		Piece checkingPiece = Check.getCheckingPiece(board14, ChessPieceColor.WHITE);
 		System.out.println("Checking Piece: " + checkingPiece);
-		assertTrue(Check.checkCanBeStopped(board14, ChessPieceColor.WHITE, checkingPiece));
+		assertTrue(Check.checkCanBeStoppedByAnyPiece(board14, ChessPieceColor.WHITE, checkingPiece));
 
 		System.out.println("board15 \n" +board15.toBoardString());
 		checkingPiece = Check.getCheckingPiece(board15, ChessPieceColor.WHITE);
 		System.out.println("Checking Piece: " + checkingPiece);
-		assertTrue(Check.checkCanBeStopped(board15, ChessPieceColor.WHITE, checkingPiece));
+		assertTrue(Check.checkCanBeStoppedByAnyPiece(board15, ChessPieceColor.WHITE, checkingPiece));
 
 		System.out.println("board16 \n" +board16.toBoardString());
 		checkingPiece = Check.getCheckingPiece(board16, ChessPieceColor.WHITE);
 		System.out.println("Checking Piece: " + checkingPiece);
-		assertFalse(Check.checkCanBeStopped(board16, ChessPieceColor.WHITE, checkingPiece));
+		assertFalse(Check.checkCanBeStoppedByAnyPiece(board16, ChessPieceColor.WHITE, checkingPiece));
 
 		System.out.println("board17 \n" +board17.toBoardString());
 		checkingPiece = Check.getCheckingPiece(board17, ChessPieceColor.WHITE);
 		System.out.println("Checking Piece: " + checkingPiece);
-		assertTrue(Check.checkCanBeStopped(board17, ChessPieceColor.WHITE, checkingPiece));
+		assertTrue(Check.checkCanBeStoppedByAnyPiece(board17, ChessPieceColor.WHITE, checkingPiece));
 		
 		System.out.println("board from playing Game \n" + boardFromGame1.toBoardString());
 		checkingPiece = Check.getCheckingPiece(boardFromGame1, ChessPieceColor.WHITE);
-		assertTrue(Check.checkCanBeStopped(boardFromGame1, ChessPieceColor.WHITE, checkingPiece));
+		assertTrue(Check.checkCanBeStoppedByAnyPiece(boardFromGame1, ChessPieceColor.WHITE, checkingPiece));
 		
 		System.out.println("END test_checkCanBeStopped");
 	}
