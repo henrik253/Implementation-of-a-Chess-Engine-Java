@@ -83,8 +83,9 @@ public class BotRepresentation extends Pane {
 
 		initColorSelectMenue();
 
-		this.setBackground(new Background(new BackgroundFill(Color.web("#E9E9E9"),null,null)));
-		this.setBorder(new Border(new BorderStroke(Color.LIGHTGRAY,BorderStrokeStyle.SOLID,null,new BorderWidths(1))));
+		this.setBackground(new Background(new BackgroundFill(Color.web("#E9E9E9"), null, null)));
+		this.setBorder(
+				new Border(new BorderStroke(Color.LIGHTGRAY, BorderStrokeStyle.SOLID, null, new BorderWidths(1))));
 
 		imageWrapper.getChildren().add(imageView);
 		this.getChildren().addAll(selectButton, informationText, heading, imageWrapper);
@@ -183,12 +184,20 @@ public class BotRepresentation extends Pane {
 
 	public void toggleSelectButton() {
 		getChildren().remove(selectButton);
-		getChildren().add(surrenderButton);
+//		selectButton.setVisible(false);
+		if (!getChildren().contains(surrenderButton)) {
+			getChildren().add(surrenderButton);
+		}
+//		surrenderButton.setVisible(true);
 	}
 
 	public void toggleSurrenderButton() {
 		getChildren().remove(surrenderButton);
-		getChildren().add(selectButton);
+
+		if (!getChildren().contains(selectButton)) {
+			getChildren().add(selectButton);
+		}
+
 	}
 
 	public ImageView getImage() {

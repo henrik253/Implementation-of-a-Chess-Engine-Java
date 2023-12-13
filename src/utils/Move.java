@@ -9,8 +9,8 @@ public final class Move {
 		return promoting;
 	}
 
-	private final Vector2D oldPos;
-	private final Vector2D newPos;
+	private final Vector2D from;
+	private final Vector2D to;
 
 	private Piece movedPiece;
 
@@ -64,8 +64,8 @@ public final class Move {
 	}
 
 	public Move(Vector2D oldPos, Vector2D newPos) {
-		this.oldPos = oldPos;
-		this.newPos = newPos;
+		this.from = oldPos;
+		this.to = newPos;
 	}
 
 	public boolean pieceGotCaptured() {
@@ -116,17 +116,31 @@ public final class Move {
 	}
 
 	public Vector2D from() {
-		return oldPos;
+		return from;
 	}
 
 	public Vector2D to() {
-		return newPos;
+		return to;
 	}
 
 	@Override
 	public String toString() {
 
-		return (oldPos == null ? "null" : oldPos.toString()) + " -> " + (newPos == null ? "null" : newPos.toString());
+		return (from == null ? "null" : from.toString()) + " -> " + (to == null ? "null" : to.toString());
+	}
+
+	@Override
+	public Move clone() {
+		Move m = new Move(this.from.clone(), to.clone());
+		m.movedPiece = movedPiece == null ? null : movedPiece.clone();
+		m.capturedPiece = capturedPiece == null ? null : capturedPiece.clone();
+		m.promoting = promoting == null ? null : promoting.clone();
+		m.promotingPiece = promotingPiece == null ? null : promotingPiece;
+		m.castlingMove = this.castlingMove;
+		m.oldRookPos = oldRookPos == null ? null : oldRookPos.clone();
+		m.newRookPos = newRookPos == null ? null : newRookPos.clone();
+		m.rook = rook == null ? null : (Rook) rook.clone();
+		return m;
 	}
 
 }

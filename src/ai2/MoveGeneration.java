@@ -24,8 +24,6 @@ public class MoveGeneration {
 		Piece[][] board = boardR.getBoard().clone();
 		boolean inCheck = Check.kingInCheck(boardR, color);
 		
-		
-		
 		for (Piece[] row : board) {
 			for (Piece p : row) {
 

@@ -44,7 +44,8 @@ public class BoardRepresentation {
 		setBoardForPieces(); // before initPieces() !
 		attackedSquaresByWhite = calcAttackedSquaresBy(ChessPieceColor.WHITE);
 		attackedSquaresByBlack = calcAttackedSquaresBy(ChessPieceColor.BLACK);
-
+		currentMove = new Move(new Vector2D(0,0),new Vector2D(0,0));
+		lastMove = currentMove.clone();
 	}
 
 	public BoardRepresentation(Piece[][] board, final BoardRepresentation boardRepresentation) {
@@ -54,8 +55,9 @@ public class BoardRepresentation {
 		capturedPieces = new LinkedList<>(boardRepresentation.capturedPieces);
 		whiteKing = (King) boardRepresentation.whiteKing.clone();
 		blackKing = (King) boardRepresentation.blackKing.clone();
-		currentMove = boardRepresentation.currentMove;
-		lastMove = boardRepresentation.lastMove;
+		
+		currentMove = boardRepresentation.currentMove.clone();
+		lastMove = boardRepresentation.lastMove.clone();
 		
 		moveHistory = new LinkedList<>(boardRepresentation.moveHistory);
 		calcAttackedSquaresBy(ChessPieceColor.WHITE);
@@ -315,6 +317,7 @@ public class BoardRepresentation {
 				}
 			}
 		}
+		
 		return clone;
 	}
 	

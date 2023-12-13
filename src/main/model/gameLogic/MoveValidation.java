@@ -105,10 +105,11 @@ public class MoveValidation {
 	}
 
 	private boolean enemyInRemi() { // Fehleranfällig?
-		return Remis.isRemis(board, board.getMoveHistory(), onMove, startingBoard);
+		return Remis.isRemis(board, board.getMoveHistory(), onMove.getOpponentColor(), startingBoard);
 	}
 
 	private void remis() {
+		System.out.println("REMIS");
 		State.gameState = GameState.GAME_OVER;
 		State.gameOverReason = GameOverReason.DRAW;
 	}
@@ -151,10 +152,7 @@ public class MoveValidation {
 
 	public void setBoard(BoardRepresentation board) {
 		this.board = board;
-		System.out.println("set Board");
-		System.out.println(board.hashCode());
-		startingBoard = board.clone();
-		System.out.println(startingBoard.hashCode());
+		this.startingBoard = board.clone();
 	}
 
 	public Model getModel() {

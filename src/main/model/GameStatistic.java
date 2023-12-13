@@ -62,7 +62,7 @@ public class GameStatistic {
 	}
 
 	public int getBotWins(String bot) {
-		return getPlayedGamesAgainstBot(bot) - getUserWins(bot) - getDraws(bot);
+		return getPlayedGamesAgainstBot(bot) - getUserWins(bot);
 	}
 
 	public int getDraws(String bot) {

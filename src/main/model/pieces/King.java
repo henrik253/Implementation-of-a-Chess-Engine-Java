@@ -109,7 +109,6 @@ public class King extends Piece {
 		moves.add(castlingMoves);
 
 		this.attackableSquares = moves; // TODO correct?
-
 		return moves;
 	}
 

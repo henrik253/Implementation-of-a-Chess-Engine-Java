@@ -128,7 +128,7 @@ public class GamePresenter {
 		final boolean inv = gameView.isBoardInverted();
 
 		moveablePositions = mainPresenter.getMoveablePositions(inv ? pos.getInverted(len) : pos);
-
+		
 		gameView.markSquare(pos, settings.markedColorBright.get());
 		moveablePositions.forEach(position -> gameView.markSquare(inv ? position.getInverted(len) : position,
 				settings.moveablePosMarked.get()));

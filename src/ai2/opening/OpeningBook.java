@@ -21,6 +21,8 @@ public class OpeningBook {
 	
 	public static final OpeningBook openingBook = new OpeningBook();
 	
+	private static boolean isInit; 
+	
 	private final static String FILE_PATH = "resources/";
 	private final static String PGN_FILENAME = "opening.pgn";
 	private final static String PATH = FILE_PATH + PGN_FILENAME;
@@ -31,12 +33,12 @@ public class OpeningBook {
 	private Map<String, List<Piece[][]>> openingTable;
 	private List<List<Piece[][]>> usableBoardHistorys;
 	
-	public OpeningBook(String path) {
+	private OpeningBook(String path) {
 		this.path = path;
-		init();
+		new Thread(() -> init()).start();
 	}
 	
-	public OpeningBook() {
+	private OpeningBook() {
 		this(PATH);
 	}
 	
@@ -146,6 +148,10 @@ public class OpeningBook {
 		} 
 		
 		return new Move(from, to);
+	}
+	
+	public boolean isInitalized() {
+		return isInit;
 	}
 	
 //	public static void main(String[] args) {
