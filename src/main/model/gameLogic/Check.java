@@ -169,7 +169,6 @@ public class Check {
 
 	public static boolean canBeBlocked(List<Vector2D> checkingDirection, Vector2D enemyPieceMove, Piece enemyPiece,
 			King enemyKing) {
-		System.out.println(checkingDirection);
 		if (enemyPieceMove.equals(enemyKing.getPosition()) || checkingDirection.isEmpty()) { // kings pos in not
 			return false; // included in can be blocked!
 		}

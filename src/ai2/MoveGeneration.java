@@ -60,7 +60,6 @@ public class MoveGeneration {
 		}
 
 		allMoves = sortPieceOrder(allMoves);
-		System.out.println(allMoves);
 		return allMoves;
 	}
 

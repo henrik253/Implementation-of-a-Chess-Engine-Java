@@ -55,7 +55,7 @@ public class MainPresenter {
 				System.err.println(model.getBoardRepresentation());
 				throw e;
 			}
-			if (++c >= 1000) {
+			if (++c >= 3) {
 				System.err.print("\n Bot couldnt find a Move after " + c + " attempts.");
 				break;
 			}
@@ -239,7 +239,6 @@ public class MainPresenter {
 	}
 
 	public List<Vector2D> getMoveablePositions(Vector2D pos) {
-		System.out.println(model.getBoardRepresentation());
 		return model.getMoveablePositions(pos);
 	}
 

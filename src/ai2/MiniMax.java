@@ -26,7 +26,6 @@ public class MiniMax {
 			return evaluate(boardR, WHITE);
 
 		float maxValue = NEGATIVE_INFINITY;
-		System.out.println(boardR);
 		Map<Piece, Vector2D[]> moves = MoveGeneration.getMoves(boardR, WHITE);
 
 		for (Entry<Piece, Vector2D[]> move : moves.entrySet()) {

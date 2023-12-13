@@ -1,5 +1,6 @@
 package ai2;
 
+import java.util.Arrays;
 import java.util.Map;
 import java.util.Map.Entry;
 
@@ -31,7 +32,9 @@ public class ClassicChessBot implements ChessBot {
 
 		BoardRepresentation boardR = new BoardRepresentation(board);
 		Map<Piece, Vector2D[]> moves = MoveGeneration.getMoves(boardR, color);
-		
+		System.out.println("MOVES in makeMove from ClassicChesBot");
+		moves.forEach( (key,val )-> System.out.println(key + " -> " +Arrays.toString(val)));
+		System.out.println("MOVES in makeMove from ClassicChesBot");
 		Vector2D oldPos = null, newPos = null;
 		
 		if(openingBook.hasNextMove()) {

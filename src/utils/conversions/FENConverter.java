@@ -10,6 +10,7 @@ import main.model.pieces.Rook;
 import utils.ChessPieceColor;
 import utils.ChessPieceName;
 import utils.SimplePiece;
+import utils.Vector2D;
 
 public class FENConverter { // Converting a FEN String to
 
@@ -81,7 +82,10 @@ public class FENConverter { // Converting a FEN String to
 					continue;
 				}
 				if (Character.isLetter(c)) {
-					board[row][++column] = buildPiece(c, row, column);
+					column++;
+					Piece p = buildPiece(c, row, column);
+					board[row][column] = setSettingsForPiece(p);
+	
 					continue;
 				}
 				if (Character.getNumericValue(c) != -1) {
@@ -108,6 +112,19 @@ public class FENConverter { // Converting a FEN String to
 		default -> throw new IllegalArgumentException(c + " at " + " row " + row + " & column " + column);
 		};
 
+	}
+
+	private static Piece setSettingsForPiece(Piece p) { // only the neccessary settings for double Pawn move, Castling												// rights .
+			if (p instanceof Pawn) {
+				int y = p.getPosition().getY();
+				if (y == 6 || y == 1) {
+					p.setFirstMove(true);
+				}
+				else 
+					p.setFirstMove(false);
+			}
+			
+			return p;
 	}
 
 }

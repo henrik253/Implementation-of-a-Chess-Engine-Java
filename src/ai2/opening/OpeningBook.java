@@ -95,8 +95,8 @@ public class OpeningBook {
 		if(possibleBoards.size() == 0) {
 			throw new NoSuchElementException(" couldnt find a matching board ...");
 		}
-		System.out.println("All possible Moves");
-		possibleBoards.forEach(board -> System.out.println(new BoardRepresentation(board)));
+	//	System.out.println("All possible Moves");
+	//	possibleBoards.forEach(board -> System.out.println(new BoardRepresentation(board)));
 		return possibleBoards.get(((int) Math.random() * possibleBoards.size()));
 	}
 
