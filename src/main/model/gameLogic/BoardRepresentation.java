@@ -54,6 +54,7 @@ public class BoardRepresentation {
 		capturedPieces = new LinkedList<>(boardRepresentation.capturedPieces);
 		whiteKing = (King) boardRepresentation.whiteKing.clone();
 		blackKing = (King) boardRepresentation.blackKing.clone();
+		currentMove = boardRepresentation.currentMove;
 		lastMove = boardRepresentation.lastMove;
 		
 		moveHistory = new LinkedList<>(boardRepresentation.moveHistory);

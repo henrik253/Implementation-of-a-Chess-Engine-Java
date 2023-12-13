@@ -52,7 +52,7 @@ public class OpeningBook {
 	}
 
 	public Move getNextMove(Piece[][] currentBoard) {
-		updateUsableBoards(currentBoard);
+		//updateUsableBoards(currentBoard);
 		Piece[][] board = takeBoardOfUsableBoardHistory(currentBoard);
 		
 		return filterOutMove(currentBoard, board);
@@ -81,20 +81,22 @@ public class OpeningBook {
 		
 		for (List<Piece[][]> gameHistory : usableBoardHistorys) {
 			int indexOfNextBoard = 0;
-			System.out.println(new BoardRepresentation(currentBoard));
-			System.out.println(new BoardRepresentation(gameHistory.get(0)));
+		
 			for (Piece[][] board : gameHistory) {
 				if (++indexOfNextBoard >= gameHistory.size()) {
 					continue;
 				}
 				if (isSameBoard(board, currentBoard)) {
 					possibleBoards.add(gameHistory.get(indexOfNextBoard));
+					break;
 				}
 			}
 		}
 		if(possibleBoards.size() == 0) {
 			throw new NoSuchElementException(" couldnt find a matching board ...");
 		}
+		System.out.println("All possible Moves");
+		possibleBoards.forEach(board -> System.out.println(new BoardRepresentation(board)));
 		return possibleBoards.get(((int) Math.random() * possibleBoards.size()));
 	}
 
@@ -137,25 +139,31 @@ public class OpeningBook {
 				}
 			}
 		}
+		if(from == null || to == null) {
+			System.err.println(new BoardRepresentation(current));
+			System.err.println(new BoardRepresentation(nextBoard));
+			throw new NoSuchElementException("couldnt find move");
+		} 
+		
 		return new Move(from, to);
 	}
 	
-	public static void main(String[] args) {
-	
-		OpeningBook openingBook = new OpeningBook();
-		System.out.println("Testing filterOutMove \n");
-		Piece[][] normal = FENConverter.convertToPieceBoard("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR");
-		Piece[][] next =  FENConverter.convertToPieceBoard("rnbqkbnr/pppppppp/8/8/8/5N2/PPPPPPPP/RNBQKB1R");
-		System.out.println(openingBook.filterOutMove(normal,next));
-		Piece[][] next2 =  FENConverter.convertToPieceBoard("rnbqkbnr/ppp1pppp/8/3p4/8/5N2/PPPPPPPP/RNBQKB1R");
-		System.out.println(openingBook.filterOutMove(next, next2));
-		System.out.println("\n Testing isSameBoard \n");
-		System.out.println(openingBook.isSameBoard(next,normal));
-		System.out.println(openingBook.isSameBoard(next, next2));
-		System.out.println(openingBook.isSameBoard(next,next));
-		System.out.println("\n Testing openingBook \n");
-		openingBook.init();
-		System.out.println(openingBook.getNextMove(next));
-	}
+//	public static void main(String[] args) {
+//	
+//		OpeningBook openingBook = new OpeningBook();
+//		System.out.println("Testing filterOutMove \n");
+//		Piece[][] normal = FENConverter.convertToPieceBoard("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR");
+//		Piece[][] next =  FENConverter.convertToPieceBoard("rnbqkbnr/pppppppp/8/8/8/5N2/PPPPPPPP/RNBQKB1R");
+//		System.out.println(openingBook.filterOutMove(normal,next));
+//		Piece[][] next2 =  FENConverter.convertToPieceBoard("rnbqkbnr/ppp1pppp/8/3p4/8/5N2/PPPPPPPP/RNBQKB1R");
+//		System.out.println(openingBook.filterOutMove(next, next2));
+//		System.out.println("\n Testing isSameBoard \n");
+//		System.out.println(openingBook.isSameBoard(next,normal));
+//		System.out.println(openingBook.isSameBoard(next, next2));
+//		System.out.println(openingBook.isSameBoard(next,next));
+//		System.out.println("\n Testing openingBook \n");
+//		openingBook.init();
+//		System.out.println(openingBook.getNextMove(next));
+//	}
 
 }

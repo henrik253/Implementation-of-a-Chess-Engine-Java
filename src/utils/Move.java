@@ -9,7 +9,6 @@ public final class Move {
 		return promoting;
 	}
 
-
 	private final Vector2D oldPos;
 	private final Vector2D newPos;
 
@@ -19,14 +18,15 @@ public final class Move {
 
 	private Piece promoting;
 	private ChessPieceName promotingPiece;
-	
+
 	private boolean castlingMove = false;
-	
+
 	private Vector2D oldRookPos;
 	private Vector2D newRookPos;
 	private Rook rook;
-	
+
 	private boolean movedPieceFirstMove = false;
+
 	public Vector2D getOldRookPos() {
 		return oldRookPos;
 	}
@@ -63,8 +63,6 @@ public final class Move {
 		return movedPieceFirstMove;
 	}
 
-
-
 	public Move(Vector2D oldPos, Vector2D newPos) {
 		this.oldPos = oldPos;
 		this.newPos = newPos;
@@ -81,18 +79,17 @@ public final class Move {
 	public Piece getCapturedPiece() {
 		return capturedPiece;
 	}
-	
-	// can either be used to say that a piece will promote or to set a piece that is promoted like queen
-	public void setPromotingPiece(Piece pawn,ChessPieceName promotingPiece) {
+
+	// can either be used to say that a piece will promote or to set a piece that is
+	// promoted like queen
+	public void setPromotingPiece(Piece pawn, ChessPieceName promotingPiece) {
 		promoting = pawn;
 		this.promotingPiece = promotingPiece;
 	}
-	
+
 	public ChessPieceName getPromotingPiece() {
 		return promotingPiece;
 	}
-
-
 
 	public Piece getPromoting() {
 		return promoting;
@@ -128,7 +125,7 @@ public final class Move {
 
 	@Override
 	public String toString() {
-		
+
 		return (oldPos == null ? "null" : oldPos.toString()) + " -> " + (newPos == null ? "null" : newPos.toString());
 	}
 
