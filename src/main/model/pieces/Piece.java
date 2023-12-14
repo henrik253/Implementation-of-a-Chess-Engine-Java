@@ -23,7 +23,6 @@ public abstract class Piece {
 
 	protected boolean firstMove = true;
 
-	public int value;
 
 	public Piece(ChessPieceName name, ChessPieceColor color, int row, int column) {
 		this.name = name;
@@ -143,8 +142,6 @@ public abstract class Piece {
 		this.firstMove = firstMove;
 	}
 
-	public int getValue() {
-		return value;
-	}
+	public abstract int getValue();
 
 }

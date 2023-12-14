@@ -20,49 +20,41 @@ public class ClassicChessBot implements ChessBot {
 	private Move move;
 
 	private OpeningBook openingBook = OpeningBook.openingBook;
-	
+
 	public ClassicChessBot() {
 		depth = 2;
 		color = ChessPieceColor.BLACK; // by default Black
 	}
-	
-	
 
 	@Override
 	public Move makeMove(Piece[][] board) {
 
 		BoardRepresentation boardR = new BoardRepresentation(board);
+
 		Map<Piece, Vector2D[]> moves = MoveGeneration.getMoves(boardR, color);
-		
-		System.out.println(color);
-		System.out.println("moves of ClassicChessBot");
-		System.out.println(moves);
-		
-		
+
 		Vector2D oldPos = null, newPos = null;
-		
-		if(openingBook.hasNextMove()) {
-			try {
-			move = openingBook.getNextMove(board);
-			
-			if(move.from() == null || move.to() == null) {
-				throw new IllegalArgumentException();
-			}
-			return move;
-			}catch(Exception e) {
-			}
-		}
-		
+
+//		if (openingBook.hasNextMove()) {
+//			try {
+//				move = openingBook.getNextMove(board);
+//
+//				if (move.from() == null || move.to() == null) {
+//					throw new IllegalArgumentException();
+//				}
+//				return move;
+//			} catch (Exception e) {
+//			}
+//		}
+
 		for (Entry<Piece, Vector2D[]> pMoves : moves.entrySet()) {
 			System.out.println(pMoves.getKey());
 			for (Vector2D move : pMoves.getValue()) {
-				boardR.makeMove(pMoves.getKey().getPosition(), move);
-				if (false) { 
+				System.out.println(move);
+				if (color.isWhite()) {
 					float bestValue = Float.MIN_VALUE;
-					
-					float val = MiniMax.max(boardR, depth, Integer.MAX_VALUE, Integer.MIN_VALUE,color);
-					System.out.print(move + " ");
-					System.out.print(val);
+					float val = MiniMax.max(boardR, depth, Integer.MIN_VALUE, Integer.MAX_VALUE, color);
+					System.out.print(" " + val + "\n");
 					if (val > bestValue) {
 						bestValue = val;
 						oldPos = pMoves.getKey().getPosition().clone();
@@ -71,9 +63,8 @@ public class ClassicChessBot implements ChessBot {
 
 				} else {
 					float bestValue = Float.MAX_VALUE;
-					float val = MiniMax.min(boardR, depth, Integer.MIN_VALUE, Integer.MAX_VALUE,color);
-					
-					
+					float val = MiniMax.min(boardR, depth, Integer.MIN_VALUE, Integer.MAX_VALUE, color);
+
 					if (val < bestValue) {
 						bestValue = val;
 						oldPos = pMoves.getKey().getPosition().clone();
@@ -81,13 +72,12 @@ public class ClassicChessBot implements ChessBot {
 					}
 
 				}
-				boardR.undoLastMove();
 			}
 		}
-		if(oldPos == null || newPos == null) {
+		if (oldPos == null || newPos == null) {
 			throw new NoSuchElementException(" ClassicChessBot couldnt find move");
 		}
-		
+
 		move = new Move(oldPos, newPos);
 		return move;
 	}

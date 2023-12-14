@@ -62,8 +62,8 @@ public class MoveGeneration {
 	}
 
 	private static Map<Piece, Vector2D[]> sortPieceOrder(Map<Piece, Vector2D[]> allMoves) {
-		Comparator<Map.Entry<Piece, Vector2D[]>> comparator = (entry1, entry2) -> entry2.getKey().value
-				- entry1.getKey().value;
+		Comparator<Map.Entry<Piece, Vector2D[]>> comparator = (entry1, entry2) -> entry2.getKey().getValue()
+				- entry1.getKey().getValue();
 		List<Map.Entry<Piece, Vector2D[]>> entries = new ArrayList<>(allMoves.entrySet());
 		Collections.sort(entries, comparator);
 		Map<Piece, Vector2D[]> sortedMap = new LinkedHashMap<>();
