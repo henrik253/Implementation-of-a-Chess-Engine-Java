@@ -20,7 +20,9 @@ import javafx.scene.text.Text;
 import utils.ChessPieceColor;
 
 public class BotRepresentation extends Pane {
-
+	
+	private String name;
+	
 	private static final Double OFFSET = 25.0;
 	private static final Double PADDING = 10.0;
 	private static final Double IMAGE_WIDTH = 64.0;
@@ -61,10 +63,11 @@ public class BotRepresentation extends Pane {
 	private Button selectBlackButton = new Button();
 	private Button selectRandButton = new Button("?");
 
-	public BotRepresentation(BotSelectionView botSelectionView) {
+	public BotRepresentation(BotSelectionView botSelectionView,String name) {
 		this.botSelectionView = botSelectionView;
 		userPlaysAs = ChessPieceColor.WHITE; // By default black
 		colorButtonPressed(selectWhiteButton); // By default white is selected
+		this.name = name;
 		init();
 	}
 
@@ -260,6 +263,10 @@ public class BotRepresentation extends Pane {
 		selectWhiteButton.setDisable(disable);
 		selectBlackButton.setDisable(disable);
 		selectRandButton.setDisable(disable);
+	}
+
+	public String getName() {
+		return name;
 	}
 
 }

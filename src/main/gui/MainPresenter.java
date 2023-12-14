@@ -82,6 +82,7 @@ public class MainPresenter {
 
 	public void surrenderGame() {
 		model.playerSurrendersGame();
+		gamePresenter.stopChessBotCalculation();
 		initGameOver();
 	}
 
@@ -188,8 +189,10 @@ public class MainPresenter {
 		gameStartPresenter.botSelected(source);
 		gameOverPresenter.botSelected(source);
 		gamePresenter.userPlaysAs(source.getUserColor());
+		System.out.println("bot selected");
 		if (model != null) {
 			model.getSelectedChessBot().setColor(source.getUserColor().getOpponentColor());
+			model.setSelectedChessBot(source.getName().equals("bot1") ? model.bot1 : model.bot2);
 		}
 	}
 
@@ -218,6 +221,7 @@ public class MainPresenter {
 	}
 
 	public void playAgainButtonPressed() {
+		State.gameState = GameState.NO_GAME;
 		gameStartPresenter.setEnableView(true);
 		gameOverPresenter.setEnableView(false);
 	}

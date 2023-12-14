@@ -87,13 +87,13 @@ public class BotSelectionView extends BorderPane { // TODO REMOVE BorderPane Wra
 	}
 
 	private void initBotRepresentation() {
-		botRepresentation1 = new BotRepresentation(this);
+		botRepresentation1 = new BotRepresentation(this,"bot1");
 		botRepresentation1.setHeading(BOT_NAME1);
 		botRepresentation1.setImage(IMAGE_PATH + IMAGE1_NAME + FILE_FORMAT);
 		botRepresentation1.setInformationText(
 				"Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum.");
 
-		botRepresentation2 = new BotRepresentation(this);
+		botRepresentation2 = new BotRepresentation(this,"bot2");
 		botRepresentation2.setHeading(BOT_NAME2);
 		botRepresentation2.setImage(IMAGE_PATH + IMAGE2_NAME + FILE_FORMAT);
 		botRepresentation2.setInformationText(

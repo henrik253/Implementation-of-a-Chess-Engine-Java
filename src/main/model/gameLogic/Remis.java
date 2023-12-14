@@ -20,7 +20,8 @@ public class Remis {
 		
 		return checkBoardHistoryForMaxCount(moveHistory,startingBoard) || !playerCanMove(board,nextPlayerMove);
 	}
-
+	
+	// generating all boards from the moveHistory and comparing them 
 	public static boolean checkBoardHistoryForMaxCount(final List<Move> moveHistory,final BoardRepresentation startingBoard) {
 		List<BoardRepresentation> boards = new LinkedList<>();
 		BoardRepresentation start = startingBoard.clone();
@@ -56,8 +57,6 @@ public class Remis {
 	}
 	
 	public static boolean playerCanMove(BoardRepresentation board,ChessPieceColor movingPlayer) {
-		System.out.println("MoveGen getMoves");
-		System.out.println(MoveGeneration.getMoves(board, movingPlayer));
 		return Check.kingCanMove(board, movingPlayer) || MoveGeneration.getMoves(board, movingPlayer).size() > 0;
 	}
 }

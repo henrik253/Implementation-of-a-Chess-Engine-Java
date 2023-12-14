@@ -7,7 +7,7 @@ import javafx.scene.text.Text;
 import utils.conversions.FENConverter;
 import javafx.scene.control.TextField;
 
-public class InsertBoardView extends Pane {
+public class InsertFENView extends Pane {
 
 	private static SettingsView settingsView;
 
@@ -30,7 +30,7 @@ public class InsertBoardView extends Pane {
 	
 	private double parentHeight,parentWidth;
 
-	public InsertBoardView(SettingsView settingsView, double parentHeight, double parentWidth) {
+	public InsertFENView(SettingsView settingsView, double parentHeight, double parentWidth) {
 		this.settingsView = settingsView;
 		
 		this.parentHeight = parentHeight;

@@ -149,6 +149,10 @@ public class GamePresenter {
 		chessBotCalculation.setOnSucceeded(event -> gameView.loadSimpleBoard(chessBotCalculation.getValue()));
 	}
 	
+	public void stopChessBotCalculation() throws InterruptedException {
+		chessBotCalculation.cancel();
+	}
+	
 	private class ChessBotCalculationService extends Service<SimplePiece[][]>{
 
 		@Override

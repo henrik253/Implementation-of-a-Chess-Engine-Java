@@ -29,8 +29,8 @@ public class Model {
 	private GameStatistic gameStatistic;
 
 	private ChessBot selectedChessBot;
-	private ChessBot bot1 = new DeeperBlueBot();
-	private ChessBot bot2 = new ClassicBot();
+	public final ChessBot bot1 = new DeeperBlueBot();
+	public final ChessBot bot2 = new ClassicBot();
 
 	public Model() {
 		selectedChessBot = bot2;//new ClassicBot();// new RandomChessBot();// bot1;//new DeeperBlueBot();// bot2;//new ClassicBot();
@@ -191,6 +191,8 @@ public class Model {
 
 	public void setSelectedChessBot(ChessBot selectedChessBot) {
 		this.selectedChessBot = selectedChessBot;
+		System.out.println(this.selectedChessBot);
 	}
+
 
 }

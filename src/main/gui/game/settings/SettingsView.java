@@ -19,8 +19,8 @@ public class SettingsView extends Pane {
 	private Pane gameContent;
 
 	private BotSelectionView botSelectionView;
-	
-	private InsertBoardView insertBoardView;
+
+	private InsertFENView insertBoardView;
 
 	public void init() { // init() is called when all Comps. are connected
 		this.setTranslateX(settings.settingsViewTranslateX.get());
@@ -30,13 +30,13 @@ public class SettingsView extends Pane {
 		this.setPrefHeight(settings.WINDOW_HEIGHT);
 		this.setId("SettingsView");
 		this.botSelectionView = new BotSelectionView(this);
-		this.insertBoardView = new InsertBoardView(this,getPrefHeight(),getPrefWidth());
-		
+		this.insertBoardView = new InsertFENView(this, getPrefHeight(), getPrefWidth());
+
 		initGameContent();
 
 		// inGameContent = new InGamePane();
 
-		this.getChildren().addAll(botSelectionView,insertBoardView);
+		this.getChildren().addAll(botSelectionView, insertBoardView);
 
 	}
 
@@ -48,7 +48,7 @@ public class SettingsView extends Pane {
 		gameContent = new Pane();
 		this.getChildren().add(gameContent);
 	}
-	
+
 	public void saveFENString(String fen) {
 		settingsPresenter.loadBoard(fen);
 		settings.selectedFEN.set(fen);
@@ -90,6 +90,8 @@ public class SettingsView extends Pane {
 		botSelectionView.setVisibleBotSelectButtons(disable);
 	}
 
-	
+	public void setVisibleInsertFENView(boolean visible) {
+		insertBoardView.setVisible(visible);
+	}
 
 }

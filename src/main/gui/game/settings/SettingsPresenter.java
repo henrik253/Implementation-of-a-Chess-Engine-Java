@@ -13,18 +13,20 @@ public class SettingsPresenter {
 		settingsView.toggleSelectSurrenderButton(true);
 		settingsView.setDisableColorSelect(true);
 		settingsView.setVisibleBotSelectButtons(false);
+		settingsView.setVisibleInsertFENView(false);
 	}
 
 	public void setNoGameContent() {
 		settingsView.toggleSelectSurrenderButton(false);
 		settingsView.setDisableColorSelect(false);
 		settingsView.setVisibleBotSelectButtons(true);
+		settingsView.setVisibleInsertFENView(true);
 	}
-	
+
 	public void loadBoard(String fen) {
 		mainPresenter.loadBoard(fen);
 	}
-	
+
 	public Settings getSettings() {
 		return settings;
 	}

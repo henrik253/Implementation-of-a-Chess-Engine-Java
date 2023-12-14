@@ -109,7 +109,6 @@ public class MoveValidation {
 	}
 
 	private void remis() {
-		System.out.println("REMIS");
 		State.gameState = GameState.GAME_OVER;
 		State.gameOverReason = GameOverReason.DRAW;
 	}
