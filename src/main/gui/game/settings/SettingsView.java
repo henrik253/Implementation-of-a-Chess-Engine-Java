@@ -1,5 +1,6 @@
 package main.gui.game.settings;
 
+import javafx.application.Platform;
 import javafx.geometry.Insets;
 import javafx.scene.control.Button;
 import javafx.scene.layout.Background;
@@ -41,7 +42,8 @@ public class SettingsView extends Pane {
 	}
 
 	public void toggleSelectSurrenderButton(boolean inGame) {
-		botSelectionView.toggleSelectSurrenderButton(inGame);
+		Platform.runLater( () -> 	botSelectionView.toggleSelectSurrenderButton(inGame));
+	
 	}
 
 	private void initGameContent() {

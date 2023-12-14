@@ -60,6 +60,7 @@ public class MainPresenter {
 				break;
 			}
 		}
+		
 		checkGameStates();
 		return BoardConverter.convertToSimple(model.getBoard());
 	}
@@ -82,7 +83,11 @@ public class MainPresenter {
 
 	public void surrenderGame() {
 		model.playerSurrendersGame();
-		gamePresenter.stopChessBotCalculation();
+		try {
+			gamePresenter.stopChessBotCalculation();
+		} catch (InterruptedException e) {
+			System.err.println("Interrupted Exception thrown because thread running the ChessCalculation was stopped during run");
+		}
 		initGameOver();
 	}
 
@@ -189,10 +194,11 @@ public class MainPresenter {
 		gameStartPresenter.botSelected(source);
 		gameOverPresenter.botSelected(source);
 		gamePresenter.userPlaysAs(source.getUserColor());
-		System.out.println("bot selected");
+
 		if (model != null) {
 			model.getSelectedChessBot().setColor(source.getUserColor().getOpponentColor());
 			model.setSelectedChessBot(source.getName().equals("bot1") ? model.bot1 : model.bot2);
+			model.setColorForSelectedChessBot(source.getUserColor().getOpponentColor());
 		}
 	}
 

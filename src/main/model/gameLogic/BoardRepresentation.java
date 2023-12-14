@@ -122,7 +122,7 @@ public class BoardRepresentation {
 		Piece movedPiece = getPiece(oldPos); // get the piece
 
 		if (movedPiece == null) {
-			throw new NullPointerException(
+			throw new NullPointerException("\n" +
 					"\n couldnt find a piece at " + oldPos + "\n Board: \n" + this.toBoardString());
 		}
 

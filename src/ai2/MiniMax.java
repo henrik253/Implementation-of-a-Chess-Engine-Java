@@ -21,19 +21,19 @@ public class MiniMax {
 	private static final ChessPieceColor BLACK = ChessPieceColor.BLACK;
 
 	public static float max(BoardRepresentation boardR, int depth, float alpha,
-			float beta) {
-		if (depth == 0 || gameOver(boardR, WHITE))
-			return evaluate(boardR, WHITE);
+			float beta,ChessPieceColor color) {
+		if (depth == 0 || gameOver(boardR, color))
+			return evaluate(boardR, color);
 
 		float maxValue = NEGATIVE_INFINITY;
-		Map<Piece, Vector2D[]> moves = MoveGeneration.getMoves(boardR, WHITE);
-
+		Map<Piece, Vector2D[]> moves = MoveGeneration.getMoves(boardR, color);
+		
 		for (Entry<Piece, Vector2D[]> move : moves.entrySet()) {
 			for (Vector2D newPos : move.getValue()) {
 				Piece p = move.getKey();
 				boardR.makeMove(p.getPosition(), newPos);
 
-				float value = -min(boardR, depth - 1, alpha, beta);
+				float value = -min(boardR, depth - 1, alpha, beta,color.getOpponentColor());
 
 				boardR.undoLastMove();
 
@@ -49,19 +49,19 @@ public class MiniMax {
 	}
 
 	public static float min(BoardRepresentation boardR, int depth, float alpha,
-			float beta) {
-		if (depth == 0 || gameOver(boardR, BLACK))
-			return evaluate(boardR, BLACK);
+			float beta,ChessPieceColor color) {
+		if (depth == 0 || gameOver(boardR, color))
+			return evaluate(boardR, color);
 
 		float minValue = INFINITY;
 
-		Map<Piece, Vector2D[]> moves = MoveGeneration.getMoves(boardR, BLACK);
+		Map<Piece, Vector2D[]> moves = MoveGeneration.getMoves(boardR, color);
 
 		for (Entry<Piece, Vector2D[]> move : moves.entrySet()) {
 			for (Vector2D newPos : move.getValue()) {
 
 				boardR.makeMove(move.getKey().getPosition(), newPos);
-				float value = max(boardR, depth - 1, alpha, beta);
+				float value = max(boardR, depth - 1, alpha, beta,color.getOpponentColor());
 				boardR.undoLastMove();
 
 				minValue = Math.min(minValue, value);

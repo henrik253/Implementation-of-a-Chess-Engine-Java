@@ -193,6 +193,10 @@ public class Model {
 		this.selectedChessBot = selectedChessBot;
 		System.out.println(this.selectedChessBot);
 	}
+	
+	public void setColorForSelectedChessBot(ChessPieceColor color) {
+		selectedChessBot.setColor(color);
+	}
 
 
 }

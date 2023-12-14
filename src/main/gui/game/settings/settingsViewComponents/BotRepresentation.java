@@ -1,5 +1,6 @@
 package main.gui.game.settings.settingsViewComponents;
 
+import javafx.application.Platform;
 import javafx.geometry.Insets;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
@@ -195,7 +196,8 @@ public class BotRepresentation extends Pane {
 	}
 
 	public void toggleSurrenderButton() {
-		getChildren().remove(surrenderButton);
+		Platform.runLater(() -> getChildren().remove(surrenderButton));	
+		
 
 		if (!getChildren().contains(selectButton)) {
 			getChildren().add(selectButton);

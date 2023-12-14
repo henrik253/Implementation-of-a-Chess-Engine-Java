@@ -2,7 +2,7 @@ package main.gui.game.board.presenter;
 
 import java.util.List;
 
-
+import javafx.application.Platform;
 import javafx.concurrent.Service;
 import javafx.concurrent.Task;
 import main.Settings;
@@ -25,13 +25,13 @@ public class GamePresenter {
 
 	private List<Vector2D> moveablePositions;
 	private Vector2D piecePosition;
-	
+
 	private Service<SimplePiece[][]> chessBotCalculation = new ChessBotCalculationService();
-	
+
 	public GamePresenter() {
 		initChessBotCalculation();
 	}
-	
+
 	public void setBoard(SimplePiece[][] simplePieceBoard) {
 		gameView.initSimplePieceBoard(simplePieceBoard);
 	}
@@ -49,9 +49,7 @@ public class GamePresenter {
 	}
 
 	public void userMoveSucceeded() {
-		if (mainPresenter.gameIsRunning()) {
-			chessBotCalculation.restart();		
-		}
+		chessBotCalculation.restart();
 	}
 
 	public void startGame() {
@@ -128,7 +126,7 @@ public class GamePresenter {
 		final boolean inv = gameView.isBoardInverted();
 
 		moveablePositions = mainPresenter.getMoveablePositions(inv ? pos.getInverted(len) : pos);
-		
+
 		gameView.markSquare(pos, settings.markedColorBright.get());
 		moveablePositions.forEach(position -> gameView.markSquare(inv ? position.getInverted(len) : position,
 				settings.moveablePosMarked.get()));
@@ -144,36 +142,53 @@ public class GamePresenter {
 		moveablePositions.forEach(position -> gameView.unmarkSquare(inv ? position.getInverted(len) : position));
 
 	}
-	
+
+	// when ChessBotCalculation finished the Executer draws the board
 	private void initChessBotCalculation() {
-		chessBotCalculation.setOnSucceeded(event -> gameView.loadSimpleBoard(chessBotCalculation.getValue()));
+		chessBotCalculation.setOnSucceeded(event -> {
+			SimplePiece[][] b = chessBotCalculation.getValue();
+			System.out.println("finished");
+			System.out.println(b);
+			Platform.runLater(() -> gameView.loadSimpleBoard(b));
+		});
 	}
-	
+
 	public void stopChessBotCalculation() throws InterruptedException {
 		chessBotCalculation.cancel();
 	}
-	
-	private class ChessBotCalculationService extends Service<SimplePiece[][]>{
+
+	private class ChessBotCalculationService extends Service<SimplePiece[][]> {
 
 		@Override
 		protected Task<SimplePiece[][]> createTask() {
 			return new ChessBotCalculationTask();
-		}}
-	
-	private class ChessBotCalculationTask extends Task<SimplePiece[][]>{
+		}
+	}
+
+	private class ChessBotCalculationTask extends Task<SimplePiece[][]> {
 
 		@Override
 		protected SimplePiece[][] call() throws Exception {
-			SimplePiece[][] board = mainPresenter.requestBotMove();
+			SimplePiece[][] board = null;
+			try {
+				board = mainPresenter.requestBotMove();
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
 			Move botMove = mainPresenter.getLastBotMove();
-			markCheckedKing();
-			final Vector2D oldPos = botMove.from(), newPos = botMove.to();
-			boolean inv = gameView.isBoardInverted();
-			int len = settings.columns - 1;
-			markSquaresPieceMoved(inv ? oldPos.getInverted(len) : oldPos, inv ? newPos.getInverted(len) : newPos);
+			Platform.runLater(() -> {
+				markCheckedKing();
+				final Vector2D oldPos = botMove.from(), newPos = botMove.to();
+				boolean inv = gameView.isBoardInverted();
+				int len = settings.columns - 1;
+				markSquaresPieceMoved(inv ? oldPos.getInverted(len) : oldPos, inv ? newPos.getInverted(len) : newPos);
+			});
+
+			System.out.println("return board");
+			System.out.println("current played Move: " + botMove);
 			return board;
 		}
-		
+
 	}
 
 }
