@@ -2,6 +2,7 @@ package ai2.boardEvaluation;
 
 import ai2.boardEvaluation.squaretables.PieceSquareTable;
 import main.model.gameLogic.BoardRepresentation;
+import main.model.gameLogic.Check;
 import main.model.pieces.Piece;
 import utils.ChessPieceColor;
 import utils.ChessPieceName;
@@ -12,16 +13,17 @@ public class Evaluate {
 	private static final int MAX_PIECE_COUNT = 32;
 
 	// Evaluating the board for colors perspective
-	public static float evaluate(BoardRepresentation boardR, ChessPieceColor color) {
+	public static float evaluate(BoardRepresentation boardR, ChessPieceColor color, boolean maximazing,int depth) {
 		// 0 for start, 1 for end
 		float gameProgress = ((boardR.getWhitePieces().size() + boardR.getBlackPieces().size()) / MAX_PIECE_COUNT) - 1;
+		float evaluation = evaluate(boardR.getBoard(), color, maximazing, gameProgress);
 
-		return evaluate(boardR.getBoard(), color, gameProgress);
+		return maximazing ? evaluation : -evaluation;
 	}
 
 	// The iteration includes MaterialDifference, Position of the pieces with
 	// linear interpolation
-	public static float evaluate(Piece[][] board, ChessPieceColor color, float gameProgress) {
+	public static float evaluate(Piece[][] board, ChessPieceColor color, boolean maximazing, float gameProgress) {
 		float blackPos = 0;
 		float whitePos = 0;
 
@@ -36,7 +38,7 @@ public class Evaluate {
 				if (p.getColor().isWhite()) {
 					materialWhite += p.getValue();
 					whitePos += p.getValue() * getSquareTableValue(p, gameProgress); // weighting the position with
-																// piece val
+					// piece val
 				} else {
 					materialBlack += p.getValue();
 					blackPos += p.getValue() * getSquareTableValue(p, gameProgress);
@@ -45,16 +47,21 @@ public class Evaluate {
 			}
 		}
 
-		// looking from colors perspective
-		float position = color.isWhite() ? whitePos - blackPos : blackPos - whitePos;
-		float material = color.isWhite() ? materialWhite - materialBlack : materialBlack - materialWhite;
-	
+		float position = whitePos - blackPos;
+		float material = materialWhite - materialBlack;
+
 		return position + material;
 	}
 
 	// SquareTables store values ranging from 0.0f - 1.0f.
 	public static float getSquareTableValue(Piece p, float gameProgress) {
+
 		int x = p.getPosition().getX(), y = p.getPosition().getY();
+		if (p.getColor().isBlack()) {
+			x = Math.abs(x - 7);
+			y = Math.abs(y - 7);
+		}
+
 		return switch (p.getName()) {
 		case PAWN -> linearInterpolation(PieceSquareTable.PawnTable.opening[y][x],
 				PieceSquareTable.PawnTable.endGame[y][x], gameProgress);

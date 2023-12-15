@@ -22,19 +22,13 @@ public class ClassicChessBot implements ChessBot {
 	private OpeningBook openingBook = OpeningBook.openingBook;
 
 	public ClassicChessBot() {
-		depth = 3;
+		depth = 5;
 		color = ChessPieceColor.BLACK; // by default Black
 	}
 
 	@Override
 	public Move makeMove(Piece[][] board) {
-
 		BoardRepresentation boardR = new BoardRepresentation(board);
-
-		Map<Piece, Vector2D[]> moves = MoveGeneration.getMoves(boardR, color);
-
-		Vector2D oldPos = null, newPos = null;
-
 //		if (openingBook.hasNextMove()) {
 //			try {
 //				move = openingBook.getNextMove(board);
@@ -46,39 +40,8 @@ public class ClassicChessBot implements ChessBot {
 //			} catch (Exception e) {
 //			}
 //		}
-
-		for (Entry<Piece, Vector2D[]> pMoves : moves.entrySet()) {
-			System.out.println(pMoves.getKey());
-			for (Vector2D move : pMoves.getValue()) {
-				System.out.println(move);
-				if (color.isWhite()) {
-					float bestValue = Float.MIN_VALUE;
-					float val = MiniMax.max(boardR, depth, Integer.MIN_VALUE, Integer.MAX_VALUE, color);
-					System.out.print(" " + val + "\n");
-					if (val >= bestValue) {
-						bestValue = val;
-						oldPos = pMoves.getKey().getPosition().clone();
-						newPos = move.clone();
-					}
-
-				} else {
-					float bestValue = Float.MAX_VALUE;
-					float val = MiniMax.min(boardR, depth, Integer.MIN_VALUE, Integer.MAX_VALUE, color);
-
-					if (val <= bestValue) {
-						bestValue = val;
-						oldPos = pMoves.getKey().getPosition().clone();
-						newPos = move.clone();
-					}
-
-				}
-			}
-		}
-		if (oldPos == null || newPos == null) {
-			throw new NoSuchElementException(" ClassicChessBot couldnt find move");
-		}
-
-		move = new Move(oldPos, newPos);
+		
+		move = MiniMax.miniMaxRoot(boardR, color, depth);
 		return move;
 	}
 
