@@ -22,7 +22,7 @@ public class ClassicChessBot implements ChessBot {
 	private OpeningBook openingBook = OpeningBook.openingBook;
 
 	public ClassicChessBot() {
-		depth = 2;
+		depth = 3;
 		color = ChessPieceColor.BLACK; // by default Black
 	}
 
@@ -55,7 +55,7 @@ public class ClassicChessBot implements ChessBot {
 					float bestValue = Float.MIN_VALUE;
 					float val = MiniMax.max(boardR, depth, Integer.MIN_VALUE, Integer.MAX_VALUE, color);
 					System.out.print(" " + val + "\n");
-					if (val > bestValue) {
+					if (val >= bestValue) {
 						bestValue = val;
 						oldPos = pMoves.getKey().getPosition().clone();
 						newPos = move.clone();
@@ -65,7 +65,7 @@ public class ClassicChessBot implements ChessBot {
 					float bestValue = Float.MAX_VALUE;
 					float val = MiniMax.min(boardR, depth, Integer.MIN_VALUE, Integer.MAX_VALUE, color);
 
-					if (val < bestValue) {
+					if (val <= bestValue) {
 						bestValue = val;
 						oldPos = pMoves.getKey().getPosition().clone();
 						newPos = move.clone();

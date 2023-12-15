@@ -18,9 +18,13 @@ public class Remis {
 	public static boolean isRemis(final BoardRepresentation board,final List<Move> moveHistory,
 			final ChessPieceColor nextPlayerMove, final BoardRepresentation startingBoard) {
 		
-		return checkBoardHistoryForMaxCount(moveHistory,startingBoard) || !playerCanMove(board,nextPlayerMove);
+		return checkBoardHistoryForMaxCount(moveHistory,startingBoard) || !playerCanMove(board,nextPlayerMove) || onlyTwoKingsOnBoard(board);
 	}
 	
+	private static boolean onlyTwoKingsOnBoard(BoardRepresentation board) {
+		return board.getBlackPieces().size() == 1 && board.getWhitePieces().size() == 1;
+	}
+
 	// generating all boards from the moveHistory and comparing them 
 	public static boolean checkBoardHistoryForMaxCount(final List<Move> moveHistory,final BoardRepresentation startingBoard) {
 		List<BoardRepresentation> boards = new LinkedList<>();

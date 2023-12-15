@@ -60,7 +60,7 @@ public class MainPresenter {
 				break;
 			}
 		}
-		
+
 		checkGameStates();
 		return BoardConverter.convertToSimple(model.getBoard());
 	}
@@ -86,7 +86,8 @@ public class MainPresenter {
 		try {
 			gamePresenter.stopChessBotCalculation();
 		} catch (InterruptedException e) {
-			System.err.println("Interrupted Exception thrown because thread running the ChessCalculation was stopped during run");
+			System.err.println(
+					"Interrupted Exception thrown because thread running the ChessCalculation was stopped during run");
 		}
 		initGameOver();
 	}

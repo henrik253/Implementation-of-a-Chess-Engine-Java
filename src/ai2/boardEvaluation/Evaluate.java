@@ -48,8 +48,7 @@ public class Evaluate {
 		// looking from colors perspective
 		float position = color.isWhite() ? whitePos - blackPos : blackPos - whitePos;
 		float material = color.isWhite() ? materialWhite - materialBlack : materialBlack - materialWhite;
-		System.out.println(new BoardRepresentation(board));
-		System.out.println("position : " + position);
+	
 		return position + material;
 	}
 
