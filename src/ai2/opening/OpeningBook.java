@@ -48,6 +48,10 @@ public class OpeningBook {
 		System.out.println("FINISHED PARSING PGN FILE");
 		updateUsableBoards(FENConverter.convertToPieceBoard("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR"));
 	}
+	
+	public boolean isInit() {
+		return usableBoardHistorys != null;
+	}
 
 	public boolean hasNextMove() {
 		return usableBoardHistorys.size() > 0;

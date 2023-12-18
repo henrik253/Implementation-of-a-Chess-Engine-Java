@@ -76,7 +76,6 @@ public class MiniMax {
 		List<Future<MoveValuePair>> results = new LinkedList<>();
 		
 		Map<Piece, Vector2D[]> moves = MoveGeneration.getMoves(board, onMove);
-		Vector2D from = null, to = null;
 
 		int bestValue = Integer.MIN_VALUE;
 		for (Map.Entry<Piece, Vector2D[]> pieceWithMoves : moves.entrySet()) {
@@ -85,11 +84,12 @@ public class MiniMax {
 			for (Vector2D moveOfPiece : pieceWithMoves.getValue()) {
 
 				Future<MoveValuePair> pair = executorService.submit( () -> {
-					board.makeMove(piecePos, moveOfPiece);
-					int evaluated = miniMax(board, false,onMove.getOpponentColor(), depth, Integer.MIN_VALUE,
+					BoardRepresentation boardClone = board.clone(); 
+					boardClone.makeMove(piecePos, moveOfPiece);
+					int evaluated = miniMax(boardClone, false,onMove.getOpponentColor(), depth, Integer.MIN_VALUE,
 							Integer.MAX_VALUE);
 					
-					board.undoLastMove();
+					boardClone.undoLastMove();
 					System.out.println(pieceWithMoves.getKey() + " -> " + moveOfPiece + " evaluated: " + evaluated);
 					return new MoveValuePair(new Move(pieceWithMoves.getKey().getPosition(),moveOfPiece),evaluated);
 					
@@ -98,23 +98,25 @@ public class MiniMax {
 			}
 		}
 
-		if (from == null || to == null)
-			throw new NoSuchElementException("couldnt find a move in MinimaxRoot");
-		
 		Move bestMove = null;
 		int best = Integer.MIN_VALUE;
 		for(Future<MoveValuePair> future : results) {
 			MoveValuePair pair = null;
 			try {
 				pair = future.get();
+				if (pair.value >= best) { //
+					bestMove = pair.move;
+				}
 			} catch (Exception e) {
-				// TODO Auto-generated catch block
+				System.out.println("interrupted");
 				e.printStackTrace();
 			} 
-			if (pair.value >= bestValue) { //
-				bestMove = pair.move;
-			}
+			
 		}
+		System.out.println("bestMove: " + bestMove);
+		
+		if (bestMove == null)
+			throw new NoSuchElementException("couldnt find a move in MinimaxRootParallel");
 		
 		return  bestMove;
 	}
@@ -129,9 +131,11 @@ public class MiniMax {
 		Map<Piece, Vector2D[]> moves = MoveGeneration.getMoves(board, player);
 
 		if (moves.size() == 0 && gameOver(board, player)) {
-			return maximazingPlayer ? Integer.MIN_VALUE : Integer.MAX_VALUE;
+			int currentDepth = maxDepth - depth;
+			return maximazingPlayer ? Integer.MIN_VALUE + currentDepth : Integer.MAX_VALUE - currentDepth;
 		}
-
+		// minus the currentDepth, a mate at a low depth is better rated then a mate in a high depth
+		
 		if (maximazingPlayer) { // maximazing player wants positive values as result if he s good, if the
 								// maximazing player is black
 								// we need to negate the values

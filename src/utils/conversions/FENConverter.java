@@ -123,6 +123,18 @@ public class FENConverter { // Converting a FEN String to
 				else 
 					p.setFirstMove(false);
 			}
+			if(p instanceof Knight) {
+				Vector2D whiteKingPos = new Vector2D(4,7),blackKingPos = new Vector2D(4,0);
+				if(p.getColor().isWhite() && !p.getPosition().equals(whiteKingPos)) {
+					p.setFirstMove(false);
+				}
+				else if(!p.getPosition().equals(blackKingPos)) 
+				{
+					p.setFirstMove(false);
+				}
+			}
+			
+			
 			
 			return p;
 	}

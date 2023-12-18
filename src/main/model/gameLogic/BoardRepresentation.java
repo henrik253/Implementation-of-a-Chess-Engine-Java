@@ -49,6 +49,7 @@ public class BoardRepresentation {
 	}
 
 	public BoardRepresentation(Piece[][] board, final BoardRepresentation boardRepresentation) {
+		
 		this.board = board;
 		whitePieces = new LinkedList<>(boardRepresentation.whitePieces);
 		blackPieces = new LinkedList<>(boardRepresentation.blackPieces);
@@ -99,7 +100,11 @@ public class BoardRepresentation {
 	}
 
 	public int[][] calcAttackedSquaresBy(ChessPieceColor color) {
+		if(this.board == null) {
+			System.err.println("board null=??=");
+		}
 		int[][] attackedSquares = new int[board.length][board.length];
+	
 		for (int i = 0; i < board.length; i++) {
 			for (int j = 0; j < board.length; j++) {
 				if (board[i][j] != null && board[i][j].getColor() == color) {

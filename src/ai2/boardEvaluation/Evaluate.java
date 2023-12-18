@@ -3,6 +3,7 @@ package ai2.boardEvaluation;
 import ai2.boardEvaluation.squaretables.PieceSquareTable;
 import main.model.gameLogic.BoardRepresentation;
 import main.model.gameLogic.Check;
+import main.model.pieces.King;
 import main.model.pieces.Piece;
 import utils.ChessPieceColor;
 import utils.ChessPieceName;
@@ -38,12 +39,13 @@ public class Evaluate {
 				if (p == null)
 					continue;
 
+				int val = p instanceof King ? 1 :  p.getValue();
 				if (p.getColor().isWhite()) {
-					materialWhite += p.getValue();
-					whitePos += p.getValue() * getSquareTableValue(p, gameProgress); 
+					materialWhite += val;
+					whitePos += val * getSquareTableValue(p, gameProgress); 
 					
 				} else {
-					materialBlack += p.getValue();
+					materialBlack += val;
 					blackPos += p.getValue() * getSquareTableValue(p, gameProgress);
 				}
 

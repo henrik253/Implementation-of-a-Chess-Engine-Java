@@ -58,7 +58,19 @@ public class Settings { // Settings is not static, to make different saveable se
 			"8/1b2p3/1p2N1P1/p2p4/7r/Rn1P2K1/P1k5/4rB2 w - - 0 1", "7q/1PP2p1k/1BPPn3/R3np2/p7/4K1Q1/8/N7 w - - 0 1",
 			"2N5/4P1K1/4k1B1/2b1p3/3P3p/2pn3N/b3Pr2/3r4 w - - 0 1",
 			"2R5/2p5/p1n1b3/q2pb2k/3P2p1/3nK1p1/p6P/8 w - - 0 1", "6q1/7P/2P5/2p2Q2/1p1PPK2/3pP2P/4Ppk1/7R w - - 0 1",
-			"B7/3P1qn1/4p2p/b3R3/2R2Np1/P1P3P1/3k4/6K1 w - - 0 1", "4k2r/6r1/8/8/8/8/3R4/R3K3", defaultFENString };
+			"B7/3P1qn1/4p2p/b3R3/2R2Np1/P1P3P1/3k4/6K1 w - - 0 1", "4k2r/6r1/8/8/8/8/3R4/R3K3", defaultFENString ,
+			"2kr1b1r/2p1qpp1/ppnpbn1p/P3p3/1PB1P3/2N2N2/1BPP1PPP/R2Q1RK1",
+			"2kr3r/2p1q1b1/p2ppnp1/Pp6/1P2P2p/2p4P/1BPPQPP1/R3R1K1",
+			"k3b3/qp6/2n5/1B6/8/8/3Q1N1P/3K4",
+			"1k5b/rrr5/8/8/8/8/RRR5/K6B",
+			"3N3q/K3P1BP/2p5/3pPP2/5kr1/1P2R3/B6n/8 w - - 0 1",
+			"3r2r1/q1P2K2/7b/1N5p/2pP3B/7p/p2n3k/5b2 w - - 0 1",
+			"7n/2B1K2p/q1Pr4/R1n1Qp2/8/8/1rNk2BP/8 w - - 0 1",
+			"8/P6p/1k6/1P1K3b/1N5Q/r5PN/2p1n1B1/3R3R w - - 0 1",
+			"8/N5pp/1P2QP1n/P3P1p1/k2p4/3R1P2/2K2P2/8 w - - 0 1",
+			"2b1K3/1q4p1/6Pp/1N2Pp2/2N5/1P3r2/P1k1n2P/8 w - - 0 1",
+			"8/1nRr1k2/p6K/P2PP3/2N1pP2/b6P/5P2/1q6 w - - 0 1"	
+	};
 
 
 

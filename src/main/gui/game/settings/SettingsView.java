@@ -31,7 +31,7 @@ public class SettingsView extends Pane {
 		this.setPrefHeight(settings.WINDOW_HEIGHT);
 		this.setId("SettingsView");
 		this.botSelectionView = new BotSelectionView(this);
-		this.insertBoardView = new InsertFENView(this, getPrefHeight(), getPrefWidth());
+		this.insertBoardView = new InsertFENView(this, getPrefHeight(), getPrefWidth(),settings);
 
 		initGameContent();
 

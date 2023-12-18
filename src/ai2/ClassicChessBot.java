@@ -22,14 +22,14 @@ public class ClassicChessBot implements ChessBot {
 	private OpeningBook openingBook = OpeningBook.openingBook;
 
 	public ClassicChessBot() {
-		depth = 5;
+		depth = 4;
 		color = ChessPieceColor.BLACK; // by default Black
 	}
 
 	@Override
 	public Move makeMove(Piece[][] board) {
 		BoardRepresentation boardR = new BoardRepresentation(board);
-		if (openingBook.hasNextMove()) {
+		if (openingBook.isInit()) {
 			try {
 				move = openingBook.getNextMove(board);
 
@@ -40,8 +40,7 @@ public class ClassicChessBot implements ChessBot {
 			} catch (Exception e) {
 			}
 		}
-		
-		move = MiniMax.miniMaxRootParallel(boardR, color, depth);
+		move = MiniMax.miniMaxRoot(boardR, color, depth);
 		return move;
 	}
 
