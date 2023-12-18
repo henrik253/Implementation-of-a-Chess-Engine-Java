@@ -11,19 +11,22 @@ import utils.conversions.FENConverter;
 public class Evaluate {
 
 	private static final int MAX_PIECE_COUNT = 32;
-
+	
+	private static final float MATERIAL_WEIGHT = 2.5f;
+	private static final float POSITION_WEIGHT = 2.0f;
+	
 	// Evaluating the board for colors perspective
-	public static float evaluate(BoardRepresentation boardR, ChessPieceColor color, boolean maximazing,int depth) {
+	public static int evaluate(BoardRepresentation boardR) {
 		// 0 for start, 1 for end
-		float gameProgress = ((boardR.getWhitePieces().size() + boardR.getBlackPieces().size()) / MAX_PIECE_COUNT) - 1;
-		float evaluation = evaluate(boardR.getBoard(), color, maximazing, gameProgress);
+		float gameProgress = 1 - ((boardR.getWhitePieces().size() + boardR.getBlackPieces().size()) / (float) MAX_PIECE_COUNT) ;
+		int evaluation = evaluate(boardR.getBoard(), gameProgress);
 
-		return maximazing ? evaluation : -evaluation;
+		return evaluation;
 	}
 
 	// The iteration includes MaterialDifference, Position of the pieces with
 	// linear interpolation
-	public static float evaluate(Piece[][] board, ChessPieceColor color, boolean maximazing, float gameProgress) {
+	public static int evaluate(Piece[][] board, float gameProgress) {
 		float blackPos = 0;
 		float whitePos = 0;
 
@@ -37,8 +40,8 @@ public class Evaluate {
 
 				if (p.getColor().isWhite()) {
 					materialWhite += p.getValue();
-					whitePos += p.getValue() * getSquareTableValue(p, gameProgress); // weighting the position with
-					// piece val
+					whitePos += p.getValue() * getSquareTableValue(p, gameProgress); 
+					
 				} else {
 					materialBlack += p.getValue();
 					blackPos += p.getValue() * getSquareTableValue(p, gameProgress);
@@ -47,9 +50,9 @@ public class Evaluate {
 			}
 		}
 
-		float position = whitePos - blackPos;
-		float material = materialWhite - materialBlack;
-
+		int position = ((int) ((whitePos - blackPos)* POSITION_WEIGHT));
+		int material =(int) ((materialWhite - materialBlack) * MATERIAL_WEIGHT);
+		
 		return position + material;
 	}
 
@@ -57,7 +60,7 @@ public class Evaluate {
 	public static float getSquareTableValue(Piece p, float gameProgress) {
 
 		int x = p.getPosition().getX(), y = p.getPosition().getY();
-		if (p.getColor().isBlack()) {
+		if (p.getColor().isBlack()) { // Invert the position because the square tables are from whites perspective. 
 			x = Math.abs(x - 7);
 			y = Math.abs(y - 7);
 		}
@@ -88,11 +91,11 @@ public class Evaluate {
 	}
 
 //	public static void main(String[] args) {
-//		String fen1 = "7K/k7/4q2N/8/8/8/8/6qr";
+//		String fen1 = "rnbqkbnr/pppppppp/8/8/8/8/8/4K3";
 //		BoardRepresentation boardR = new BoardRepresentation(
-//				FENConverter.convertToPieceBoard("7K/k7/4q2N/8/8/8/8/6qr"));
+//				FENConverter.convertToPieceBoard("4nk2/8/8/3p4/3P4/2N5/8/7K"));
 //
-//		System.out.println(evaluate(boardR, ChessPieceColor.BLACK));
+//		System.out.println(evaluate(boardR));
 //	}
 
 }

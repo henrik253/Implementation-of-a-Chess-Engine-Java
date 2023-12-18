@@ -9,7 +9,7 @@ import utils.Vector2D;
 
 public class Queen extends Piece {
 
-	public final int value = 80;
+	public final int value = 9;
 
 	private Vector2D[] attackDirections = { new Vector2D(1, 0), new Vector2D(-1, 0), new Vector2D(0, 1),
 			new Vector2D(0, -1), new Vector2D(1, 1), new Vector2D(-1, -1), new Vector2D(-1, 1), new Vector2D(1, -1) };

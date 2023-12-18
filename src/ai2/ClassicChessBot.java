@@ -29,19 +29,19 @@ public class ClassicChessBot implements ChessBot {
 	@Override
 	public Move makeMove(Piece[][] board) {
 		BoardRepresentation boardR = new BoardRepresentation(board);
-//		if (openingBook.hasNextMove()) {
-//			try {
-//				move = openingBook.getNextMove(board);
-//
-//				if (move.from() == null || move.to() == null) {
-//					throw new IllegalArgumentException();
-//				}
-//				return move;
-//			} catch (Exception e) {
-//			}
-//		}
+		if (openingBook.hasNextMove()) {
+			try {
+				move = openingBook.getNextMove(board);
+
+				if (move.from() == null || move.to() == null) {
+					throw new IllegalArgumentException();
+				}
+				return move;
+			} catch (Exception e) {
+			}
+		}
 		
-		move = MiniMax.miniMaxRoot(boardR, color, depth);
+		move = MiniMax.miniMaxRootParallel(boardR, color, depth);
 		return move;
 	}
 

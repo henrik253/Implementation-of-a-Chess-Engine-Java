@@ -9,7 +9,7 @@ import utils.Vector2D;
 
 public class Bishop extends Piece {
 
-	public final int value = 30;
+	public final int value = 3;
 
 	protected final Vector2D[] attackDirections = { new Vector2D(1, 1), new Vector2D(-1, -1), new Vector2D(-1, 1),
 			new Vector2D(1, -1) };

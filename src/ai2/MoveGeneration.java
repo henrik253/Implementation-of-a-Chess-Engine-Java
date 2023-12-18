@@ -5,6 +5,7 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 import java.util.LinkedHashMap;
 import java.util.Comparator;
 
@@ -18,12 +19,15 @@ import utils.Vector2D;
 
 public class MoveGeneration {
 
+	private static Comparator<Map.Entry<Piece, Vector2D[]>> sortOrder = (entry1, entry2) -> entry2.getKey().getValue()
+			- entry1.getKey().getValue();
+
 	public static Map<Piece, Vector2D[]> getMoves(final BoardRepresentation boardR, final ChessPieceColor color) {
 
 		Map<Piece, Vector2D[]> allMoves = new LinkedHashMap<>();
 		Piece[][] board = boardR.getBoard().clone();
 		boolean inCheck = Check.kingInCheck(boardR, color);
-		
+
 		for (Piece[] row : board) {
 			for (Piece p : row) {
 
@@ -62,13 +66,9 @@ public class MoveGeneration {
 	}
 
 	private static Map<Piece, Vector2D[]> sortPieceOrder(Map<Piece, Vector2D[]> allMoves) {
-		Comparator<Map.Entry<Piece, Vector2D[]>> comparator = (entry1, entry2) -> entry2.getKey().getValue()
-				- entry1.getKey().getValue();
 		List<Map.Entry<Piece, Vector2D[]>> entries = new ArrayList<>(allMoves.entrySet());
-		Collections.sort(entries, comparator);
-		Map<Piece, Vector2D[]> sortedMap = new LinkedHashMap<>();
-		entries.forEach(entrie -> sortedMap.put(entrie.getKey(), entrie.getValue()));
-		return sortedMap;
+		return entries.stream().sorted(sortOrder).collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue,
+				(oldVal, newVal) -> oldVal, LinkedHashMap::new));
 	}
 
 }

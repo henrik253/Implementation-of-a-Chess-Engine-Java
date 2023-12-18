@@ -10,7 +10,7 @@ import utils.Vector2D;
 
 public class Pawn extends Piece {
 
-	public final int value = 10;
+	public final int value = 1;
 
 	private static final int WHITE_ENDLINE = 0;
 	private static final int BLACK_ENDLINE = 7;

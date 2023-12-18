@@ -9,7 +9,7 @@ import utils.Vector2D;
 
 public class Knight extends Piece {
 
-	public final int value = 30;
+	public final int value = 3;
 
 	protected Vector2D[] attackDirections = { new Vector2D(2, 1), new Vector2D(1, 2), new Vector2D(-2, 1),
 			new Vector2D(-1, 2), new Vector2D(-2, -1), new Vector2D(-1, -2), new Vector2D(1, -2), new Vector2D(2, -1) };

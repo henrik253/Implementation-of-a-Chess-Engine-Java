@@ -9,7 +9,7 @@ import utils.Vector2D;
 
 public class Rook extends Piece {
 
-	public final int value = 50;
+	public final int value = 5;
 
 	private Vector2D[] attackDirections = { new Vector2D(1, 0), new Vector2D(-1, 0), new Vector2D(0, 1),
 			new Vector2D(0, -1) };
