@@ -21,8 +21,9 @@ public class MiniMax {
 
 	private static final ChessPieceColor WHITE = ChessPieceColor.WHITE;
 	private static final ChessPieceColor BLACK = ChessPieceColor.BLACK;
-	private static final float MAX = 1000000.0f;
-
+	private static final int MAX = 10000000;
+	private static final int MIN = -MAX;
+	
 	private static int maxDepth;
 
 	public static Move miniMaxRoot(BoardRepresentation board, ChessPieceColor onMove, int depth) {
@@ -31,15 +32,15 @@ public class MiniMax {
 		Map<Piece, Vector2D[]> moves = MoveGeneration.getMoves(board, onMove);
 		Vector2D from = null, to = null;
 
-		int bestValue = Integer.MIN_VALUE;
+		int bestValue = MIN;
 		for (Map.Entry<Piece, Vector2D[]> pieceWithMoves : moves.entrySet()) {
 			Vector2D piecePos = pieceWithMoves.getKey().getPosition();
 
 			for (Vector2D moveOfPiece : pieceWithMoves.getValue()) {
 
 				board.makeMove(piecePos, moveOfPiece);
-				int evaluated = miniMax(board, false, onMove.getOpponentColor(), depth, Integer.MIN_VALUE,
-						Integer.MAX_VALUE);
+				int evaluated = miniMax(board, false, onMove.getOpponentColor(), depth, MIN,
+						MAX);
 
 				board.undoLastMove();
 
@@ -88,8 +89,8 @@ public class MiniMax {
 					
 					boardClone.makeMove(piecePos.clone(), moveOfPiece.clone());
 
-					int evaluated = miniMax(boardClone, false, onMove.getOpponentColor(), depth, Integer.MIN_VALUE,
-							Integer.MAX_VALUE);
+					int evaluated = miniMax(boardClone, false, onMove.getOpponentColor(), depth, MIN,
+							MAX);
 
 					boardClone.undoLastMove();
 
@@ -101,7 +102,7 @@ public class MiniMax {
 		}
 
 		Move bestMove = null;
-		int best = Integer.MIN_VALUE;
+		int best = MIN;
 
 		for (Future<MoveValuePair> future : results) {
 			MoveValuePair pair = null;
@@ -135,7 +136,7 @@ public class MiniMax {
 			int alpha, int beta) {
 
 		if (depth == 0) {
-			return Evaluate.evaluate(board); // // negative values for black side and
+			return  Evaluate.evaluate(board); // // negative values for black side and
 		}
 
 		Map<Piece, Vector2D[]> moves = MoveGeneration.getMoves(board, player);
@@ -143,7 +144,7 @@ public class MiniMax {
 		if (moves.size() == 0) {
 			if (gameOver(board, player)) {
 				int currentDepth = maxDepth - depth;
-				return maximazingPlayer ? Integer.MIN_VALUE + currentDepth : Integer.MAX_VALUE - currentDepth;
+				return maximazingPlayer ? MIN + currentDepth : MAX - currentDepth;
 			}
 
 			// otherwise Remis
@@ -155,7 +156,7 @@ public class MiniMax {
 		if (maximazingPlayer) { // maximazing player wants positive values as result if he s good, if the
 								// maximazing player is black
 								// we need to negate the values
-			int maxValue = Integer.MIN_VALUE;
+			int maxValue = MIN;
 			for (Map.Entry<Piece, Vector2D[]> pieceWithMoves : moves.entrySet()) {
 				for (Vector2D moveOfPiece : pieceWithMoves.getValue()) {
 					board.makeMove(pieceWithMoves.getKey().getPosition(), moveOfPiece);
@@ -175,10 +176,8 @@ public class MiniMax {
 				}
 			}
 			return maxValue;
-
 		} else {
-
-			int minValue = Integer.MAX_VALUE;
+			int minValue = MAX;
 
 			for (Map.Entry<Piece, Vector2D[]> pieceWithMoves : moves.entrySet()) {
 				for (Vector2D moveOfPiece : pieceWithMoves.getValue()) {

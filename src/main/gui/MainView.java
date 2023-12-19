@@ -6,7 +6,7 @@ import main.Settings;
 import main.gui.game.board.view.GameView;
 import main.gui.game.gameOver.GameOverView;
 import main.gui.game.gameStart.GameStartView;
-import main.gui.game.settings.SettingsView;
+import main.gui.game.sidebar.SettingsView;
 
 public class MainView extends AnchorPane {
 

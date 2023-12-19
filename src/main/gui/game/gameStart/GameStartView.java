@@ -13,7 +13,7 @@ import javafx.scene.paint.Color;
 import javafx.scene.text.Text;
 import main.Settings;
 import main.gui.game.Overlay;
-import main.gui.game.settings.settingsViewComponents.BotRepresentation;
+import main.gui.game.sidebar.botrepresentations.BotRepresentation;
 
 public class GameStartView extends Pane {
 

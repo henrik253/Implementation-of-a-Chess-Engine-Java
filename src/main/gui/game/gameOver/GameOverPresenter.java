@@ -2,7 +2,7 @@ package main.gui.game.gameOver;
 
 import main.gui.MainPresenter;
 import main.gui.game.board.presenter.GamePresenter;
-import main.gui.game.settings.settingsViewComponents.BotRepresentation;
+import main.gui.game.sidebar.botrepresentations.BotRepresentation;
 import main.model.GameStatistic;
 import utils.State;
 

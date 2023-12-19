@@ -2,7 +2,7 @@ package main.gui.game.gameStart;
 
 import main.Settings;
 import main.gui.MainPresenter;
-import main.gui.game.settings.settingsViewComponents.BotRepresentation;
+import main.gui.game.sidebar.botrepresentations.BotRepresentation;
 
 public class GameStartPresenter {
 

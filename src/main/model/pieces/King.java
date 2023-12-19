@@ -180,8 +180,10 @@ public class King extends Piece {
 		// only rook needs to be moved
 		int rookCol = kingSideCastle ? this.board.getBoard().length - 1 : 0;
 		Vector2D rookPos = new Vector2D(rookCol, this.position.getY()); // on the same row
+		
 		if (!(this.board.getPiece(rookPos) instanceof Rook)) {
 			System.err.println("execute Castling failed, no Rook on " + rookPos + "\n" + board);
+			return;
 		}
 
 		Rook rook = (Rook) this.board.getPiece(rookPos);

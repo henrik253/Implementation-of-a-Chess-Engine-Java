@@ -12,14 +12,16 @@ import utils.conversions.FENConverter;
 public class Evaluate {
 
 	private static final int MAX_PIECE_COUNT = 32;
-	
+
 	private static final float MATERIAL_WEIGHT = 2.5f;
 	private static final float POSITION_WEIGHT = 2.0f;
-	
+
 	// Evaluating the board for colors perspective
 	public static int evaluate(BoardRepresentation boardR) {
 		// 0 for start, 1 for end
-		float gameProgress = 1 - ((boardR.getWhitePieces().size() + boardR.getBlackPieces().size()) / (float) MAX_PIECE_COUNT) ;
+		float gameProgress = 1
+				- ((boardR.getWhitePieces().size() + boardR.getBlackPieces().size() - 2) / (float) MAX_PIECE_COUNT);
+	
 		int evaluation = evaluate(boardR.getBoard(), gameProgress);
 
 		return evaluation;
@@ -39,30 +41,32 @@ public class Evaluate {
 				if (p == null)
 					continue;
 
-				int val = p instanceof King ? 1 :  p.getValue();
+				int pieceValue = p instanceof King ? 10 : p.getValue();
+
 				if (p.getColor().isWhite()) {
-					materialWhite += val;
-					whitePos += val * getSquareTableValue(p, gameProgress); 
-					
+
+					materialWhite += pieceValue;
+					whitePos += pieceValue * getSquareTableValue(p, gameProgress);
+
 				} else {
-					materialBlack += val;
-					blackPos += p.getValue() * getSquareTableValue(p, gameProgress);
+					materialBlack += pieceValue;
+					blackPos += pieceValue * getSquareTableValue(p, gameProgress);
 				}
 
 			}
 		}
 
-		int position = ((int) ((whitePos - blackPos)* POSITION_WEIGHT));
-		int material =(int) ((materialWhite - materialBlack) * MATERIAL_WEIGHT);
-		
-		return position + material;
+		int position = ((int) ((whitePos - blackPos) * POSITION_WEIGHT));
+		int material = (int) ((materialWhite - materialBlack) * MATERIAL_WEIGHT);
+
+		return (int) (position + material);
 	}
 
 	// SquareTables store values ranging from 0.0f - 1.0f.
 	public static float getSquareTableValue(Piece p, float gameProgress) {
 
 		int x = p.getPosition().getX(), y = p.getPosition().getY();
-		if (p.getColor().isBlack()) { // Invert the position because the square tables are from whites perspective. 
+		if (p.getColor().isBlack()) { // Invert the position because the square tables are from whites perspective.
 			x = Math.abs(x - 7);
 			y = Math.abs(y - 7);
 		}
@@ -96,8 +100,13 @@ public class Evaluate {
 //		String fen1 = "rnbqkbnr/pppppppp/8/8/8/8/8/4K3";
 //		BoardRepresentation boardR = new BoardRepresentation(
 //				FENConverter.convertToPieceBoard("4nk2/8/8/3p4/3P4/2N5/8/7K"));
-//
+//		
 //		System.out.println(evaluate(boardR));
+//		
+//		String fen2 = "1k6/rB6/8/8/8/2R5/RR6/K7";
+//		BoardRepresentation boardR2 = new BoardRepresentation(
+//				FENConverter.convertToPieceBoard(fen2));
+//		System.out.println(evaluate(boardR2));
 //	}
 
 }
