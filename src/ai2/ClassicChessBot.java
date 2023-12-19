@@ -40,7 +40,7 @@ public class ClassicChessBot implements ChessBot {
 			} catch (Exception e) {
 			}
 		}
-		move = MiniMax.miniMaxRoot(boardR, color, depth);
+		move = MiniMax.miniMaxRootParallel(boardR, color, depth);
 		return move;
 	}
 

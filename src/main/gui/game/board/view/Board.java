@@ -127,7 +127,12 @@ public class Board extends GridPane {
 
 	public void drawPiecesOnBoard(SimplePiece[][] board) {
 		clearPiecesOnBoard();
-
+		
+		if(board == null) {
+			System.err.println("drawPiecesOnBoard(board), board == null = true");
+			return;
+		}
+		
 		if (inverted) {
 			board = invertBoard(board);
 		}
@@ -154,6 +159,10 @@ public class Board extends GridPane {
 	}
 
 	private SimplePiece[][] invertBoard(SimplePiece[][] board) {
+		if(board == null) {
+			throw new IllegalArgumentException("board is null");
+		}
+		
 		SimplePiece[][] invertedBoard = new SimplePiece[board.length][board[0].length];
 		for (int i = 0; i < invertedBoard.length; i++) {
 			SimplePiece[] invertedRow = new SimplePiece[invertedBoard[i].length];

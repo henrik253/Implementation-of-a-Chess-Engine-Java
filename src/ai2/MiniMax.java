@@ -11,6 +11,7 @@ import java.util.*;
 import ai2.boardEvaluation.Evaluate;
 import main.model.gameLogic.BoardRepresentation;
 import main.model.gameLogic.Check;
+import main.model.gameLogic.Remis;
 import main.model.pieces.Piece;
 import utils.ChessPieceColor;
 import utils.Move;
@@ -65,34 +66,50 @@ public class MiniMax {
 			this.move = move;
 			this.value = value;
 		}
-		
+
 	}
 
 	public static Move miniMaxRootParallel(BoardRepresentation board, ChessPieceColor onMove, int depth) {
-		
+
 		maxDepth = depth;
 
 		ExecutorService executorService = Executors.newFixedThreadPool(8);
 		List<Future<MoveValuePair>> results = new LinkedList<>();
-		
+
 		Map<Piece, Vector2D[]> moves = MoveGeneration.getMoves(board, onMove);
 
 		int bestValue = Integer.MIN_VALUE;
 		for (Map.Entry<Piece, Vector2D[]> pieceWithMoves : moves.entrySet()) {
+			BoardRepresentation boardClone = board.clone();
 			Vector2D piecePos = pieceWithMoves.getKey().getPosition();
-
+			System.err.println("test1");
 			for (Vector2D moveOfPiece : pieceWithMoves.getValue()) {
 
-				Future<MoveValuePair> pair = executorService.submit( () -> {
-					BoardRepresentation boardClone = board.clone(); 
-					boardClone.makeMove(piecePos, moveOfPiece);
-					int evaluated = miniMax(boardClone, false,onMove.getOpponentColor(), depth, Integer.MIN_VALUE,
+				Future<MoveValuePair> pair = executorService.submit(() -> {
+					System.err.println("test2");
+					
+					System.out.println("test3");
+					try {
+						boardClone.makeMove(piecePos.clone(), moveOfPiece.clone());
+					} catch (Exception e) {
+						System.err.println("make move error in minimaxRootParallel");
+						System.err.println(boardClone);
+						throw new IllegalArgumentException("make move error in minimaxRootParallel");
+					}
+					System.out.print("test5");
+					int evaluated = miniMax(boardClone, false, onMove.getOpponentColor(), depth, Integer.MIN_VALUE,
 							Integer.MAX_VALUE);
-					
-					boardClone.undoLastMove();
+					try {
+						boardClone.undoLastMove();
+					}
+
+					catch (Exception e) {
+						System.err.println("undo move error in minimaxRootParallel");
+						System.err.println(boardClone);
+						throw e;
+					}
 					System.out.println(pieceWithMoves.getKey() + " -> " + moveOfPiece + " evaluated: " + evaluated);
-					return new MoveValuePair(new Move(pieceWithMoves.getKey().getPosition(),moveOfPiece),evaluated);
-					
+					return new MoveValuePair(new Move(pieceWithMoves.getKey().getPosition(), moveOfPiece), evaluated);
 				});
 				results.add(pair);
 			}
@@ -100,25 +117,32 @@ public class MiniMax {
 
 		Move bestMove = null;
 		int best = Integer.MIN_VALUE;
-		for(Future<MoveValuePair> future : results) {
+
+		for (Future<MoveValuePair> future : results) {
 			MoveValuePair pair = null;
 			try {
+			
 				pair = future.get();
 				if (pair.value >= best) { //
 					bestMove = pair.move;
+					best = pair.value;
 				}
 			} catch (Exception e) {
-				System.out.println("interrupted");
+				System.err.println("Exception in future.get()");
 				e.printStackTrace();
-			} 
-			
+				
+				continue;
+			}
+
 		}
 		System.out.println("bestMove: " + bestMove);
-		
+
+		executorService.shutdown();
+
 		if (bestMove == null)
 			throw new NoSuchElementException("couldnt find a move in MinimaxRootParallel");
-		
-		return  bestMove;
+
+		return bestMove;
 	}
 
 	public static int miniMax(BoardRepresentation board, boolean maximazingPlayer, ChessPieceColor player, int depth,
@@ -130,12 +154,18 @@ public class MiniMax {
 
 		Map<Piece, Vector2D[]> moves = MoveGeneration.getMoves(board, player);
 
-		if (moves.size() == 0 && gameOver(board, player)) {
-			int currentDepth = maxDepth - depth;
-			return maximazingPlayer ? Integer.MIN_VALUE + currentDepth : Integer.MAX_VALUE - currentDepth;
+		if (moves.size() == 0) {
+			if (gameOver(board, player)) {
+				int currentDepth = maxDepth - depth;
+				return maximazingPlayer ? Integer.MIN_VALUE + currentDepth : Integer.MAX_VALUE - currentDepth;
+			}
+
+			// otherwise Remis
+			return 0;
 		}
-		// minus the currentDepth, a mate at a low depth is better rated then a mate in a high depth
-		
+		// minus the currentDepth, a mate at a low depth is better rated then a mate in
+		// a high depth
+
 		if (maximazingPlayer) { // maximazing player wants positive values as result if he s good, if the
 								// maximazing player is black
 								// we need to negate the values
@@ -170,7 +200,7 @@ public class MiniMax {
 					board.makeMove(pieceWithMoves.getKey().getPosition(), moveOfPiece);
 					int evaluation = miniMax(board, true, player.getOpponentColor(), depth - 1, alpha, beta);
 					board.undoLastMove();
-
+					
 					if (player.isWhite()) {
 						evaluation = -evaluation;
 					}

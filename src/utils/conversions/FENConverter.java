@@ -85,7 +85,7 @@ public class FENConverter { // Converting a FEN String to
 					column++;
 					Piece p = buildPiece(c, row, column);
 					board[row][column] = setSettingsForPiece(p);
-	
+
 					continue;
 				}
 				if (Character.getNumericValue(c) != -1) {
@@ -114,29 +114,25 @@ public class FENConverter { // Converting a FEN String to
 
 	}
 
-	private static Piece setSettingsForPiece(Piece p) { // only the neccessary settings for double Pawn move, Castling												// rights .
-			if (p instanceof Pawn) {
-				int y = p.getPosition().getY();
-				if (y == 6 || y == 1) {
-					p.setFirstMove(true);
-				}
-				else 
-					p.setFirstMove(false);
+	private static Piece setSettingsForPiece(Piece p) { // only the neccessary settings for double Pawn move, Castling
+														// // rights .
+		if (p instanceof Pawn) {
+			int y = p.getPosition().getY();
+			if (y == 6 || y == 1) {
+				p.setFirstMove(true);
+			} else
+				p.setFirstMove(false);
+		} else if (p instanceof Knight) {
+			Vector2D whiteKingPos = new Vector2D(4, 7), blackKingPos = new Vector2D(4, 0);
+			if (p.getColor().isWhite() && !p.getPosition().equals(whiteKingPos)) {
+				p.setFirstMove(false);
+			} else if (!p.getPosition().equals(blackKingPos)) {
+				p.setFirstMove(false);
 			}
-			if(p instanceof Knight) {
-				Vector2D whiteKingPos = new Vector2D(4,7),blackKingPos = new Vector2D(4,0);
-				if(p.getColor().isWhite() && !p.getPosition().equals(whiteKingPos)) {
-					p.setFirstMove(false);
-				}
-				else if(!p.getPosition().equals(blackKingPos)) 
-				{
-					p.setFirstMove(false);
-				}
-			}
-			
-			
-			
-			return p;
+
+		}
+
+		return p;
 	}
 
 }

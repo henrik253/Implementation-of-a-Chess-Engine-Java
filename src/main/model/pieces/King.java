@@ -67,8 +67,13 @@ public class King extends Piece {
 	@Override
 	public List<List<Vector2D>> calculateMoveablePositions() {
 		List<List<Vector2D>> moves = new LinkedList<>();
+		if(board.getBoard() == null) {
+			throw new NullPointerException("board is null in king class");
+		}
+		board.getBoard()[this.position.getY()][this.getPosition().getX()] = null;
 		int[][] attackedSquaresEnemy = board.calcAttackedSquaresBy(color.getOpponentColor());
-
+		board.getBoard()[this.position.getY()][this.getPosition().getX()] = this;
+		
 		if (outOfBounds(position)) // base case
 			return moves;
 

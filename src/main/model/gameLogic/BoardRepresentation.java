@@ -35,34 +35,47 @@ public class BoardRepresentation {
 	private Piece[][] copy;
 
 	public BoardRepresentation(Piece[][] board) {
-		this.board = board.clone();
-		whitePieces = new LinkedList<>();
-		blackPieces = new LinkedList<>();
-		capturedPieces = new LinkedList<>();
-		moveHistory = new LinkedList<>();
-		initPieces();
-		setBoardForPieces(); // before initPieces() !
-		attackedSquaresByWhite = calcAttackedSquaresBy(ChessPieceColor.WHITE);
-		attackedSquaresByBlack = calcAttackedSquaresBy(ChessPieceColor.BLACK);
-		currentMove = new Move(new Vector2D(0,0),new Vector2D(0,0));
-		lastMove = currentMove.clone();
+		try {
+			this.board = board.clone();
+			whitePieces = new LinkedList<>();
+			blackPieces = new LinkedList<>();
+			capturedPieces = new LinkedList<>();
+			moveHistory = new LinkedList<>();
+			initPieces();
+			setBoardForPieces(); // before initPieces() !
+			attackedSquaresByWhite = calcAttackedSquaresBy(ChessPieceColor.WHITE);
+			attackedSquaresByBlack = calcAttackedSquaresBy(ChessPieceColor.BLACK);
+			currentMove = new Move(new Vector2D(0, 0), new Vector2D(0, 0));
+			lastMove = currentMove.clone();
+		} catch (Exception e) {
+			throw new IllegalArgumentException();
+		}
 	}
 
 	public BoardRepresentation(Piece[][] board, final BoardRepresentation boardRepresentation) {
-		
-		this.board = board;
-		whitePieces = new LinkedList<>(boardRepresentation.whitePieces);
-		blackPieces = new LinkedList<>(boardRepresentation.blackPieces);
-		capturedPieces = new LinkedList<>(boardRepresentation.capturedPieces);
-		whiteKing = (King) boardRepresentation.whiteKing.clone();
-		blackKing = (King) boardRepresentation.blackKing.clone();
-		
-		currentMove = boardRepresentation.currentMove.clone();
-		lastMove = boardRepresentation.lastMove.clone();
-		
-		moveHistory = new LinkedList<>(boardRepresentation.moveHistory);
-		calcAttackedSquaresBy(ChessPieceColor.WHITE);
-		calcAttackedSquaresBy(ChessPieceColor.BLACK);
+
+		try {
+			this.board = board;
+			whitePieces = new LinkedList<>(boardRepresentation.whitePieces);
+			blackPieces = new LinkedList<>(boardRepresentation.blackPieces);
+			capturedPieces = new LinkedList<>(boardRepresentation.capturedPieces);
+			whiteKing = (King) boardRepresentation.whiteKing.clone();
+			blackKing = (King) boardRepresentation.blackKing.clone();
+
+			currentMove = boardRepresentation.currentMove.clone();
+			lastMove = boardRepresentation.lastMove.clone();
+
+			moveHistory = new LinkedList<>(boardRepresentation.moveHistory);
+			calcAttackedSquaresBy(ChessPieceColor.WHITE);
+			calcAttackedSquaresBy(ChessPieceColor.BLACK);
+		} catch (Exception e) {
+			if (board != null) {
+				System.err.println(board.toString());
+			} else {
+				System.err.println("board of type Piece[][] is null");
+			}
+			throw new IllegalArgumentException("invalid board");
+		}
 	}
 
 	private void initPieces() {
@@ -89,8 +102,14 @@ public class BoardRepresentation {
 	}
 
 	private void setBoardForPieces() {
-		whitePieces.forEach(piece -> piece.setBoard(this));
-		blackPieces.forEach(piece -> piece.setBoard(this));
+		for (int row = 0; row < board.length; row++) {
+			for (int column = 0; column < board[row].length; column++) {
+				Piece piece = board[row][column];
+				if (piece != null) {
+					piece.setBoard(this);
+				}
+			}
+		}
 	}
 
 	public BoardRepresentation(int length) {
@@ -100,11 +119,8 @@ public class BoardRepresentation {
 	}
 
 	public int[][] calcAttackedSquaresBy(ChessPieceColor color) {
-		if(this.board == null) {
-			System.err.println("board null=??=");
-		}
 		int[][] attackedSquares = new int[board.length][board.length];
-	
+
 		for (int i = 0; i < board.length; i++) {
 			for (int j = 0; j < board.length; j++) {
 				if (board[i][j] != null && board[i][j].getColor() == color) {
@@ -121,14 +137,14 @@ public class BoardRepresentation {
 	}
 
 	public void makeMove(Vector2D oldPos, Vector2D newPos) {
-	//	copy = getBoardClone();
+		// copy = getBoardClone();
 		currentMove = new Move(oldPos, newPos);
 		// order in which funcs are called is important!
 		Piece movedPiece = getPiece(oldPos); // get the piece
 
 		if (movedPiece == null) {
-			throw new NullPointerException("\n" +
-					"\n couldnt find a piece at " + oldPos + "\n Board: \n" + this.toBoardString());
+			throw new NullPointerException(
+					"\n" + "\n couldnt find a piece at " + oldPos + "\n Board: \n" + this.toBoardString());
 		}
 
 		currentMove.setMovedPiece(movedPiece);
@@ -142,10 +158,10 @@ public class BoardRepresentation {
 		lastMove.setCapturedPiece(removedPiece);
 		moveHistory.add(lastMove);
 	}
-	
-	// this method is a edgecase 
+
+	// this method is a edgecase
 	public void makeMove(Vector2D oldPos, Vector2D newPos, ChessPieceName promotingPiece) {
-		//copy = getBoardClone();
+		// copy = getBoardClone();
 		currentMove = new Move(oldPos, newPos);
 		// order in which funcs are called is important!
 		Piece movedPiece = getPiece(oldPos); // get the piece
@@ -213,7 +229,7 @@ public class BoardRepresentation {
 			rook.setPosition(oldRookPos);
 			rook.setFirstMove(true);
 			board[newRookPos.getY()][newRookPos.getX()] = null;
-			board[oldRookPos.getY()][oldRookPos.getX()] = rook;		
+			board[oldRookPos.getY()][oldRookPos.getX()] = rook;
 		}
 
 		if (lastMove.pawnWillPromote()) {
@@ -291,7 +307,7 @@ public class BoardRepresentation {
 		removePiece(from.getPosition());
 		board[y][x] = to;
 		to.setBoard(this);
-		currentMove.setPromotingPiece(to,null);
+		currentMove.setPromotingPiece(to, null);
 		if (color.isWhite())
 			whitePieces.add(to);
 		else
@@ -305,27 +321,43 @@ public class BoardRepresentation {
 	}
 
 	public Piece[][] getBoard() {
+		if(this.board == null) {
+			System.err.println("err in BoardRepresentation getBoard");
+			throw new NullPointerException("err in BoardRepresentation getBoard");
+		}
 		return board;
 	}
 
 	@Override
-	public BoardRepresentation clone() {
+	public synchronized BoardRepresentation clone() {
 		Piece[][] result = new Piece[board.length][board.length];
-		BoardRepresentation clone = new BoardRepresentation(result, this);
+		BoardRepresentation clone = new BoardRepresentation(result,this);
 		for (int row = 0; row < board.length; row++) {
 			for (int column = 0; column < board[row].length; column++) {
 				Piece p = this.board[row][column];
 				if (p != null) {
 					Piece pieceClone = p.clone();
-					result[row][column] = pieceClone; 
+					result[row][column] = pieceClone;
 					pieceClone.setBoard(clone);
 				}
 			}
 		}
-		
+
+		clone.whitePieces = new LinkedList<>(this.whitePieces);
+		clone.blackPieces = new LinkedList<>(this.blackPieces);
+		clone.capturedPieces = new LinkedList<>(this.capturedPieces);
+		clone.whiteKing = (King) this.whiteKing.clone();
+		clone.blackKing = (King) this.blackKing.clone();
+
+		clone.currentMove = clone.currentMove.clone();
+		clone.lastMove = clone.lastMove.clone();
+
+		clone.moveHistory = new LinkedList<>(this.moveHistory);
+		clone.calcAttackedSquaresBy(ChessPieceColor.WHITE);
+		clone.calcAttackedSquaresBy(ChessPieceColor.BLACK);
 		return clone;
 	}
-	
+
 	public BoardRepresentation softClone() { // cloning without cloning the pieces to reduce memory
 		Piece[][] result = new Piece[board.length][board.length];
 		BoardRepresentation clone = new BoardRepresentation(result, this);
@@ -334,14 +366,13 @@ public class BoardRepresentation {
 				Piece p = this.board[row][column];
 				if (p != null) {
 					Piece pieceClone = p;
-					result[row][column] = pieceClone; 
+					result[row][column] = pieceClone;
 					pieceClone.setBoard(clone);
 				}
 			}
 		}
 		return clone;
 	}
-
 
 	public void setBoard(Piece[][] board) {
 		this.board = board;
@@ -404,17 +435,20 @@ public class BoardRepresentation {
 		// + toBoardString() + "#".repeat(50);
 		return toBoardString();
 	}
-	
+
 	@Override
 	public boolean equals(Object b) {
-		if(b instanceof BoardRepresentation) {
-			return isSameBoard(this.getBoard(),((BoardRepresentation) b).getBoard());
-		}
-		else
+		try {
+			if (b instanceof BoardRepresentation) {
+				return isSameBoard(this.getBoard(), ((BoardRepresentation) b).getBoard());
+			} else
+				throw new IllegalArgumentException(" cant compare " + b + " to BoardRepresentation");
+		} catch (Exception e) {
 			throw new IllegalArgumentException(" cant compare " + b + " to BoardRepresentation");
+		}
 	}
-	
-	public static boolean isSameBoard(final Piece[][] board1,final Piece[][] board2) {
+
+	public static boolean isSameBoard(final Piece[][] board1, final Piece[][] board2) {
 		for (int i = 0; i < board1.length; i++) {
 			for (int j = 0; j < board1[i].length; j++) {
 				Piece board1Piece = board1[i][j];
