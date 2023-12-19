@@ -50,6 +50,16 @@ public class ClassicChessBot implements ChessBot {
 	}
 
 	@Override
+	public void setDepthOrMillis(int depth) {
+
+	}
+
+	@Override
+	public int getDepthOrMillis() {
+		return 0;
+	}
+
+	@Override
 	public ChessPieceColor getColor() {
 		return color;
 	}

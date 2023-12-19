@@ -29,4 +29,14 @@ public class ClassicBot implements ChessBot {
 		return bot.getLastMove();
 	}
 
+	@Override
+	public void setDepthOrMillis(int depth) {
+
+	}
+
+	@Override
+	public int getDepthOrMillis() {
+		return 0;
+	}
+
 }

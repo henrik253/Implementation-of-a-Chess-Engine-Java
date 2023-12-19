@@ -91,8 +91,7 @@ public class RandomChessBot implements ChessBot {
 	}
 
 	@Override
-	public int getDepth() {
-		// TODO Auto-generated method stub
+	public int getDepthOrMillis() {
 		return 0;
 	}
 

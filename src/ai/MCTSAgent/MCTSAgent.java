@@ -127,4 +127,14 @@ public class MCTSAgent implements ChessBot {
     public Move getLastMove() {
         return null;
     }
+
+    @Override
+    public void setDepthOrMillis(int depth) {
+
+    }
+
+    @Override
+    public int getDepthOrMillis() {
+        return 0;
+    }
 }

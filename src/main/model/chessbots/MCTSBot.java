@@ -46,4 +46,14 @@ public class MCTSBot implements ChessBot {
     public Move getLastMove() {
         return this.lastMove;
     }
+
+    @Override
+    public void setDepthOrMillis(int depth) {
+
+    }
+
+    @Override
+    public int getDepthOrMillis() {
+        return 0;
+    }
 }

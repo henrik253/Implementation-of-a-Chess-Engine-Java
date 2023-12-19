@@ -49,4 +49,14 @@ public class DeeperBlueBot implements ChessBot {
         return this.lastMove;
 
     }
+
+    @Override
+    public void setDepthOrMillis(int depth) {
+
+    }
+
+    @Override
+    public int getDepthOrMillis() {
+        return 0;
+    }
 }
