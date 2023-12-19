@@ -19,7 +19,7 @@ import org.junit.Before;
 public class OpeningBookTest {
 
 	private static final String DEFAULT_BAORD = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR";
-	private OpeningBook openingBook = new OpeningBook();
+	private OpeningBook openingBook = OpeningBook.openingBook;
 	
 	
 	@Before

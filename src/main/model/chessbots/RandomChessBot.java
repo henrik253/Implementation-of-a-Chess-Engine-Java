@@ -84,4 +84,16 @@ public class RandomChessBot implements ChessBot {
 		return move;
 	}
 
+	@Override
+	public void setDepthOrMillis(int depth) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public int getDepth() {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+
 }

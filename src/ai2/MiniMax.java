@@ -78,36 +78,20 @@ public class MiniMax {
 
 		Map<Piece, Vector2D[]> moves = MoveGeneration.getMoves(board, onMove);
 
-		int bestValue = Integer.MIN_VALUE;
 		for (Map.Entry<Piece, Vector2D[]> pieceWithMoves : moves.entrySet()) {
-			BoardRepresentation boardClone = board.clone();
-			Vector2D piecePos = pieceWithMoves.getKey().getPosition();
-			System.err.println("test1");
-			for (Vector2D moveOfPiece : pieceWithMoves.getValue()) {
 
+			Vector2D piecePos = pieceWithMoves.getKey().getPosition();
+			for (Vector2D moveOfPiece : pieceWithMoves.getValue()) {
+				BoardRepresentation boardClone = board.clone();
 				Future<MoveValuePair> pair = executorService.submit(() -> {
-					System.err.println("test2");
-					
-					System.out.println("test3");
-					try {
-						boardClone.makeMove(piecePos.clone(), moveOfPiece.clone());
-					} catch (Exception e) {
-						System.err.println("make move error in minimaxRootParallel");
-						System.err.println(boardClone);
-						throw new IllegalArgumentException("make move error in minimaxRootParallel");
-					}
-					System.out.print("test5");
+
+					boardClone.makeMove(piecePos.clone(), moveOfPiece.clone());
+
 					int evaluated = miniMax(boardClone, false, onMove.getOpponentColor(), depth, Integer.MIN_VALUE,
 							Integer.MAX_VALUE);
-					try {
-						boardClone.undoLastMove();
-					}
 
-					catch (Exception e) {
-						System.err.println("undo move error in minimaxRootParallel");
-						System.err.println(boardClone);
-						throw e;
-					}
+					boardClone.undoLastMove();
+
 					System.out.println(pieceWithMoves.getKey() + " -> " + moveOfPiece + " evaluated: " + evaluated);
 					return new MoveValuePair(new Move(pieceWithMoves.getKey().getPosition(), moveOfPiece), evaluated);
 				});
@@ -121,17 +105,13 @@ public class MiniMax {
 		for (Future<MoveValuePair> future : results) {
 			MoveValuePair pair = null;
 			try {
-			
 				pair = future.get();
 				if (pair.value >= best) { //
 					bestMove = pair.move;
 					best = pair.value;
 				}
 			} catch (Exception e) {
-				System.err.println("Exception in future.get()");
 				e.printStackTrace();
-				
-				continue;
 			}
 
 		}
@@ -200,7 +180,7 @@ public class MiniMax {
 					board.makeMove(pieceWithMoves.getKey().getPosition(), moveOfPiece);
 					int evaluation = miniMax(board, true, player.getOpponentColor(), depth - 1, alpha, beta);
 					board.undoLastMove();
-					
+
 					if (player.isWhite()) {
 						evaluation = -evaluation;
 					}

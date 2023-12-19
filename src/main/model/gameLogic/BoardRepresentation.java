@@ -56,18 +56,15 @@ public class BoardRepresentation {
 
 		try {
 			this.board = board;
-			whitePieces = new LinkedList<>(boardRepresentation.whitePieces);
-			blackPieces = new LinkedList<>(boardRepresentation.blackPieces);
-			capturedPieces = new LinkedList<>(boardRepresentation.capturedPieces);
-			whiteKing = (King) boardRepresentation.whiteKing.clone();
-			blackKing = (King) boardRepresentation.blackKing.clone();
+			whitePieces = new LinkedList<>();
+			blackPieces = new LinkedList<>();
+			capturedPieces = new LinkedList<>();
+
 
 			currentMove = boardRepresentation.currentMove.clone();
 			lastMove = boardRepresentation.lastMove.clone();
 
 			moveHistory = new LinkedList<>(boardRepresentation.moveHistory);
-			calcAttackedSquaresBy(ChessPieceColor.WHITE);
-			calcAttackedSquaresBy(ChessPieceColor.BLACK);
 		} catch (Exception e) {
 			if (board != null) {
 				System.err.println(board.toString());
@@ -321,7 +318,7 @@ public class BoardRepresentation {
 	}
 
 	public Piece[][] getBoard() {
-		if(this.board == null) {
+		if (this.board == null) {
 			System.err.println("err in BoardRepresentation getBoard");
 			throw new NullPointerException("err in BoardRepresentation getBoard");
 		}
@@ -339,15 +336,26 @@ public class BoardRepresentation {
 					Piece pieceClone = p.clone();
 					result[row][column] = pieceClone;
 					pieceClone.setBoard(clone);
+
+					if (p.getColor().isWhite()) {
+						if (p instanceof King) {
+							clone.whiteKing = (King) pieceClone;
+						}
+						clone.whitePieces.add(pieceClone);
+					} else {
+						if (p instanceof King) {
+							clone.blackKing = (King) pieceClone;
+						}
+						clone.blackPieces.add(pieceClone);
+					}
 				}
 			}
 		}
-
-		clone.whitePieces = new LinkedList<>(this.whitePieces);
-		clone.blackPieces = new LinkedList<>(this.blackPieces);
+		
+		for(Piece captured : this.capturedPieces) {
+			clone.capturedPieces.add(captured.clone());
+		}
 		clone.capturedPieces = new LinkedList<>(this.capturedPieces);
-		clone.whiteKing = (King) this.whiteKing.clone();
-		clone.blackKing = (King) this.blackKing.clone();
 
 		clone.currentMove = clone.currentMove.clone();
 		clone.lastMove = clone.lastMove.clone();
@@ -356,6 +364,7 @@ public class BoardRepresentation {
 		clone.calcAttackedSquaresBy(ChessPieceColor.WHITE);
 		clone.calcAttackedSquaresBy(ChessPieceColor.BLACK);
 		return clone;
+
 	}
 
 	public BoardRepresentation softClone() { // cloning without cloning the pieces to reduce memory

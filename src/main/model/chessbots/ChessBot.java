@@ -13,4 +13,8 @@ public interface ChessBot {
 	Move makeMove(Piece[][] board);
 
 	Move getLastMove();
+	
+	void setDepthOrMillis(int depth); 
+	
+	int getDepthOrMillis();
 }
