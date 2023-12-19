@@ -2,6 +2,7 @@ package main.model.chessbots;
 
 import ai.DeeperBlue.DeeperBlueAgent;
 import ai.DeeperBlue.DeeperBlueException;
+import main.model.gameLogic.BoardRepresentation;
 import main.model.pieces.Piece;
 import utils.ChessPieceColor;
 import utils.Move;
@@ -31,12 +32,18 @@ public class DeeperBlueBot implements ChessBot {
     @Override
     public Move makeMove(Piece[][] board) {
         try {
+            System.out.println(new BoardRepresentation(board));
             long start = System.currentTimeMillis();
-            int[] moveSquares = this.agent.makeMove(this.agent.translator.translateBoard(board), -1);
+            int[] moveSquares = this.agent.makeMove(this.agent.translator.translateBoard(board), this.agent.player);
             int[] coordinates = new int[]{moveSquares[0]%8, moveSquares[0]/8, moveSquares[1]%8, moveSquares[1]/8};
+
             lastMove = new Move(new Vector2D(coordinates[0], coordinates[1]), new Vector2D(coordinates[2],coordinates[3]));
+            lastMove = this.agent.player == 1 ? new Move(lastMove.from().getInverted(7), lastMove.to().getInverted(7)) : lastMove;
             long end = System.currentTimeMillis();
             System.out.println("Time: " + ((end - start)) + "ms");
+
+            //System.out.println("=================================Square: " + lastMove.from().getX() + ", " + lastMove.from().getY());
+
             return lastMove;
         } catch (DeeperBlueException | InterruptedException e) {
             throw new RuntimeException(e);

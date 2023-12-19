@@ -61,14 +61,27 @@ public class DeeperBlueAgent{
 
     public int[] makeMove(int[][] intBoard, int player) throws DeeperBlueException, InterruptedException {
         int[][] correctedBoard;
+        if(this.openingBook.finishedLoadingData()){
+            mode = DeeperBlueState.OPENING_BOOK;
+        }else{
+            mode = DeeperBlueState.NORMAL_SEARCH;
+        }
         correctedBoard = getCorrectedBoard(intBoard);
         switch (mode){
             case OPENING_BOOK -> {
+                if(this.player == 1){
+                    correctedBoard = flipBoardVertically(correctedBoard);
+                }
                 int[] move = this.openingBook.getMove(correctedBoard);
                 if(move == null){
                     this.mode = DeeperBlueState.NORMAL_SEARCH;
                     System.out.println("Normal_search");
-                    return getMoveWithIterativeDeepening(intBoard, player);
+                    System.out.println(this.player);
+                    if(this.player == -1){
+                        return returnCorrectedMove(1, getMoveWithIterativeDeepening(intBoard));
+                    }else{
+                        return flipMoveVertically(getMoveWithIterativeDeepening(intBoard));
+                    }
                 }else{
                     System.out.println("Opening_book");
                     return returnCorrectedMove(-player, move);
@@ -82,7 +95,11 @@ public class DeeperBlueAgent{
                     return getMoveWithForcedCheckMateSearch(intBoard, player);
                 }
                 System.out.println("Normal_search");
-                return getMoveWithIterativeDeepening(intBoard, player);
+                if(this.player == -1){
+                    return returnCorrectedMove(1, getMoveWithIterativeDeepening(intBoard));
+                }else{
+                    return getMoveWithIterativeDeepening(intBoard);
+                }
             }
             case FORCED_CHECKMATE -> {
                 System.out.println("Forced_CheckMate");
@@ -93,6 +110,9 @@ public class DeeperBlueAgent{
             }
         }
     }
+
+
+
     public void backPropagate(DeeperBlueExtensionNode currentLeafNode) {
         DeeperBlueNode currentNode = currentLeafNode;
         while(!currentNode.isRoot){
@@ -121,14 +141,17 @@ public class DeeperBlueAgent{
 
     private int[][] getCorrectedBoard(int[][] intBoard) {
         int[][] correctedBoard;
-        if (this.player == 1) {
+        if (this.player == 1 && this.mode == DeeperBlueState.OPENING_BOOK) {
+            correctedBoard = flipBoardVertically(ai.Util.Util.flipBoardHorizontallyAndFLipPlayer(intBoard));
+        }else if(this.player == 1) {
             correctedBoard = ai.Util.Util.flipBoardHorizontallyAndFLipPlayer(intBoard);
-        } else {
+        }
+        else {
             correctedBoard = intBoard;
         }
         return correctedBoard;
     }
-    private int[] getMoveWithIterativeDeepening(int[][] intBoard, int player) throws DeeperBlueException, InterruptedException {
+    private int[] getMoveWithIterativeDeepening(int[][] intBoard) throws DeeperBlueException, InterruptedException {
         int[][] correctedBoard;
         correctedBoard = getCorrectedBoard(intBoard);
         long start = System.currentTimeMillis();
@@ -139,16 +162,16 @@ public class DeeperBlueAgent{
             this.maxDepthAlphaBeta += 2;
         }
         System.out.println("Alpha-Beta-Depth was: " + this.maxDepthAlphaBeta);
-        return runExtensionsAndGetBestMove(player);
+        return runExtensionsAndGetBestMove();
     }
 
-    private int[] runExtensionsAndGetBestMove(int player) throws InterruptedException {
+    private int[] runExtensionsAndGetBestMove() throws InterruptedException {
         if(useExtensions){
             this.pool.run(this.leafNodes);
         }
         int[] bestMove = this.tree.getMoveWithBestValue();
         bestMove = changeMoveIfMoveMemoryHit(bestMove);
-        return returnCorrectedMove(player, bestMove);
+        return returnCorrectedMove(-this.player, bestMove);
     }
 
 
@@ -190,6 +213,20 @@ public class DeeperBlueAgent{
         }
         return false;
     }
-
-
+    private int[][] flipBoardVertically(int[][] board){
+        int[][] result = new int[8][8];
+        for (int i = 0; i < 8; i++) {
+            for (int j = 0; j < 8; j++) {
+                result[i][j] = board[i][7-j];
+            }
+        }
+        return result;
+    }
+    private int[] flipMoveVertically(int[] bestMove) {
+        int startRow = bestMove[0] / 8;
+        int startCol = bestMove[0] % 8;
+        int destinationRow = bestMove[1] / 8;
+        int destinationCol = bestMove[1] % 8;
+        return new int[]{startRow * 8 + (7-startCol), destinationRow * 8 + (7-destinationCol)};
+    }
 }

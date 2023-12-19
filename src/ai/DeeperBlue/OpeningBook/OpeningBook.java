@@ -9,13 +9,20 @@ import java.util.HashMap;
 public class OpeningBook{
 
     HashMap<Integer, int[]> content;
+    boolean finishedLoading;
 
     public OpeningBook(){
-        this.initContent();
+        this.content = new HashMap<>();
+        finishedLoading = false;
+        Thread thread = new Thread(()->{
+            this.initContent();
+            this.finishedLoading = true;
+        });
+        thread.start();
+
     }
 
     private void initContent(){
-        this.content = new HashMap<>();
         try(BufferedReader input = new BufferedReader(new FileReader("./resources/openingBook.csv"))){
             String buffer;
             while(true){
@@ -60,5 +67,9 @@ public class OpeningBook{
             System.arraycopy(board[row], 0, result, row * 8, board[0].length);
         }
         return result;
+    }
+
+    public boolean finishedLoadingData() {
+        return this.finishedLoading;
     }
 }
