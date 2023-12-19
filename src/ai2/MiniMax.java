@@ -83,8 +83,9 @@ public class MiniMax {
 			Vector2D piecePos = pieceWithMoves.getKey().getPosition();
 			for (Vector2D moveOfPiece : pieceWithMoves.getValue()) {
 				BoardRepresentation boardClone = board.clone();
+				
 				Future<MoveValuePair> pair = executorService.submit(() -> {
-
+					
 					boardClone.makeMove(piecePos.clone(), moveOfPiece.clone());
 
 					int evaluated = miniMax(boardClone, false, onMove.getOpponentColor(), depth, Integer.MIN_VALUE,
@@ -110,7 +111,12 @@ public class MiniMax {
 					bestMove = pair.move;
 					best = pair.value;
 				}
-			} catch (Exception e) {
+			}
+			catch(InterruptedException e) {
+				executorService.shutdown();
+				System.err.println("ClassicChessBot interrupted in MiniMaxParallel");
+			}
+			catch (Exception e) {
 				e.printStackTrace();
 			}
 

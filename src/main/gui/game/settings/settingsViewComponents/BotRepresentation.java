@@ -2,8 +2,10 @@ package main.gui.game.settings.settingsViewComponents;
 
 import javafx.application.Platform;
 import javafx.geometry.Insets;
+import javafx.geometry.Pos;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.control.Slider;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.Background;
@@ -17,13 +19,16 @@ import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
+import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 import utils.ChessPieceColor;
 
 public class BotRepresentation extends Pane {
-	
+
 	private String name;
-	
+
+	private static final int FONT_SIZE = 16;
+
 	private static final Double OFFSET = 25.0;
 	private static final Double PADDING = 10.0;
 	private static final Double IMAGE_WIDTH = 64.0;
@@ -64,7 +69,13 @@ public class BotRepresentation extends Pane {
 	private Button selectBlackButton = new Button();
 	private Button selectRandButton = new Button("?");
 
-	public BotRepresentation(BotSelectionView botSelectionView,String name) {
+	private VBox sliderWrapper = new VBox(1);
+	private Slider slider = new Slider(0, 10, 1);
+	private String format = " ms."; // by default ms.
+	private Label sliderLabel = new Label( ((int) slider.getValue()) + format);
+	
+
+	public BotRepresentation(BotSelectionView botSelectionView, String name) {
 		this.botSelectionView = botSelectionView;
 		userPlaysAs = ChessPieceColor.WHITE; // By default black
 		colorButtonPressed(selectWhiteButton); // By default white is selected
@@ -86,13 +97,13 @@ public class BotRepresentation extends Pane {
 		initSelectButton();
 
 		initColorSelectMenue();
-
+		initSlider();
 		this.setBackground(new Background(new BackgroundFill(Color.web("#E9E9E9"), null, null)));
 		this.setBorder(
 				new Border(new BorderStroke(Color.LIGHTGRAY, BorderStrokeStyle.SOLID, null, new BorderWidths(1))));
 
 		imageWrapper.getChildren().add(imageView);
-		this.getChildren().addAll(selectButton, informationText, heading, imageWrapper);
+		this.getChildren().addAll(selectButton, informationText, sliderWrapper, heading, imageWrapper);
 	}
 
 	private void initImageWrapper() {
@@ -111,6 +122,7 @@ public class BotRepresentation extends Pane {
 		this.informationText.setTranslateY(IMAGE_HEIGHT + INFO_TEXT_OFFSET);
 		this.informationText.setTranslateX(PADDING);
 		this.informationText.setWrappingWidth(WINDOW_WIDTH - OFFSET);
+		this.informationText.setFont(new Font(FONT_SIZE));
 	}
 
 	private void initSelectButton() {
@@ -151,6 +163,7 @@ public class BotRepresentation extends Pane {
 		});
 
 		buttonWrapper.setSpacing(BUTTON_SPACING);
+		selectHeading.setFont(new Font(FONT_SIZE));
 		colorSelectMenue.getChildren().addAll(selectHeading, buttonWrapper);
 		this.getChildren().add(colorSelectMenue);
 
@@ -196,8 +209,7 @@ public class BotRepresentation extends Pane {
 	}
 
 	public void toggleSurrenderButton() {
-		Platform.runLater(() -> getChildren().remove(surrenderButton));	
-		
+		Platform.runLater(() -> getChildren().remove(surrenderButton));
 
 		if (!getChildren().contains(selectButton)) {
 			getChildren().add(selectButton);
@@ -269,6 +281,43 @@ public class BotRepresentation extends Pane {
 
 	public String getName() {
 		return name;
+	}
+
+	private void initSlider() {
+		sliderWrapper.setTranslateX(this.getPrefWidth() / 20 + 25);
+		sliderWrapper.setTranslateY(this.getPrefHeight() / 3 - 10);
+		slider.setShowTickLabels(false);
+		slider.setShowTickMarks(true);
+		slider.setPrefWidth( (this.getPrefWidth() / 4) * 3);
+		// Create a Label
+		//sliderWrapper.setAlignment(Pos.CENTER);
+		// Add a ChangeListener to the Slider
+		slider.valueProperty().addListener((obs, oldV, newV) -> {
+			sliderLabel.setText("" + newV.intValue() + " " +  format);
+		});
+		sliderLabel.textProperty().addListener( (obs,old,newV) -> {
+			int textLength = newV.toString().length();
+			sliderLabel.setTranslateX(slider.getPrefWidth() / 2 - 25 - 2*textLength);
+		});
+		sliderLabel.setTranslateX(slider.getPrefWidth() / 2 - 25);
+		sliderLabel.setFont(new Font(FONT_SIZE));
+		
+		sliderWrapper.getChildren().addAll(slider, sliderLabel);
+	}
+	
+	public void setSliderMinMax(int min,int max,int defaultValue) {
+		slider.setMin(min);
+		slider.setMax(max);
+		slider.setValue(defaultValue);
+	}
+	
+	public void setFormatForSlider(String format) {
+		this.format = format;
+		sliderLabel.setText(((int) slider.getValue()) + format);
+	}
+
+	public Slider getSlider() {
+		return slider;
 	}
 
 }

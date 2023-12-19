@@ -197,6 +197,13 @@ public class Model {
 	public void setColorForSelectedChessBot(ChessPieceColor color) {
 		selectedChessBot.setColor(color);
 	}
-
+	
+	public void setMillisForBot1(int millis) {
+		bot1.setDepthOrMillis(millis);
+	}
+	
+	public void setDepthForBot2(int depth) {
+		bot2.setDepthOrMillis(depth);
+	}
 
 }

@@ -87,18 +87,29 @@ public class BotSelectionView extends BorderPane { // TODO REMOVE BorderPane Wra
 	}
 
 	private void initBotRepresentation() {
-		botRepresentation1 = new BotRepresentation(this,"bot1");
+		botRepresentation1 = new BotRepresentation(this, "bot1");
 		botRepresentation1.setHeading(BOT_NAME1);
 		botRepresentation1.setImage(IMAGE_PATH + IMAGE1_NAME + FILE_FORMAT);
-		botRepresentation1.setInformationText(
-				"Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum.");
+		botRepresentation1.setSliderMinMax(0, 30, 15);
+		botRepresentation1.setInformationText("Select the max-calculation time:");
+		botRepresentation1.setFormatForSlider(" ms.");
 
-		botRepresentation2 = new BotRepresentation(this,"bot2");
+		botRepresentation2 = new BotRepresentation(this, "bot2");
 		botRepresentation2.setHeading(BOT_NAME2);
 		botRepresentation2.setImage(IMAGE_PATH + IMAGE2_NAME + FILE_FORMAT);
-		botRepresentation2.setInformationText(
-				"Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum.");
+		botRepresentation2.setInformationText("Select the max-depth of AlphaBeta Search:");
+		botRepresentation2.setFormatForSlider(" is the max-depth.");
+		botRepresentation2.setSliderMinMax(0, 7, 4);
 
+		botRepresentation2.getSlider().valueProperty().set(5);
+
+		botRepresentation1.getSlider().valueProperty().addListener((obs, oldV, newV) -> {
+			bot1SliderMillisChanged(newV.intValue());
+		});
+
+		botRepresentation2.getSlider().valueProperty().addListener((obs, oldV, newV) -> {
+			bot2SliderDepthChanged(newV.intValue());
+		});
 	}
 
 	public void selectedPressed(BotRepresentation source) {
@@ -112,6 +123,14 @@ public class BotSelectionView extends BorderPane { // TODO REMOVE BorderPane Wra
 		selected = source;
 
 		settingsView.botSelectedPressed(source);
+	}
+
+	public void bot1SliderMillisChanged(int millis) {
+		settingsView.bot1SliderMillisChanged(millis);
+	}
+
+	public void bot2SliderDepthChanged(int depth) {
+		settingsView.bot2SliderDepthChanged(depth);
 	}
 
 	public void surrenderPressed() {
@@ -151,6 +170,10 @@ public class BotSelectionView extends BorderPane { // TODO REMOVE BorderPane Wra
 				onActionButton2(new ActionEvent());
 			}
 		}
+	}
+
+	public void disableSlider(boolean b) {
+
 	}
 
 }

@@ -14,6 +14,7 @@ public class SettingsPresenter {
 		settingsView.setDisableColorSelect(true);
 		settingsView.setVisibleBotSelectButtons(false);
 		settingsView.setVisibleInsertFENView(false);
+		settingsView.disableSlider(true);
 	}
 
 	public void setNoGameContent() {
@@ -21,6 +22,7 @@ public class SettingsPresenter {
 		settingsView.setDisableColorSelect(false);
 		settingsView.setVisibleBotSelectButtons(true);
 		settingsView.setVisibleInsertFENView(true);
+		settingsView.disableSlider(false);
 	}
 
 	public void loadBoard(String fen) {
@@ -69,6 +71,15 @@ public class SettingsPresenter {
 
 	public void surrenderButtonPressed() {
 		mainPresenter.surrenderGame();
+	}
+
+	public void bot1SliderMillisChanged(int millis) {
+		mainPresenter.bot1SliderMillisChanged(millis);
+
+	}
+
+	public void bot2SliderDepthChanged(int depth) {
+		mainPresenter.bot2SliderDepthChanged(depth);
 	}
 
 }

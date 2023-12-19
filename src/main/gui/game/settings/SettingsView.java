@@ -96,4 +96,17 @@ public class SettingsView extends Pane {
 		insertBoardView.setVisible(visible);
 	}
 
+	public void bot1SliderMillisChanged(int millis) {
+		settingsPresenter.bot1SliderMillisChanged(millis);
+	}
+
+	public void bot2SliderDepthChanged(int depth) {
+		settingsPresenter.bot2SliderDepthChanged(depth);
+		
+	}
+
+	public void disableSlider(boolean b) {
+		botSelectionView.disableSlider(b);	
+	}
+
 }
