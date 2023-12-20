@@ -38,18 +38,15 @@ public class GameOverPresenter {
 	}
 
 	public void botSelected(BotRepresentation source) {
-		System.out.println("GameOverPResenter bot Selected");
 		if (State.gameState.noGame()) {
 			gameOverView.drawSelectedBot(source);
 			selectedBot = source;
 		}
-		System.out.println("gamestate : "  + State.gameState);
-
 	}
 
 	public void gameOver() {
 		gameOverView.drawScore(mainPresenter.getUserWins(), mainPresenter.getBotWins());
-		
+
 	}
 
 }

@@ -13,6 +13,7 @@ import utils.Move;
 import utils.Vector2D;
 
 public class RandomChessBot implements ChessBot {
+	// this class is just for testing purposes
 
 	private Piece[][] board;
 	private ChessPieceColor color = ChessPieceColor.BLACK;
@@ -59,10 +60,10 @@ public class RandomChessBot implements ChessBot {
 		}
 
 		int movesPiece = (int) (Math.random() * (allMoves1.size()) - 1) + 1;
-		
+
 		List<Vector2D> movesFromPiece = allMoves1.get(movesPiece);
 		int moveIndex = (int) ((Math.random() * (movesFromPiece.size()) - 1) + 1);
-		move = new Move(movesFromPiece.get(0),movesFromPiece.get(moveIndex));
+		move = new Move(movesFromPiece.get(0), movesFromPiece.get(moveIndex));
 
 		return move;
 
@@ -87,7 +88,7 @@ public class RandomChessBot implements ChessBot {
 	@Override
 	public void setDepthOrMillis(int depth) {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 	@Override

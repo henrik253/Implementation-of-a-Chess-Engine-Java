@@ -31,36 +31,30 @@ public class MainPresenter {
 	private Model model;
 
 	public boolean moveRequest(Vector2D oldPos, Vector2D newPos) {
-		boolean validMove;
+		boolean validMove = false;
 		try {
 			validMove = model.movePiece(oldPos, newPos); // after model.moveRequest
 		} catch (Exception e) {
 			e.printStackTrace();
 			System.err.println(model.getBoardRepresentation());
-			throw e;
 		}
 		checkGameStates();
 		return validMove;
 	}
 
 	public SimplePiece[][] requestBotMove() {
-		int c = 0;
-		while (State.gameState.inGame()) {
-			try {
-				if (model.makeBotMove()) {
-					break;
-				}
-			} catch (Exception e) {
-				e.printStackTrace();
-				System.err.println(model.getBoardRepresentation());
-				initGameOver();
-			}
-			if (++c >= 1) {
-				System.err.print("\n Bot couldnt find a Move after " + c + " attempts.");
-				break;
-			}
-		}
 
+		try {
+			boolean success = model.makeBotMove();
+
+			if (!success) {
+				System.err.println("ChessBot requested a wrong move");
+				throw new IllegalArgumentException();
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+			initGameOver();
+		}
 		checkGameStates();
 		return BoardConverter.convertToSimple(model.getBoard());
 	}
@@ -87,7 +81,7 @@ public class MainPresenter {
 			gamePresenter.stopChessBotCalculation();
 		} catch (InterruptedException e) {
 			System.err.println(
-					"Interrupted Exception thrown because thread running the ChessCalculation was stopped during run");
+					"Interrupted Exception thrown, because the thread running the ChessCalculation was stopped during the run");
 		}
 		initGameOver();
 	}

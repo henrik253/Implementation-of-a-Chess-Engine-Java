@@ -113,9 +113,8 @@ public class FENConverter { // Converting a FEN String to
 		};
 
 	}
-
-	private static Piece setSettingsForPiece(Piece p) { // only the neccessary settings for double Pawn move, Castling
-														// // rights .
+	 // only the necessary settings for double Pawn move, Castling rights, ... 
+	private static Piece setSettingsForPiece(Piece p) {
 		if (p instanceof Pawn) {
 			int y = p.getPosition().getY();
 			if (y == 6 || y == 1) {

@@ -1,5 +1,6 @@
 package main.model;
 
+import java.util.LinkedList;
 import java.util.List;
 
 import main.Settings;
@@ -33,7 +34,7 @@ public class Model {
 	public final ChessBot bot2 = new ClassicBot();
 
 	public Model() {
-		selectedChessBot = bot1;//new ClassicBot();// new RandomChessBot();// bot1;//new DeeperBlueBot();// bot2;//new ClassicBot();
+		selectedChessBot = bot1;
 		selectedChessBot.setColor(ChessPieceColor.BLACK); // By default black
 		gameStatistic = new GameStatistic();
 	}
@@ -43,19 +44,17 @@ public class Model {
 		State.gameState = GameState.IN_GAME;
 		State.gameOverReason = GameOverReason.NONE;
 		State.inCheck = InCheck.OFF;
-		this.boardRepresentation = new BoardRepresentation(FENConverter.convertToPieceBoard(settings.selectedFEN.get())); // <----
+		this.boardRepresentation = new BoardRepresentation(
+				FENConverter.convertToPieceBoard(settings.selectedFEN.get()));
 		moveValidation.setBoard(boardRepresentation);
 		this.moveValidation.setOnMove(ChessPieceColor.WHITE);
-
-		System.out.println("MODEL START GAME ");
 	}
 
 	public void endGame() {
 		State.gameState = GameState.GAME_OVER;
 	}
 
-	// GAME RUNNING
-	public boolean movePiece(Vector2D oldPos, Vector2D newPos) { // <----
+	public boolean movePiece(Vector2D oldPos, Vector2D newPos) {
 		boolean success;
 		try {
 			success = moveValidation.makeMove(oldPos, newPos);
@@ -72,7 +71,6 @@ public class Model {
 	public boolean makeBotMove() {
 		BoardRepresentation boardForBot = boardRepresentation.clone();
 		Move move = selectedChessBot.makeMove(boardForBot.getBoard());
-		System.out.println(move);
 		boolean success = moveValidation.makeMove(move.from(), move.to());
 		updateState(success, move);
 		enterGameResult();
@@ -176,13 +174,13 @@ public class Model {
 
 	public List<Vector2D> getMoveablePositions(Vector2D pos) {
 		try {
-		return boardRepresentation.getPiece(pos).calculateMoveablePositions().stream().flatMap(s -> s.stream())
-				.toList();
-		}catch(Exception e) {
+			return boardRepresentation.getPiece(pos).calculateMoveablePositions().stream().flatMap(s -> s.stream())
+					.toList();
+		} catch (Exception e) {
 			System.err.println("Tryed to access position: " + pos + " on board:");
 			System.err.println(boardRepresentation);
-			throw e;
 		}
+		return new LinkedList<>();
 	}
 
 	public ChessBot getSelectedChessBot() {
@@ -191,17 +189,16 @@ public class Model {
 
 	public void setSelectedChessBot(ChessBot selectedChessBot) {
 		this.selectedChessBot = selectedChessBot;
-		System.out.println(this.selectedChessBot);
 	}
-	
+
 	public void setColorForSelectedChessBot(ChessPieceColor color) {
 		selectedChessBot.setColor(color);
 	}
-	
+
 	public void setMillisForBot1(int millis) {
 		bot1.setDepthOrMillis(millis);
 	}
-	
+
 	public void setDepthForBot2(int depth) {
 		bot2.setDepthOrMillis(depth);
 	}

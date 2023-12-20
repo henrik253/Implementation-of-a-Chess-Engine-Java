@@ -20,14 +20,17 @@ public class Evaluate {
 	public static int evaluate(BoardRepresentation boardR) {
 		// 0 for start, 1 for end
 
-		if (boardR.getBlackPieces().size() + boardR.getWhitePieces().size() > MAX_PIECE_COUNT) {
-			System.err.println("Error occured, there a too many Pieces in the list of BoardRepr");
-			System.err.println("white Pieces:" + boardR.getWhitePieces());
-			System.err.println("black Pieces: " + boardR.getBlackPieces());
-		}
-
 		float gameProgress = Math.abs(
 				1 - ((boardR.getWhitePieces().size() + boardR.getBlackPieces().size() - 2) / (float) MAX_PIECE_COUNT));
+
+		if (boardR.getBlackPieces().size() + boardR.getWhitePieces().size() > MAX_PIECE_COUNT) {
+//			System.err.println("Error occured, there a too many Pieces in the list of BoardRepr");
+//			System.err.println("white Pieces:" + boardR.getWhitePieces());
+//			System.err.println("black Pieces: " + boardR.getBlackPieces());
+			gameProgress = Math.abs(
+					1 - ((8 + 8 - 2) / (float) MAX_PIECE_COUNT));
+
+		}
 
 		int evaluation = evaluate(boardR.getBoard(), gameProgress);
 
@@ -92,7 +95,6 @@ public class Evaluate {
 		case KING -> linearInterpolation(PieceSquareTable.KingTable.opening[y][x],
 				PieceSquareTable.KingTable.endGame[y][x], gameProgress);
 		default -> {
-			System.out.println("Unknown membership status. No discount applicable.");
 			yield 0.0f;
 		}
 		};

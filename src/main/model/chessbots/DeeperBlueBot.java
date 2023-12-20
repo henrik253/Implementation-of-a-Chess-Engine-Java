@@ -53,16 +53,12 @@ public class DeeperBlueBot implements ChessBot {
     }
 
     @Override
-    public void setDepthOrMillis(int depth) {
-
-        this.agent.iterativeDeepeningMillis = depth;
-
+    public void setDepthOrMillis(int millis) {
+        this.agent.iterativeDeepeningMillis = millis;
     }
 
     @Override
     public int getDepthOrMillis() {
-
         return this.agent.iterativeDeepeningMillis;
-
     }
 }

@@ -80,7 +80,12 @@ public class MiniMax {
 		List<Future<MoveValuePair>> results = new LinkedList<>();
 
 		Map<Piece, Vector2D[]> moves = MoveGeneration.getMoves(board, onMove);
-
+		
+		if(moves.isEmpty()) {
+			return new Move(new Vector2D(0,0),new Vector2D(0,0));
+		}
+		
+		System.out.println( "\n" + "-".repeat(50) + "\nPossible Moves:");
 		for (Map.Entry<Piece, Vector2D[]> pieceWithMoves : moves.entrySet()) {
 
 			Vector2D piecePos = pieceWithMoves.getKey().getPosition();
@@ -124,7 +129,7 @@ public class MiniMax {
 
 		}
 		System.out.println("bestMove: " + bestMove);
-
+		
 		executorService.shutdown();
 
 		if (bestMove == null) {

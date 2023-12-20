@@ -12,7 +12,7 @@ import utils.SimplePiece;
 
 // this class allows conversions between different Boards
 public class BoardConverter {
-	
+
 	public static SimplePiece[][] convertToSimple(Piece[][] board) {
 		SimplePiece[][] simpleBoard = new SimplePiece[board.length][board.length];
 		for (int row = 0; row < board.length; row++) {

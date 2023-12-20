@@ -74,7 +74,6 @@ public class GamePresenter {
 			gameView.unmarkSquare(inv ? lastMarkedKingPos.getInverted(len) : lastMarkedKingPos);
 		}
 	}
-	
 
 	private void markSquaresPieceMoved(Vector2D oldPos, Vector2D newPos) {
 		if (markedSquareOld != null && markedSquareNew != null) {
@@ -148,8 +147,6 @@ public class GamePresenter {
 	private void initChessBotCalculation() {
 		chessBotCalculation.setOnSucceeded(event -> {
 			SimplePiece[][] b = chessBotCalculation.getValue();
-			System.out.println("finished");
-			System.out.println(b);
 			Platform.runLater(() -> gameView.loadSimpleBoard(b));
 		});
 	}
@@ -185,13 +182,9 @@ public class GamePresenter {
 				markSquaresPieceMoved(inv ? oldPos.getInverted(len) : oldPos, inv ? newPos.getInverted(len) : newPos);
 			});
 
-			System.out.println("return board");
-			System.out.println("current played Move: " + botMove);
 			return board;
 		}
 
 	}
-
-
 
 }

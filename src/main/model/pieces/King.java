@@ -165,7 +165,6 @@ public class King extends Piece {
 			return validMove && rook.firstMove && firstMove && !inCheck && !pieceOnSquare;
 
 		} catch (IndexOutOfBoundsException e) {
-			System.err.println("isValidCastle, error in King Class");
 		}
 		return false;
 	}
@@ -182,7 +181,6 @@ public class King extends Piece {
 		Vector2D rookPos = new Vector2D(rookCol, this.position.getY()); // on the same row
 		
 		if (!(this.board.getPiece(rookPos) instanceof Rook)) {
-			System.err.println("execute Castling failed, no Rook on " + rookPos + "\n" + board);
 			return;
 		}
 

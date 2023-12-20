@@ -18,37 +18,38 @@ import utils.conversions.FENConverter;
 import utils.conversions.pgn.PGNParser;
 
 public class OpeningBook {
-	
+
 	public static final OpeningBook openingBook = new OpeningBook();
-	
-	private static boolean isInit; 
-	
+
+	private static boolean isInit;
+
 	private final static String FILE_PATH = "resources/";
 	private final static String PGN_FILENAME = "opening.pgn";
 	private final static String PATH = FILE_PATH + PGN_FILENAME;
-	
+
 	private String path;
-	private final Piece[][] DEFAULT_BOARD = FENConverter.convertToPieceBoard("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR");
-	
+	private final Piece[][] DEFAULT_BOARD = FENConverter
+			.convertToPieceBoard("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR");
+
 	private Map<String, List<Piece[][]>> openingTable;
 	private List<List<Piece[][]>> usableBoardHistorys;
-	
+
 	private OpeningBook(String path) {
 		this.path = path;
 		new Thread(() -> init()).start();
 	}
-	
+
 	private OpeningBook() {
 		this(PATH);
 	}
-	
+
 	public void init() {
 		System.out.println("STARTED PARSING PGN FILE");
 		openingTable = PGNParser.parsePGNFile(Paths.get(path).toAbsolutePath().toString());
 		System.out.println("FINISHED PARSING PGN FILE");
 		updateUsableBoards(FENConverter.convertToPieceBoard("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR"));
 	}
-	
+
 	public boolean isInit() {
 		return usableBoardHistorys != null;
 	}
@@ -58,9 +59,9 @@ public class OpeningBook {
 	}
 
 	public Move getNextMove(Piece[][] currentBoard) {
-		//updateUsableBoards(currentBoard);
+		// updateUsableBoards(currentBoard);
 		Piece[][] board = takeBoardOfUsableBoardHistory(currentBoard);
-		
+
 		return filterOutMove(currentBoard, board);
 	}
 
@@ -84,10 +85,10 @@ public class OpeningBook {
 
 	private Piece[][] takeBoardOfUsableBoardHistory(Piece[][] currentBoard) {
 		List<Piece[][]> possibleBoards = new ArrayList<>();
-		
+
 		for (List<Piece[][]> gameHistory : usableBoardHistorys) {
 			int indexOfNextBoard = 0;
-		
+
 			for (Piece[][] board : gameHistory) {
 				if (++indexOfNextBoard >= gameHistory.size()) {
 					continue;
@@ -98,11 +99,9 @@ public class OpeningBook {
 				}
 			}
 		}
-		if(possibleBoards.size() == 0) {
+		if (possibleBoards.size() == 0) {
 			throw new NoSuchElementException(" couldnt find a matching board ...");
 		}
-	//	System.out.println("All possible Moves");
-	//	possibleBoards.forEach(board -> System.out.println(new BoardRepresentation(board)));
 		return possibleBoards.get(((int) Math.random() * possibleBoards.size()));
 	}
 
@@ -129,7 +128,6 @@ public class OpeningBook {
 		return true;
 	}
 
-	
 	private Move filterOutMove(Piece[][] current, Piece[][] nextBoard) {
 		Vector2D from = null, to = null;
 
@@ -145,19 +143,17 @@ public class OpeningBook {
 				}
 			}
 		}
-		if(from == null || to == null) {
-			System.err.println(new BoardRepresentation(current));
-			System.err.println(new BoardRepresentation(nextBoard));
+		if (from == null || to == null) {
 			throw new NoSuchElementException("couldnt find move");
-		} 
-		
+		}
+
 		return new Move(from, to);
 	}
-	
+
 	public boolean isInitalized() {
 		return isInit;
 	}
-	
+
 //	public static void main(String[] args) {
 //	
 //		OpeningBook openingBook = new OpeningBook();

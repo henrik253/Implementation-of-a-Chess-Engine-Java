@@ -22,7 +22,7 @@ public class BoardRepresentation {
 
 	private List<Piece> whitePieces;
 	private List<Piece> blackPieces;
-	private List<Piece> capturedPieces;
+	private List<Piece> removedPieces;
 
 	private King whiteKing;
 	private King blackKing;
@@ -39,7 +39,7 @@ public class BoardRepresentation {
 			this.board = board.clone();
 			whitePieces = new LinkedList<>();
 			blackPieces = new LinkedList<>();
-			capturedPieces = new LinkedList<>();
+			removedPieces = new LinkedList<>();
 			moveHistory = new LinkedList<>();
 			initPieces();
 			setBoardForPieces(); // before initPieces() !
@@ -58,8 +58,7 @@ public class BoardRepresentation {
 			this.board = board;
 			whitePieces = new LinkedList<>();
 			blackPieces = new LinkedList<>();
-			capturedPieces = new LinkedList<>();
-
+			removedPieces = new LinkedList<>();
 
 			currentMove = boardRepresentation.currentMove.clone();
 			lastMove = boardRepresentation.lastMove.clone();
@@ -211,7 +210,7 @@ public class BoardRepresentation {
 
 		if (lastMove.pieceGotCaptured()) {
 			capturedPiece.setPosition(newPos);
-			capturedPieces.remove(capturedPiece);
+			removedPieces.remove(capturedPiece);
 			getPieces(capturedPiece.getColor()).add(capturedPiece);
 		}
 
@@ -229,17 +228,12 @@ public class BoardRepresentation {
 		}
 
 		if (lastMove.pawnWillPromote()) {
-			Piece to = lastMove.getPromoting();  // to ist the pawn 
-			Piece from = getPiece(lastMove.from());  // from is e.g. the queen 
-			// e.g. the queen?
-			to.setPosition(lastMove.from().clone()); 
+			Piece to = lastMove.getPromoting(); // to ist the Queen
+			Piece from = getPiece(lastMove.from()); // from is e.g. the pawn
+
+			to.setPosition(lastMove.from().clone());
 			from.setPosition(lastMove.from().clone()); // important step
-			if(from.getColor().isWhite()) {
-				whitePieces.remove(from);
-			}
-			else {
-				blackPieces.remove(from);
-			}
+			
 			promotePiece(from, to);
 		}
 
@@ -249,14 +243,6 @@ public class BoardRepresentation {
 			lastMove = moveHistory.get(moveHistory.size() - 1);
 	}
 
-	// public void undoLastMove() {
-	// board = copy;
-	//
-	// moveHistory.remove(moveHistory.size() - 1);
-	// if (moveHistory.size() > 0)
-	// lastMove = moveHistory.get(moveHistory.size() - 1);
-	// }
-
 	public Piece removePiece(Vector2D pos) {
 		Piece piece = getPiece(pos);
 		if (piece != null) {
@@ -264,7 +250,7 @@ public class BoardRepresentation {
 				whitePieces.remove(piece);
 			} else
 				blackPieces.remove(piece);
-			capturedPieces.add(piece);
+			removedPieces.add(piece);
 		}
 		return piece;
 	}
@@ -301,6 +287,7 @@ public class BoardRepresentation {
 	}
 
 	// TODO TEST THE BUGS!
+	// from is the pawn, to the promoting piece e.g. Queen
 	public void promotePiece(Piece from, Piece to) {
 		ChessPieceColor color = from.getColor();
 		int x = from.getPosition().getX();
@@ -333,7 +320,7 @@ public class BoardRepresentation {
 	@Override
 	public BoardRepresentation clone() {
 		Piece[][] result = new Piece[board.length][board.length];
-		BoardRepresentation clone = new BoardRepresentation(result,this);
+		BoardRepresentation clone = new BoardRepresentation(result, this);
 		for (int row = 0; row < board.length; row++) {
 			for (int column = 0; column < board[row].length; column++) {
 				Piece p = this.board[row][column];
@@ -356,11 +343,11 @@ public class BoardRepresentation {
 				}
 			}
 		}
-		
-		for(Piece captured : this.capturedPieces) {
-			clone.capturedPieces.add(captured.clone());
+
+		for (Piece captured : this.removedPieces) {
+			clone.removedPieces.add(captured.clone());
 		}
-		clone.capturedPieces = new LinkedList<>(this.capturedPieces);
+		clone.removedPieces = new LinkedList<>(this.removedPieces);
 
 		clone.currentMove = clone.currentMove.clone();
 		clone.lastMove = clone.lastMove.clone();

@@ -16,7 +16,7 @@ public class MoveValidation {
 	private Model model;
 
 	private ChessPieceColor onMove;
-	private BoardRepresentation startingBoard; 
+	private BoardRepresentation startingBoard;
 	private BoardRepresentation board;
 
 	public MoveValidation(ChessPieceColor startingColor) {
@@ -33,11 +33,11 @@ public class MoveValidation {
 
 	public boolean makeMove(Vector2D oldPos, Vector2D newPos) {
 		Piece movedPiece = board.getPiece(oldPos);
-		
+
 		if (isNoValidMove(oldPos, newPos)) {
 			return false;
 		}
-		
+
 		board.makeMove(oldPos, newPos);
 		board.calcAttackedSquaresBy(movedPiece.getColor());
 
@@ -71,14 +71,13 @@ public class MoveValidation {
 
 	private void testCheckMate(Piece piece) {
 		if (Check.isMate(board, piece.getColor().getOpponentColor(), piece)) {
-			initiateCheckMate(); 
+			initiateCheckMate();
 		}
 	}
 
 	private void initiateCheckMate() {
 		State.gameState = GameState.GAME_OVER;
 		State.gameOverReason = onMove.isWhite() ? GameOverReason.WHITE_WON : GameOverReason.BLACK_WON;
-		System.out.println("CHECK MATE ! ");
 	}
 
 	public boolean kingInCheckIfPieceMoves(Vector2D oldPos, Vector2D newPos) {

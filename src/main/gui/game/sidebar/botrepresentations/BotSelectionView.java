@@ -101,7 +101,7 @@ public class BotSelectionView extends BorderPane { // TODO REMOVE BorderPane Wra
 		botRepresentation2.setFormatForSlider(" is the max-depth.");
 		botRepresentation2.setSliderMinMax(0, 7, 4);
 
-		botRepresentation2.getSlider().valueProperty().set(5);
+		botRepresentation2.getSlider().valueProperty().set(4);
 
 		botRepresentation1.getSlider().valueProperty().addListener((obs, oldV, newV) -> {
 			bot1SliderMillisChanged(newV.intValue());

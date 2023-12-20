@@ -98,7 +98,7 @@ public class PGNParser {
 
 					if (lastEffort != c) {
 						lastEffort = c;
-						System.err.println("Effort: " + c + "%");
+						System.err.println("Parsing PGN, effort: " + c + "%");
 					}
 					List<Piece[][]> gameHistory = parsePGNStringToSimpleBoard(pgn);
 					result.put(pgn, gameHistory);
