@@ -48,6 +48,7 @@ public class Main extends Application {
 		initModelComponents();
 		combineGUItoModel();
 		primaryStage.setScene(scene);
+		primaryStage.setResizable(false);
 		primaryStage.show();
 	
 	}
@@ -140,9 +141,9 @@ public class Main extends Application {
 		// Board
 		board.drawBoard();
 		// mainPresenter.loadBoard(settings.defaultFENString);
-		String fen = getRandomFEN();
+		String fen = settings.defaultFENString;
 		settings.selectedFEN.set(settings.defaultFENString);
-		mainPresenter.loadBoard(getRandomFEN());
+		mainPresenter.loadBoard(fen);
 
 		// Scene
 		scene = new Scene(mainView, settings.WINDOW_WIDTH, settings.WINDOW_HEIGHT);
@@ -162,9 +163,6 @@ public class Main extends Application {
 		mainPresenter.setModel(model);
 	}
 
-	public String getRandomFEN() {
-		return settings.fenExamples[(int) (Math.random() * settings.fenExamples.length)];
-	}
 
 	public static void main(String[] args) {
 		launch(args);

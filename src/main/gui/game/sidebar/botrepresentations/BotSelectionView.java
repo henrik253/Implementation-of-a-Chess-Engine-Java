@@ -91,14 +91,14 @@ public class BotSelectionView extends BorderPane { // TODO REMOVE BorderPane Wra
 		botRepresentation1.setHeading(BOT_NAME1);
 		botRepresentation1.setImage(IMAGE_PATH + IMAGE1_NAME + FILE_FORMAT);
 		botRepresentation1.setSliderMinMax(1000, 3000, 1500);
-		botRepresentation1.setInformationText("Select the max-calculation time:");
+		botRepresentation1.setInformationText("Select the max. Calculation Time:");
 		botRepresentation1.setFormatForSlider(" ms.");
 
 		botRepresentation2 = new BotRepresentation(this, "bot2");
 		botRepresentation2.setHeading(BOT_NAME2);
 		botRepresentation2.setImage(IMAGE_PATH + IMAGE2_NAME + FILE_FORMAT);
-		botRepresentation2.setInformationText("Select the max-depth of AlphaBeta Search:");
-		botRepresentation2.setFormatForSlider(" is the max-depth.");
+		botRepresentation2.setInformationText("Select the Search Depth of AlphaBeta Search:");
+		botRepresentation2.setFormatForSlider(" is the Depth.");
 		botRepresentation2.setSliderMinMax(0, 7, 4);
 
 		botRepresentation2.getSlider().valueProperty().set(4);
