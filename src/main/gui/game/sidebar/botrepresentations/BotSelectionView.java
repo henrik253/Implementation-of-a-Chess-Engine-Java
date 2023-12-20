@@ -90,7 +90,7 @@ public class BotSelectionView extends BorderPane { // TODO REMOVE BorderPane Wra
 		botRepresentation1 = new BotRepresentation(this, "bot1");
 		botRepresentation1.setHeading(BOT_NAME1);
 		botRepresentation1.setImage(IMAGE_PATH + IMAGE1_NAME + FILE_FORMAT);
-		botRepresentation1.setSliderMinMax(0, 30, 15);
+		botRepresentation1.setSliderMinMax(1000, 3000, 1500);
 		botRepresentation1.setInformationText("Select the max-calculation time:");
 		botRepresentation1.setFormatForSlider(" ms.");
 

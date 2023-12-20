@@ -287,7 +287,7 @@ public class BotRepresentation extends Pane {
 		sliderWrapper.setTranslateX(this.getPrefWidth() / 20 + 25);
 		sliderWrapper.setTranslateY(this.getPrefHeight() / 3 - 10);
 		slider.setShowTickLabels(false);
-		slider.setShowTickMarks(true);
+		slider.setShowTickMarks(false);
 		slider.setPrefWidth( (this.getPrefWidth() / 4) * 3);
 		// Create a Label
 		//sliderWrapper.setAlignment(Pos.CENTER);
