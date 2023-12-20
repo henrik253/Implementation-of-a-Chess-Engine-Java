@@ -21,7 +21,7 @@ public class DeeperBlueAgent{
     private final int[][] moveMemory;
     private final Workerpool pool;
     private final OpeningBook openingBook;
-    private final int iterativeDeepeningMillis;
+    public int iterativeDeepeningMillis;
     private DeeperBlueState mode;
     private final ForcedCheckMateTree forcedCheckMateTree;
     //-----------------------------------------public vars------------------------------------------------

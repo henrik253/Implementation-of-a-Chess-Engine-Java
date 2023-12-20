@@ -41,9 +41,6 @@ public class DeeperBlueBot implements ChessBot {
             lastMove = this.agent.player == 1 ? new Move(lastMove.from().getInverted(7), lastMove.to().getInverted(7)) : lastMove;
             long end = System.currentTimeMillis();
             System.out.println("Time: " + ((end - start)) + "ms");
-
-            //System.out.println("=================================Square: " + lastMove.from().getX() + ", " + lastMove.from().getY());
-
             return lastMove;
         } catch (DeeperBlueException | InterruptedException e) {
             throw new RuntimeException(e);
@@ -59,11 +56,11 @@ public class DeeperBlueBot implements ChessBot {
 
     @Override
     public void setDepthOrMillis(int depth) {
-
+        this.agent.iterativeDeepeningMillis = depth;
     }
 
     @Override
     public int getDepthOrMillis() {
-        return 0;
+        return this.agent.iterativeDeepeningMillis;
     }
 }
