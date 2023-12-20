@@ -42,7 +42,9 @@ public class GamePresenter {
 		if (isValidMove) {
 			gameView.loadSimpleBoard(mainPresenter.getGameBoard());
 			markCheckedKing();
-			markSquaresPieceMoved(oldPos, newPos);
+			boolean inv = gameView.isBoardInverted();
+			int len = settings.columns - 1;
+			markSquaresPieceMoved(inv ? oldPos.getInverted(len) : oldPos, inv ? newPos.getInverted(len) : newPos);
 		}
 
 		return isValidMove;
@@ -88,6 +90,29 @@ public class GamePresenter {
 		markedSquareNew = newPos;
 	}
 
+	public void markMoveableSquares(Vector2D pos) {
+		piecePosition = pos;
+		final int len = settings.columns - 1; // either columns or rows, does not matter
+		final boolean inv = gameView.isBoardInverted();
+
+		moveablePositions = mainPresenter.getMoveablePositions(inv ? pos.getInverted(len) : pos);
+
+		gameView.markSquare(pos, settings.markedColorBright.get());
+		moveablePositions.forEach(position -> gameView.markSquare(inv ? position.getInverted(len) : position,
+				settings.moveablePosMarked.get()));
+	}
+
+	public void unMarkMoveableSquares() {
+		if (moveablePositions == null)
+			return;
+
+		final boolean inv = gameView.isBoardInverted();
+		final int len = settings.columns - 1;
+		gameView.unmarkSquare(inv ? piecePosition.getInverted(len) : piecePosition);
+		moveablePositions.forEach(position -> gameView.unmarkSquare(inv ? position.getInverted(len) : position));
+
+	}
+
 	public void setPieceListenerDisabled(ChessPieceColor color, boolean disabled) {
 		gameView.setPieceListenerDisabled(color, disabled);
 	}
@@ -118,29 +143,6 @@ public class GamePresenter {
 
 	public void setSettings(Settings settings) {
 		this.settings = settings;
-	}
-
-	public void markMoveableSquares(Vector2D pos) {
-		piecePosition = pos;
-		final int len = settings.columns - 1; // either columns or rows, does not matter
-		final boolean inv = gameView.isBoardInverted();
-
-		moveablePositions = mainPresenter.getMoveablePositions(inv ? pos.getInverted(len) : pos);
-
-		gameView.markSquare(pos, settings.markedColorBright.get());
-		moveablePositions.forEach(position -> gameView.markSquare(inv ? position.getInverted(len) : position,
-				settings.moveablePosMarked.get()));
-	}
-
-	public void unMarkMoveableSquares() {
-		if (moveablePositions == null)
-			return;
-
-		final boolean inv = gameView.isBoardInverted();
-		final int len = settings.columns - 1;
-		gameView.unmarkSquare(inv ? piecePosition.getInverted(len) : piecePosition);
-		moveablePositions.forEach(position -> gameView.unmarkSquare(inv ? position.getInverted(len) : position));
-
 	}
 
 	// when ChessBotCalculation finished the Executer draws the board

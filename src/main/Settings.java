@@ -69,7 +69,8 @@ public class Settings { // Settings is not static, to make different saveable se
 			"8/P6p/1k6/1P1K3b/1N5Q/r5PN/2p1n1B1/3R3R w - - 0 1",
 			"8/N5pp/1P2QP1n/P3P1p1/k2p4/3R1P2/2K2P2/8 w - - 0 1",
 			"2b1K3/1q4p1/6Pp/1N2Pp2/2N5/1P3r2/P1k1n2P/8 w - - 0 1",
-			"8/1nRr1k2/p6K/P2PP3/2N1pP2/b6P/5P2/1q6 w - - 0 1"	
+			"8/1nRr1k2/p6K/P2PP3/2N1pP2/b6P/5P2/1q6 w - - 0 1",
+			"2bn1k1N/4b3/3rP3/8/1P6/B2p4/P2P2pK/1r3q2"
 	};
 
 
