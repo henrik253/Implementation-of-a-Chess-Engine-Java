@@ -67,13 +67,13 @@ public class King extends Piece {
 	@Override
 	public List<List<Vector2D>> calculateMoveablePositions() {
 		List<List<Vector2D>> moves = new LinkedList<>();
-		if(board.getBoard() == null) {
+		if (board.getBoard() == null) {
 			throw new NullPointerException("board is null in king class");
 		}
 		board.getBoard()[this.position.getY()][this.getPosition().getX()] = null;
 		int[][] attackedSquaresEnemy = board.calcAttackedSquaresBy(color.getOpponentColor());
 		board.getBoard()[this.position.getY()][this.getPosition().getX()] = this;
-		
+
 		if (outOfBounds(position)) // base case
 			return moves;
 
@@ -126,11 +126,11 @@ public class King extends Piece {
 		}
 	}
 
-	// Valid Castle if 1. Rook & King didnt move 2. no Pieces between 3. no check
-	// between
+	// Valid Castle if 1. Rook & King didnt move 2. no Pieces between 3. no check in the directions king would move
 	public boolean isValidCastle(Vector2D pos) {
-		if (!firstMove)
+		if (!firstMove) {
 			return false;
+		}
 		try {
 			int[][] aS = board.calcAttackedSquaresBy(color.getOpponentColor());
 			Piece[][] b = board.getBoard();
@@ -144,7 +144,7 @@ public class King extends Piece {
 
 			boolean inCheck = false;
 			boolean pieceOnSquare = false;
-	
+
 			if (kingSideCastle) {
 				int x0 = this.position.getX();
 				int x1 = this.position.getX() + 1, x2 = this.position.getX() + 2;
@@ -155,19 +155,17 @@ public class King extends Piece {
 				int x0 = this.position.getX();
 				int x1 = this.position.getX() - 1, x2 = this.position.getX() - 2, x3 = this.position.getX() - 3;
 				int y0 = this.position.getY();
-	
-			
-				inCheck = aS[y0][x0] > 0 || aS[y0][x1] > 0 || aS[y0][x2] > 0; // only the squares where king would move through in check
+
+				inCheck = aS[y0][x0] > 0 || aS[y0][x1] > 0 || aS[y0][x2] > 0; // only the squares where king would move
+																				// through in check
 				pieceOnSquare = b[y0][x1] != null || b[y0][x2] != null || b[y0][x3] != null; // BETWEEN K & R
 			}
-			boolean validMove = ((int) Math.abs((((double) (position.getX() - pos.getX())))) == 2); 
+			boolean validMove = ((int) Math.abs((((double) (position.getX() - pos.getX())))) == 2);
 
-			
-			return validMove && rook.firstMove && firstMove
-					&& !inCheck && !pieceOnSquare;
-			
+			return validMove && rook.firstMove && firstMove && !inCheck && !pieceOnSquare;
+
 		} catch (IndexOutOfBoundsException e) {
-			System.err.println("Castling Error in King Class");
+			System.err.println("isValidCastle, error in King Class");
 		}
 		return false;
 	}
@@ -175,21 +173,26 @@ public class King extends Piece {
 	private void executeCastling(Vector2D oldPos, Vector2D newPos) { // TODO test Castling
 		boolean kingSideCastle = newPos.getX() > this.getPosition().getX();
 		Vector2D rookDirection = new Vector2D(kingSideCastle ? -2 : 3, 0);
-		
+
 		super.executeMove(oldPos, newPos);
-	
-		
+
 		Piece[][] board = this.board.getBoard();
 		// only rook needs to be moved
 		int rookCol = kingSideCastle ? this.board.getBoard().length - 1 : 0;
 		Vector2D rookPos = new Vector2D(rookCol, this.position.getY()); // on the same row
+		
+		if (!(this.board.getPiece(rookPos) instanceof Rook)) {
+			System.err.println("execute Castling failed, no Rook on " + rookPos + "\n" + board);
+			return;
+		}
+
 		Rook rook = (Rook) this.board.getPiece(rookPos);
 
 		board[rook.getPosition().getY()][rook.getPosition().getX()] = null;
 		Vector2D newRookPos = Vector2D.plus(rookPos, rookDirection);
 		rook.setPosition(newRookPos);
 		board[newRookPos.getY()][newRookPos.getX()] = rook;
-		
+
 		Move currentMove = this.board.getCurrentMove();
 		currentMove.setCastlingMove(true);
 		currentMove.setRook(rook);

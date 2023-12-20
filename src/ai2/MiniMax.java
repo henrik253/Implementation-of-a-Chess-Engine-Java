@@ -21,7 +21,9 @@ public class MiniMax {
 
 	private static final ChessPieceColor WHITE = ChessPieceColor.WHITE;
 	private static final ChessPieceColor BLACK = ChessPieceColor.BLACK;
-	private static final float MAX = 1000000.0f;
+	private static final int MAX = 10000000;
+	private static final int MIN = -MAX;
+	private static final int POOL_SIZE = 12;
 
 	private static int maxDepth;
 
@@ -31,15 +33,14 @@ public class MiniMax {
 		Map<Piece, Vector2D[]> moves = MoveGeneration.getMoves(board, onMove);
 		Vector2D from = null, to = null;
 
-		int bestValue = Integer.MIN_VALUE;
+		int bestValue = MIN;
 		for (Map.Entry<Piece, Vector2D[]> pieceWithMoves : moves.entrySet()) {
 			Vector2D piecePos = pieceWithMoves.getKey().getPosition();
 
 			for (Vector2D moveOfPiece : pieceWithMoves.getValue()) {
 
 				board.makeMove(piecePos, moveOfPiece);
-				int evaluated = miniMax(board, false, onMove.getOpponentColor(), depth, Integer.MIN_VALUE,
-						Integer.MAX_VALUE);
+				int evaluated = miniMax(board, false, onMove.getOpponentColor(), depth, MIN, MAX);
 
 				board.undoLastMove();
 
@@ -70,10 +71,8 @@ public class MiniMax {
 	}
 
 	public static Move miniMaxRootParallel(BoardRepresentation board, ChessPieceColor onMove, int depth) {
-
 		maxDepth = depth;
-
-		ExecutorService executorService = Executors.newFixedThreadPool(8);
+		ExecutorService executorService = Executors.newFixedThreadPool(POOL_SIZE);
 		List<Future<MoveValuePair>> results = new LinkedList<>();
 
 		Map<Piece, Vector2D[]> moves = MoveGeneration.getMoves(board, onMove);
@@ -83,12 +82,12 @@ public class MiniMax {
 			Vector2D piecePos = pieceWithMoves.getKey().getPosition();
 			for (Vector2D moveOfPiece : pieceWithMoves.getValue()) {
 				BoardRepresentation boardClone = board.clone();
+
 				Future<MoveValuePair> pair = executorService.submit(() -> {
 
 					boardClone.makeMove(piecePos.clone(), moveOfPiece.clone());
 
-					int evaluated = miniMax(boardClone, false, onMove.getOpponentColor(), depth, Integer.MIN_VALUE,
-							Integer.MAX_VALUE);
+					int evaluated = miniMax(boardClone, false, onMove.getOpponentColor(), depth, MIN, MAX);
 
 					boardClone.undoLastMove();
 
@@ -100,16 +99,21 @@ public class MiniMax {
 		}
 
 		Move bestMove = null;
-		int best = Integer.MIN_VALUE;
+		int best = MIN;
 
 		for (Future<MoveValuePair> future : results) {
 			MoveValuePair pair = null;
 			try {
 				pair = future.get();
-				if (pair.value >= best) { //
-					bestMove = pair.move;
-					best = pair.value;
+				if (onMove.isWhite()) {
+					if (pair.value >= best) { //
+						bestMove = pair.move;
+						best = pair.value;
+					}
 				}
+			} catch (InterruptedException e) {
+				executorService.shutdown();
+				System.err.println("ClassicChessBot interrupted in MiniMaxParallel");
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
@@ -137,7 +141,7 @@ public class MiniMax {
 		if (moves.size() == 0) {
 			if (gameOver(board, player)) {
 				int currentDepth = maxDepth - depth;
-				return maximazingPlayer ? Integer.MIN_VALUE + currentDepth : Integer.MAX_VALUE - currentDepth;
+				return maximazingPlayer ? MIN + currentDepth : MAX - currentDepth;
 			}
 
 			// otherwise Remis
@@ -149,7 +153,7 @@ public class MiniMax {
 		if (maximazingPlayer) { // maximazing player wants positive values as result if he s good, if the
 								// maximazing player is black
 								// we need to negate the values
-			int maxValue = Integer.MIN_VALUE;
+			int maxValue = MIN;
 			for (Map.Entry<Piece, Vector2D[]> pieceWithMoves : moves.entrySet()) {
 				for (Vector2D moveOfPiece : pieceWithMoves.getValue()) {
 					board.makeMove(pieceWithMoves.getKey().getPosition(), moveOfPiece);
@@ -169,10 +173,8 @@ public class MiniMax {
 				}
 			}
 			return maxValue;
-
 		} else {
-
-			int minValue = Integer.MAX_VALUE;
+			int minValue = MAX;
 
 			for (Map.Entry<Piece, Vector2D[]> pieceWithMoves : moves.entrySet()) {
 				for (Vector2D moveOfPiece : pieceWithMoves.getValue()) {

@@ -117,7 +117,6 @@ public class BoardRepresentation {
 
 	public int[][] calcAttackedSquaresBy(ChessPieceColor color) {
 		int[][] attackedSquares = new int[board.length][board.length];
-
 		for (int i = 0; i < board.length; i++) {
 			for (int j = 0; j < board.length; j++) {
 				if (board[i][j] != null && board[i][j].getColor() == color) {
@@ -326,7 +325,7 @@ public class BoardRepresentation {
 	}
 
 	@Override
-	public synchronized BoardRepresentation clone() {
+	public BoardRepresentation clone() {
 		Piece[][] result = new Piece[board.length][board.length];
 		BoardRepresentation clone = new BoardRepresentation(result,this);
 		for (int row = 0; row < board.length; row++) {
@@ -361,8 +360,8 @@ public class BoardRepresentation {
 		clone.lastMove = clone.lastMove.clone();
 
 		clone.moveHistory = new LinkedList<>(this.moveHistory);
-		clone.calcAttackedSquaresBy(ChessPieceColor.WHITE);
-		clone.calcAttackedSquaresBy(ChessPieceColor.BLACK);
+		clone.attackedSquaresByWhite = clone.calcAttackedSquaresBy(ChessPieceColor.WHITE);
+		clone.attackedSquaresByBlack = clone.calcAttackedSquaresBy(ChessPieceColor.BLACK);
 		return clone;
 
 	}

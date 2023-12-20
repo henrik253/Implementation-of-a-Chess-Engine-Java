@@ -6,8 +6,8 @@ import main.Settings;
 import main.gui.game.board.presenter.GamePresenter;
 import main.gui.game.gameOver.GameOverPresenter;
 import main.gui.game.gameStart.GameStartPresenter;
-import main.gui.game.settings.SettingsPresenter;
-import main.gui.game.settings.settingsViewComponents.BotRepresentation;
+import main.gui.game.sidebar.SettingsPresenter;
+import main.gui.game.sidebar.botrepresentations.BotRepresentation;
 import main.model.Model;
 import main.model.gameLogic.BoardRepresentation;
 import utils.ChessPieceColor;
@@ -53,9 +53,9 @@ public class MainPresenter {
 			} catch (Exception e) {
 				e.printStackTrace();
 				System.err.println(model.getBoardRepresentation());
-				throw e;
+				initGameOver();
 			}
-			if (++c >= 3) {
+			if (++c >= 1) {
 				System.err.print("\n Bot couldnt find a Move after " + c + " attempts.");
 				break;
 			}
@@ -251,6 +251,14 @@ public class MainPresenter {
 
 	public List<Vector2D> getMoveablePositions(Vector2D pos) {
 		return model.getMoveablePositions(pos);
+	}
+
+	public void bot1SliderMillisChanged(int millis) {
+		model.setMillisForBot1(millis);
+	}
+
+	public void bot2SliderDepthChanged(int depth) {
+		model.setDepthForBot2(depth);
 	}
 
 }

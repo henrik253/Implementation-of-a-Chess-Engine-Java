@@ -33,7 +33,7 @@ public class Model {
 	public final ChessBot bot2 = new ClassicBot();
 
 	public Model() {
-		selectedChessBot = bot2;//new ClassicBot();// new RandomChessBot();// bot1;//new DeeperBlueBot();// bot2;//new ClassicBot();
+		selectedChessBot = bot1;//new ClassicBot();// new RandomChessBot();// bot1;//new DeeperBlueBot();// bot2;//new ClassicBot();
 		selectedChessBot.setColor(ChessPieceColor.BLACK); // By default black
 		gameStatistic = new GameStatistic();
 	}
@@ -197,6 +197,13 @@ public class Model {
 	public void setColorForSelectedChessBot(ChessPieceColor color) {
 		selectedChessBot.setColor(color);
 	}
-
+	
+	public void setMillisForBot1(int millis) {
+		bot1.setDepthOrMillis(millis);
+	}
+	
+	public void setDepthForBot2(int depth) {
+		bot2.setDepthOrMillis(depth);
+	}
 
 }

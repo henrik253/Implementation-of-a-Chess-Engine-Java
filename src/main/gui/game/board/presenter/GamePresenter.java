@@ -74,6 +74,7 @@ public class GamePresenter {
 			gameView.unmarkSquare(inv ? lastMarkedKingPos.getInverted(len) : lastMarkedKingPos);
 		}
 	}
+	
 
 	private void markSquaresPieceMoved(Vector2D oldPos, Vector2D newPos) {
 		if (markedSquareOld != null && markedSquareNew != null) {
@@ -190,5 +191,7 @@ public class GamePresenter {
 		}
 
 	}
+
+
 
 }

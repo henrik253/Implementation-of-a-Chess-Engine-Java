@@ -51,12 +51,12 @@ public class ClassicChessBot implements ChessBot {
 
 	@Override
 	public void setDepthOrMillis(int depth) {
-
+		this.depth = depth; 
 	}
 
 	@Override
 	public int getDepthOrMillis() {
-		return 0;
+		return depth; 
 	}
 
 	@Override

@@ -13,8 +13,8 @@ import main.gui.game.gameOver.GameOverPresenter;
 import main.gui.game.gameOver.GameOverView;
 import main.gui.game.gameStart.GameStartPresenter;
 import main.gui.game.gameStart.GameStartView;
-import main.gui.game.settings.SettingsPresenter;
-import main.gui.game.settings.SettingsView;
+import main.gui.game.sidebar.SettingsPresenter;
+import main.gui.game.sidebar.SettingsView;
 import main.model.Model;
 import main.model.gameLogic.MoveValidation;
 
