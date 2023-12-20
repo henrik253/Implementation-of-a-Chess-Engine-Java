@@ -21,8 +21,8 @@ public class InsertFENView extends Pane {
 	private static final double WIDTH = 200.0;
 	private static final double HEIGHT = 200.0;
 
-	private static final String HEADING_TEXT = "INSERT A BOARD";
-	private static final String INFORMATION_TEXT = "to insert a board paste a FEN-STRING";
+	private static final String HEADING_TEXT = "Insert a FEN-String";
+	private static final String INFORMATION_TEXT = "to generate a custom Board, paste a FEN-String";
 	private static final String WARNING = "Not a valid FEN-STRING";
 	private static final String SUCCESS = "You inserted a valid FEN-STRING";
 
@@ -30,11 +30,11 @@ public class InsertFENView extends Pane {
 	private final Text informationText = new Text(INFORMATION_TEXT);
 	private TextField input = new TextField(HEADING_TEXT);
 
-	private VBox wrapper = new VBox();
-	private HBox headingWrapper = new HBox();
-	private HBox informationTextWrapper = new HBox();
+	private VBox wrapper = new VBox(10);
+	private HBox headingWrapper = new HBox(5);
+	private HBox informationTextWrapper = new HBox(5);
 	private HBox inputWrapper = new HBox();
-	private HBox randomFENWrapper = new HBox();
+	private HBox buttonWrapper = new HBox(10);
 
 	private double parentHeight, parentWidth;
 
@@ -44,14 +44,13 @@ public class InsertFENView extends Pane {
 
 	public InsertFENView(SettingsView settingsView, double parentHeight, double parentWidth, Settings settings) {
 		this.settingsView = settingsView;
-
 		this.parentHeight = parentHeight;
 		this.parentWidth = parentWidth;
 
-		this.setPrefHeight(parentHeight / 7);
-		this.setPrefWidth(parentWidth - (parentWidth / 20));
+		this.setPrefHeight(parentHeight / 5);
+		this.setPrefWidth(parentWidth - (parentWidth / 8));
 
-		this.setTranslateY((parentHeight / 5) * 4);
+		this.setTranslateY((parentHeight / 5) * 3);
 		this.setTranslateX(parentWidth / 10);
 //		this.setBackground(new Background(new BackgroundFill(Color.LIGHTGRAY, CornerRadii.EMPTY, new Insets(1))));
 		this.setId("InsertBoardView");
@@ -61,9 +60,9 @@ public class InsertFENView extends Pane {
 		headingWrapper.getChildren().add(heading);
 		informationTextWrapper.getChildren().add(informationText);
 		inputWrapper.getChildren().add(input);
-		randomFENWrapper.getChildren().addAll(randomFENButton, defaultFENButton);
-		wrapper.getChildren().addAll(headingWrapper, informationTextWrapper, inputWrapper, randomFENWrapper);
-		wrapper.setTranslateX(30);
+		buttonWrapper.getChildren().addAll(randomFENButton, defaultFENButton);
+		wrapper.getChildren().addAll(headingWrapper, informationTextWrapper, inputWrapper, buttonWrapper);
+		wrapper.setTranslateX(10);
 		wrapper.setTranslateY(10);
 		getChildren().add(wrapper);
 
@@ -99,7 +98,7 @@ public class InsertFENView extends Pane {
 
 	private void initRandomFENButton() {
 		randomFENButton = new Button("RANDOM");
-
+		randomFENButton.setId("InsertBoardViewRandomButton");
 		randomFENButton.setOnAction(event -> {
 			int index = (int) (Math.random() * this.settings.fenExamples.length);
 			String randFEN = this.settings.fenExamples[index];
@@ -112,7 +111,7 @@ public class InsertFENView extends Pane {
 
 	private void initDefaultFENButton() {
 		defaultFENButton = new Button("DEFAULT");
-
+		defaultFENButton.setId("InsertBoardViewDefaultFENButton");
 		defaultFENButton.setOnAction(event -> {
 			String defaultFEN = this.settings.defaultFENString;
 			input.setText(defaultFEN);

@@ -292,3 +292,37 @@
   -fx-cursor: hand;
 }
 
+#InsertBoardView{
+	-fx-background-color: #f7f7f7;
+	-fx-border-color: rgba(255.0,255.0,240.0);
+	-fx-effect: dropshadow( gaussian , rgba(0.0,0.0,0.0,0.5) , 2.0,0.0,0.0,1.0 );
+}
+
+#InsertBoardViewHeading{
+	-fx-font-family: "Helvetica";
+	-fx-font-size: 17px;
+}
+
+#InsertBoardViewInformationText{
+	-fx-font-family: "Helvetica";
+	-fx-font-size: 13px;
+}
+
+#InsertBoardViewDefaultFENButton{
+	-fx-background-color: #b8b8b8;
+    -fx-background-radius: 3.0;
+    -fx-border-width: 2.0;
+    -fx-font-family: "Helvetica";
+    -fx-font-size: 15.0px;
+    -fx-text-fill: black;
+    -fx-effect: dropshadow( gaussian , rgba(0.0,0.0,0.0,0.5) , 2.0,0.0,0.0,1.0 );
+}
+#InsertBoardViewRandomButton{
+	-fx-background-color: #b8b8b8;
+    -fx-background-radius: 3.0;
+    -fx-border-width: 2.0;
+    -fx-font-family: "Helvetica";
+    -fx-font-size: 15.0px;
+    -fx-text-fill: black;
+    -fx-effect: dropshadow( gaussian , rgba(0.0,0.0,0.0,0.5) , 2.0,0.0,0.0,1.0 );
+}
