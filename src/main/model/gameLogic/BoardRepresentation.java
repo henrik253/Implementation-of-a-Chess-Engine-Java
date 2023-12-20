@@ -229,11 +229,17 @@ public class BoardRepresentation {
 		}
 
 		if (lastMove.pawnWillPromote()) {
-			Piece to = lastMove.getPromoting(); // e.g. the Pawn
-			Piece from = getPiece(lastMove.from()); // TODO null ptr exc. // bc. from == null
+			Piece to = lastMove.getPromoting();  // to ist the pawn 
+			Piece from = getPiece(lastMove.from());  // from is e.g. the queen 
 			// e.g. the queen?
-			to.setPosition(lastMove.from().clone());
+			to.setPosition(lastMove.from().clone()); 
 			from.setPosition(lastMove.from().clone()); // important step
+			if(from.getColor().isWhite()) {
+				whitePieces.remove(from);
+			}
+			else {
+				blackPieces.remove(from);
+			}
 			promotePiece(from, to);
 		}
 

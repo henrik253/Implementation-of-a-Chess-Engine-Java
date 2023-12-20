@@ -2,6 +2,7 @@ package ai2;
 
 import java.util.Map;
 import java.util.NoSuchElementException;
+import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -68,6 +69,9 @@ public class MiniMax {
 			this.value = value;
 		}
 
+		public String toString() {
+			return move.toString() + " " + "val: " + value;
+		}
 	}
 
 	public static Move miniMaxRootParallel(BoardRepresentation board, ChessPieceColor onMove, int depth) {
@@ -100,17 +104,17 @@ public class MiniMax {
 
 		Move bestMove = null;
 		int best = MIN;
-
+		List<MoveValuePair> pairs = new CopyOnWriteArrayList<MoveValuePair>();
 		for (Future<MoveValuePair> future : results) {
 			MoveValuePair pair = null;
 			try {
 				pair = future.get();
-				if (onMove.isWhite()) {
-					if (pair.value >= best) { //
-						bestMove = pair.move;
-						best = pair.value;
-					}
+				if (pair.value >= best) { //
+					bestMove = pair.move;
+					best = pair.value;
 				}
+
+				pairs.add(pair);
 			} catch (InterruptedException e) {
 				executorService.shutdown();
 				System.err.println("ClassicChessBot interrupted in MiniMaxParallel");
@@ -123,9 +127,10 @@ public class MiniMax {
 
 		executorService.shutdown();
 
-		if (bestMove == null)
+		if (bestMove == null) {
+			System.err.println(pairs);
 			throw new NoSuchElementException("couldnt find a move in MinimaxRootParallel");
-
+		}
 		return bestMove;
 	}
 

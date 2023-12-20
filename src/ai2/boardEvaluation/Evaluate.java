@@ -21,8 +21,11 @@ public class Evaluate {
 		// 0 for start, 1 for end
 
 		if (boardR.getBlackPieces().size() + boardR.getWhitePieces().size() > MAX_PIECE_COUNT) {
-			throw new IllegalArgumentException("too many pieces in boardR");
+			System.err.println("Error occured, there a too many Pieces in the list of BoardRepr");
+			System.err.println("white Pieces:" + boardR.getWhitePieces());
+			System.err.println("black Pieces: " + boardR.getBlackPieces());
 		}
+
 		float gameProgress = Math.abs(
 				1 - ((boardR.getWhitePieces().size() + boardR.getBlackPieces().size() - 2) / (float) MAX_PIECE_COUNT));
 
@@ -99,18 +102,5 @@ public class Evaluate {
 	private static float linearInterpolation(float openingVal, float endingVal, float gameProgress) {
 		return openingVal + (endingVal - openingVal) * gameProgress;
 	}
-
-//	public static void main(String[] args) {
-//		String fen1 = "rnbqkbnr/pppppppp/8/8/8/8/8/4K3";
-//		BoardRepresentation boardR = new BoardRepresentation(
-//				FENConverter.convertToPieceBoard("4nk2/8/8/3p4/3P4/2N5/8/7K"));
-//		
-//		System.out.println(evaluate(boardR));
-//		
-//		String fen2 = "1k6/rB6/8/8/8/2R5/RR6/K7";
-//		BoardRepresentation boardR2 = new BoardRepresentation(
-//				FENConverter.convertToPieceBoard(fen2));
-//		System.out.println(evaluate(boardR2));
-//	}
 
 }
