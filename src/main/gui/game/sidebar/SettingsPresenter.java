@@ -18,6 +18,7 @@ public class SettingsPresenter {
 		settingsView.setVisibleBotSelectButtons(false);
 		settingsView.setVisibleInsertFENView(false);
 		settingsView.disableSlider(true);
+		settingsView.setMoveHistoryView(true);
 	}
 
 	public void setNoGameContent() {
@@ -27,6 +28,7 @@ public class SettingsPresenter {
 		settingsView.setVisibleInsertFENView(true);
 		settingsView.disableSlider(false);
 		settingsView.clearMoveHistory();
+		settingsView.setMoveHistoryView(false);
 	}
 
 	public void loadBoard(String fen) {

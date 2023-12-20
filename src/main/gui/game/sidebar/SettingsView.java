@@ -25,8 +25,8 @@ public class SettingsView extends Pane {
 	private BotSelectionView botSelectionView;
 
 	private InsertFENView insertBoardView;
-	
-	private MoveHistoryView moveHistoryView; 
+
+	private MoveHistoryView moveHistoryView;
 
 	public void init() { // init() is called when all Comps. are connected
 		this.setTranslateX(settings.settingsViewTranslateX.get());
@@ -36,19 +36,19 @@ public class SettingsView extends Pane {
 		this.setPrefHeight(settings.WINDOW_HEIGHT);
 		this.setId("SettingsView");
 		this.botSelectionView = new BotSelectionView(this);
-		this.insertBoardView = new InsertFENView(this, getPrefHeight(), getPrefWidth(),settings);
+		this.insertBoardView = new InsertFENView(this, getPrefHeight(), getPrefWidth(), settings);
 		this.moveHistoryView = new MoveHistoryView(this);
 		initGameContent();
 
 		// inGameContent = new InGamePane();
 
-		this.getChildren().addAll(botSelectionView, insertBoardView, moveHistoryView);
+		this.getChildren().addAll(botSelectionView, insertBoardView);
 
 	}
 
 	public void toggleSelectSurrenderButton(boolean inGame) {
-		Platform.runLater( () -> 	botSelectionView.toggleSelectSurrenderButton(inGame));
-	
+		Platform.runLater(() -> botSelectionView.toggleSelectSurrenderButton(inGame));
+
 	}
 
 	private void initGameContent() {
@@ -107,11 +107,11 @@ public class SettingsView extends Pane {
 
 	public void bot2SliderDepthChanged(int depth) {
 		settingsPresenter.bot2SliderDepthChanged(depth);
-		
+
 	}
 
 	public void disableSlider(boolean b) {
-		botSelectionView.disableSlider(b);	
+		botSelectionView.disableSlider(b);
 	}
 
 	public void MoveHistoryElementClicked(int index) {
@@ -121,7 +121,7 @@ public class SettingsView extends Pane {
 	public void clearMoveHistory() {
 		moveHistoryView.clearMoves();
 	}
-	
+
 	public void addMoveToMoveHistory(Move move) {
 		this.moveHistoryView.addMove(move);
 	}
@@ -129,7 +129,17 @@ public class SettingsView extends Pane {
 	public void setMoveHistory(List<Move> moveHistory) {
 		this.moveHistoryView.setMoveHistory(moveHistory);
 	}
-	
-	
+
+	public void setMoveHistoryView(boolean val) {
+		if (val) {
+			if (!getChildren().contains(moveHistoryView)) {
+				getChildren().add(moveHistoryView);
+				
+			}
+		} else {
+			getChildren().remove(moveHistoryView);
+			moveHistoryView.clearMoves();
+		}
+	}
 
 }

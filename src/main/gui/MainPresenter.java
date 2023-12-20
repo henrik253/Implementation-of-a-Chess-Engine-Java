@@ -57,7 +57,7 @@ public class MainPresenter {
 			} catch (Exception e) {
 				e.printStackTrace();
 				System.err.println(model.getBoardRepresentation());
-				initGameOver();
+				Platform.runLater( () -> initGameOver());
 			}
 			if (++c >= 1) {
 				System.err.print("\n Bot couldnt find a Move after " + c + " attempts.");
