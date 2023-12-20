@@ -339,4 +339,5 @@ public class Board extends GridPane {
 		this.inverted = inverted;
 	}
 
+
 }

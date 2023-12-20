@@ -2,6 +2,7 @@ package main.gui;
 
 import java.util.List;
 
+import javafx.application.Platform;
 import main.Settings;
 import main.gui.game.board.presenter.GamePresenter;
 import main.gui.game.gameOver.GameOverPresenter;
@@ -40,6 +41,9 @@ public class MainPresenter {
 			throw e;
 		}
 		checkGameStates();
+		if (validMove) {
+			updateMoveBoardHistory();
+		}
 		return validMove;
 	}
 
@@ -62,7 +66,14 @@ public class MainPresenter {
 		}
 
 		checkGameStates();
+		Platform.runLater(() -> updateMoveBoardHistory()); // requestBotMove is called on calculation thread, so we need
+															// to pass updating gui later to the
+		// JavaFX thread.
 		return BoardConverter.convertToSimple(model.getBoard());
+	}
+
+	private void updateMoveBoardHistory() {
+		settingsPresenter.setMoveHistory(model.getMoveHistory());
 	}
 
 	public void checkGameStates() {
@@ -79,6 +90,7 @@ public class MainPresenter {
 		gameOverPresenter.gameOver();
 		gameOverPresenter.setEnableView(true);
 		settingsPresenter.setNoGameContent();
+		gamePresenter.clearBoardHistory();
 	}
 
 	public void surrenderGame() {
@@ -259,6 +271,11 @@ public class MainPresenter {
 
 	public void bot2SliderDepthChanged(int depth) {
 		model.setDepthForBot2(depth);
+	}
+
+	public void moveHistoryElementClicked(int index) {
+		gamePresenter.moveHistoryElementClicked(index);
+
 	}
 
 }

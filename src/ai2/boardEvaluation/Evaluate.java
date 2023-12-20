@@ -21,6 +21,8 @@ public class Evaluate {
 		// 0 for start, 1 for end
 
 		if (boardR.getBlackPieces().size() + boardR.getWhitePieces().size() > MAX_PIECE_COUNT) {
+			System.out.println(boardR.getBlackPieces());
+			System.out.println(boardR.getWhitePieces());
 			throw new IllegalArgumentException("too many pieces in boardR");
 		}
 		float gameProgress = Math.abs(

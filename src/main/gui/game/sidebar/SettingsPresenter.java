@@ -1,8 +1,11 @@
 package main.gui.game.sidebar;
 
+import java.util.List;
+
 import main.Settings;
 import main.gui.MainPresenter;
 import main.gui.game.sidebar.botrepresentations.BotRepresentation;
+import utils.Move;
 
 public class SettingsPresenter {
 	private Settings settings;
@@ -23,6 +26,7 @@ public class SettingsPresenter {
 		settingsView.setVisibleBotSelectButtons(true);
 		settingsView.setVisibleInsertFENView(true);
 		settingsView.disableSlider(false);
+		settingsView.clearMoveHistory();
 	}
 
 	public void loadBoard(String fen) {
@@ -80,6 +84,15 @@ public class SettingsPresenter {
 
 	public void bot2SliderDepthChanged(int depth) {
 		mainPresenter.bot2SliderDepthChanged(depth);
+	}
+
+	public void moveHistoryElementClicked(int index) {
+		mainPresenter.moveHistoryElementClicked(index);
+		
+	}
+
+	public void setMoveHistory(List<Move> moveHistory) {
+		settingsView.setMoveHistory(moveHistory);
 	}
 
 }

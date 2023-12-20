@@ -108,7 +108,7 @@ public class Model {
 	}
 
 	public List<Move> getMoveHistory() {
-		return gameStatistic.getMoves(selectedChessBot.toString());
+		return boardRepresentation.getMoveHistory();
 	}
 
 	public int getBotWins() {

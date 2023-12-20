@@ -1,6 +1,8 @@
 package main.gui.game.board.presenter;
 
+import java.util.LinkedList;
 import java.util.List;
+
 
 import javafx.application.Platform;
 import javafx.concurrent.Service;
@@ -28,6 +30,10 @@ public class GamePresenter {
 
 	private Service<SimplePiece[][]> chessBotCalculation = new ChessBotCalculationService();
 
+	private List<SimplePiece[][]> boardHistory = new LinkedList<>();
+	
+	ChessPieceColor disabledSide = ChessPieceColor.BLACK; // default
+	
 	public GamePresenter() {
 		initChessBotCalculation();
 	}
@@ -40,7 +46,9 @@ public class GamePresenter {
 		boolean isValidMove = mainPresenter.moveRequest(oldPos, newPos);
 
 		if (isValidMove) {
-			gameView.loadSimpleBoard(mainPresenter.getGameBoard());
+			SimplePiece[][] board = mainPresenter.getGameBoard();
+			gameView.loadSimpleBoard(board);
+			boardHistory.add(board);
 			markCheckedKing();
 			markSquaresPieceMoved(oldPos, newPos);
 		}
@@ -61,6 +69,11 @@ public class GamePresenter {
 		if (lastMarkedKingPos != null) {
 			gameView.unmarkSquare(lastMarkedKingPos);
 		}
+
+	}
+
+	public void clearBoardHistory() {
+		boardHistory.clear();
 	}
 
 	private void markCheckedKing() {
@@ -74,7 +87,6 @@ public class GamePresenter {
 			gameView.unmarkSquare(inv ? lastMarkedKingPos.getInverted(len) : lastMarkedKingPos);
 		}
 	}
-	
 
 	private void markSquaresPieceMoved(Vector2D oldPos, Vector2D newPos) {
 		if (markedSquareOld != null && markedSquareNew != null) {
@@ -91,6 +103,9 @@ public class GamePresenter {
 
 	public void setPieceListenerDisabled(ChessPieceColor color, boolean disabled) {
 		gameView.setPieceListenerDisabled(color, disabled);
+		if(disabled) {
+			disabledSide = color;
+		}
 	}
 
 	public GameView getGameView() {
@@ -148,8 +163,7 @@ public class GamePresenter {
 	private void initChessBotCalculation() {
 		chessBotCalculation.setOnSucceeded(event -> {
 			SimplePiece[][] b = chessBotCalculation.getValue();
-			System.out.println("finished");
-			System.out.println(b);
+			boardHistory.add(b);
 			Platform.runLater(() -> gameView.loadSimpleBoard(b));
 		});
 	}
@@ -192,6 +206,20 @@ public class GamePresenter {
 
 	}
 
-
+	public void moveHistoryElementClicked(int index) {
+		if (index >= boardHistory.size()) {
+			throw new IndexOutOfBoundsException("moveHistory index is not the same as in BoardHistory");
+		}
+		if (index == boardHistory.size() - 1) { // current Board
+			gameView.loadSimpleBoard(boardHistory.get(index));
+			gameView.setPieceListenerDisabled(disabledSide,true); // to normal state 
+			gameView.setPieceListenerDisabled(disabledSide.getOpponentColor(), false);
+		} else {
+			gameView.loadSimpleBoard(boardHistory.get(index));
+			// when looking the boardHistory, making move should be disabled
+			gameView.setPieceListenerDisabled(ChessPieceColor.WHITE, true);
+			gameView.setPieceListenerDisabled(ChessPieceColor.BLACK, true);
+		}
+	}
 
 }

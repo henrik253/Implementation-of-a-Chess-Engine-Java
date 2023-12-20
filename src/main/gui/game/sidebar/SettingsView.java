@@ -1,5 +1,7 @@
 package main.gui.game.sidebar;
 
+import java.util.List;
+
 import javafx.application.Platform;
 import javafx.geometry.Insets;
 import javafx.scene.control.Button;
@@ -11,6 +13,7 @@ import javafx.scene.paint.Color;
 import main.Settings;
 import main.gui.game.sidebar.botrepresentations.BotRepresentation;
 import main.gui.game.sidebar.botrepresentations.BotSelectionView;
+import utils.Move;
 
 public class SettingsView extends Pane {
 
@@ -22,6 +25,8 @@ public class SettingsView extends Pane {
 	private BotSelectionView botSelectionView;
 
 	private InsertFENView insertBoardView;
+	
+	private MoveHistoryView moveHistoryView; 
 
 	public void init() { // init() is called when all Comps. are connected
 		this.setTranslateX(settings.settingsViewTranslateX.get());
@@ -32,12 +37,12 @@ public class SettingsView extends Pane {
 		this.setId("SettingsView");
 		this.botSelectionView = new BotSelectionView(this);
 		this.insertBoardView = new InsertFENView(this, getPrefHeight(), getPrefWidth(),settings);
-
+		this.moveHistoryView = new MoveHistoryView(this);
 		initGameContent();
 
 		// inGameContent = new InGamePane();
 
-		this.getChildren().addAll(botSelectionView, insertBoardView);
+		this.getChildren().addAll(botSelectionView, insertBoardView, moveHistoryView);
 
 	}
 
@@ -108,5 +113,23 @@ public class SettingsView extends Pane {
 	public void disableSlider(boolean b) {
 		botSelectionView.disableSlider(b);	
 	}
+
+	public void MoveHistoryElementClicked(int index) {
+		settingsPresenter.moveHistoryElementClicked(index);
+	}
+
+	public void clearMoveHistory() {
+		moveHistoryView.clearMoves();
+	}
+	
+	public void addMoveToMoveHistory(Move move) {
+		this.moveHistoryView.addMove(move);
+	}
+
+	public void setMoveHistory(List<Move> moveHistory) {
+		this.moveHistoryView.setMoveHistory(moveHistory);
+	}
+	
+	
 
 }

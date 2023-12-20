@@ -48,6 +48,7 @@ public class Main extends Application {
 		initModelComponents();
 		combineGUItoModel();
 		primaryStage.setScene(scene);
+		primaryStage.setResizable(false);
 		primaryStage.show();
 	
 	}

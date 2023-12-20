@@ -20,7 +20,7 @@ public class GameView extends Pane {
 	}
 
 	public void init() {
-		// TODO Auto-generated method stub
+
 
 	}
 
@@ -90,6 +90,7 @@ public class GameView extends Pane {
 	public boolean isBoardInverted() {
 		return board.isInverted();
 	}
+
 
 
 }
