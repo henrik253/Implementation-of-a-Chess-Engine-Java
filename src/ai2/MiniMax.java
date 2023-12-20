@@ -23,7 +23,8 @@ public class MiniMax {
 	private static final ChessPieceColor BLACK = ChessPieceColor.BLACK;
 	private static final int MAX = 10000000;
 	private static final int MIN = -MAX;
-	
+	private static final int POOL_SIZE = 12;
+
 	private static int maxDepth;
 
 	public static Move miniMaxRoot(BoardRepresentation board, ChessPieceColor onMove, int depth) {
@@ -39,8 +40,7 @@ public class MiniMax {
 			for (Vector2D moveOfPiece : pieceWithMoves.getValue()) {
 
 				board.makeMove(piecePos, moveOfPiece);
-				int evaluated = miniMax(board, false, onMove.getOpponentColor(), depth, MIN,
-						MAX);
+				int evaluated = miniMax(board, false, onMove.getOpponentColor(), depth, MIN, MAX);
 
 				board.undoLastMove();
 
@@ -71,10 +71,8 @@ public class MiniMax {
 	}
 
 	public static Move miniMaxRootParallel(BoardRepresentation board, ChessPieceColor onMove, int depth) {
-
 		maxDepth = depth;
-
-		ExecutorService executorService = Executors.newFixedThreadPool(8);
+		ExecutorService executorService = Executors.newFixedThreadPool(POOL_SIZE);
 		List<Future<MoveValuePair>> results = new LinkedList<>();
 
 		Map<Piece, Vector2D[]> moves = MoveGeneration.getMoves(board, onMove);
@@ -84,13 +82,12 @@ public class MiniMax {
 			Vector2D piecePos = pieceWithMoves.getKey().getPosition();
 			for (Vector2D moveOfPiece : pieceWithMoves.getValue()) {
 				BoardRepresentation boardClone = board.clone();
-				
+
 				Future<MoveValuePair> pair = executorService.submit(() -> {
-					
+
 					boardClone.makeMove(piecePos.clone(), moveOfPiece.clone());
 
-					int evaluated = miniMax(boardClone, false, onMove.getOpponentColor(), depth, MIN,
-							MAX);
+					int evaluated = miniMax(boardClone, false, onMove.getOpponentColor(), depth, MIN, MAX);
 
 					boardClone.undoLastMove();
 
@@ -108,16 +105,16 @@ public class MiniMax {
 			MoveValuePair pair = null;
 			try {
 				pair = future.get();
-				if (pair.value >= best) { //
-					bestMove = pair.move;
-					best = pair.value;
+				if (onMove.isWhite()) {
+					if (pair.value >= best) { //
+						bestMove = pair.move;
+						best = pair.value;
+					}
 				}
-			}
-			catch(InterruptedException e) {
+			} catch (InterruptedException e) {
 				executorService.shutdown();
 				System.err.println("ClassicChessBot interrupted in MiniMaxParallel");
-			}
-			catch (Exception e) {
+			} catch (Exception e) {
 				e.printStackTrace();
 			}
 
@@ -136,7 +133,7 @@ public class MiniMax {
 			int alpha, int beta) {
 
 		if (depth == 0) {
-			return  Evaluate.evaluate(board); // // negative values for black side and
+			return Evaluate.evaluate(board); // // negative values for black side and
 		}
 
 		Map<Piece, Vector2D[]> moves = MoveGeneration.getMoves(board, player);

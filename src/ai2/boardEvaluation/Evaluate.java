@@ -13,15 +13,19 @@ public class Evaluate {
 
 	private static final int MAX_PIECE_COUNT = 32;
 
-	private static final float MATERIAL_WEIGHT = 2.5f;
+	private static final float MATERIAL_WEIGHT = 3.0f;
 	private static final float POSITION_WEIGHT = 2.0f;
 
 	// Evaluating the board for colors perspective
 	public static int evaluate(BoardRepresentation boardR) {
 		// 0 for start, 1 for end
-		float gameProgress = 1
-				- ((boardR.getWhitePieces().size() + boardR.getBlackPieces().size() - 2) / (float) MAX_PIECE_COUNT);
-	
+
+		if (boardR.getBlackPieces().size() + boardR.getWhitePieces().size() > MAX_PIECE_COUNT) {
+			throw new IllegalArgumentException("too many pieces in boardR");
+		}
+		float gameProgress = Math.abs(
+				1 - ((boardR.getWhitePieces().size() + boardR.getBlackPieces().size() - 2) / (float) MAX_PIECE_COUNT));
+
 		int evaluation = evaluate(boardR.getBoard(), gameProgress);
 
 		return evaluation;
