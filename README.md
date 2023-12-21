@@ -1,5 +1,5 @@
 <h1> Implementation of a Chess Engine in Java </h1>
-This project was part of the bachelor's degree at Hochschule Trier University of Applied Sciences. It was greatly inspired by Sebastian Lague's video about chess (link provided). The features of this project include:
+This project was part of the bachelor's degree at Hochschule Trier University of Applied Sciences. It was greatly inspired by Sebastian Lague's video about chess (https://www.youtube.com/watch?v=U4ogK0MIzqk&t=939s). The features of this project include:
 
 - Two different approaches to developing a chess AI, incorporating an Opening Book, Alpha-Beta Search, Iterative Deepening, evaluation functions, among other features.
 - The game chess itself, with all special rules like Castling or en passant.
