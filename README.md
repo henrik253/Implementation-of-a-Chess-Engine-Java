@@ -1,4 +1,4 @@
-Implementation of a Chess Engine in Java 
+<h1> Implementation of a Chess Engine in Java </h1>
 This project was part of the bachelor's degree at Hochschule Trier University of Applied Science. 
 The motivation was highly created by Sebastian Lague's video about chess: https://www.youtube.com/watch?v=U4ogK0MIzqk&t=939s .
 
