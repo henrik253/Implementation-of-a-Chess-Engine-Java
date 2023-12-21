@@ -108,7 +108,7 @@ public class GamePresenter {
 
 		final boolean inv = gameView.isBoardInverted();
 		final int len = settings.columns - 1;
-		gameView.unmarkSquare(inv ? piecePosition.getInverted(len) : piecePosition);
+		gameView.unmarkSquare(piecePosition); 
 		moveablePositions.forEach(position -> gameView.unmarkSquare(inv ? position.getInverted(len) : position));
 
 	}
