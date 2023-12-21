@@ -89,10 +89,17 @@ public class DeeperBlueAgent{
             }
             case NORMAL_SEARCH -> {
                 valueBuffer.clear();
-                if(foundForcedCheckMate(correctedBoard)){
+                if(
+                        (this.player == 1 && foundForcedCheckMate(ai.Util.Util.flipBoardHorizontallyAndFLipPlayer(intBoard))) ||
+                        (this.player == -1 && foundForcedCheckMate(intBoard)))
+                {
                     this.mode = DeeperBlueState.FORCED_CHECKMATE;
                     System.out.println("Forced_CheckMate");
-                    return getMoveWithForcedCheckMateSearch(intBoard, player);
+                    if(this.player == -1){
+                        return getMoveWithForcedCheckMateSearch(ai.Util.Util.flipBoardHorizontallyAndFLipPlayer(intBoard), player);
+                    }else{
+                        return returnCorrectedMove(1, flipMoveVertically(getMoveWithForcedCheckMateSearch(intBoard, player)));
+                    }
                 }
                 System.out.println("Normal_search");
                 if(this.player == -1){
@@ -103,7 +110,12 @@ public class DeeperBlueAgent{
             }
             case FORCED_CHECKMATE -> {
                 System.out.println("Forced_CheckMate");
-                return getMoveWithForcedCheckMateSearch(intBoard, player);
+                if(this.player == -1){
+                    return getMoveWithForcedCheckMateSearch(ai.Util.Util.flipBoardHorizontallyAndFLipPlayer(intBoard), player);
+                }else{
+                    return returnCorrectedMove(1, flipMoveVertically(getMoveWithForcedCheckMateSearch(intBoard, player)));
+                }
+
             }
             default ->{
                 return new int[]{-1, -1};
